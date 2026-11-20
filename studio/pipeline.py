@@ -13,7 +13,7 @@ from pathlib import Path
 from .capture import (LAUNCH_ARGS, Cancelled, create_engine)
 from .config import ANIM_CAP_FPS, RES_LABELS, RES_SIZE, Settings
 from .detector import SlideDetector
-from .encoder import encode_steps, join_segments, probe_duration
+from .encoder import encode_steps, join_segments
 
 
 class RenderError(Exception):
@@ -99,17 +99,9 @@ def render(settings: Settings, progress, cancel_event) -> Path:
             found = det.detect(settings.selector)
             n_slides = found["count"]
 
-            audio_total = None
-            if audio is not None and settings.match_audio:
-                audio_total = probe_duration(audio, ffmpeg)
-                if audio_total <= 0:
-                    progress("log", 0, "Could not read audio duration — "
-                                      "using seconds-per-slide instead.")
-                    audio_total = None
-
             if n_slides == 0:
                 mode = "continuous"
-                total = audio_total or settings.seconds_per_slide
+                total = settings.seconds_per_slide
                 durations = [total]
                 progress("log", 0,
                          f"No slides detected — exporting one continuous "
@@ -117,12 +109,8 @@ def render(settings: Settings, progress, cancel_event) -> Path:
                          f"একটানা {total:.1f} সেকেন্ড রেকর্ড হবে।")
             else:
                 mode = "slides"
-                if audio_total is not None:
-                    durations = [audio_total / n_slides] * n_slides
-                    total = audio_total
-                else:
-                    durations = [settings.seconds_per_slide] * n_slides
-                    total = sum(durations)
+                durations = [settings.seconds_per_slide] * n_slides
+                total = sum(durations)
                 act = det.find_activator()
                 if act:
                     progress("log", 0, f"Found {n_slides} slides "

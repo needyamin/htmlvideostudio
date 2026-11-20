@@ -196,15 +196,9 @@ class App:
         ttk.Spinbox(grid, from_=1, to=120, increment=0.5, width=6,
                     textvariable=self.sec_var).grid(row=1, column=1,
                                                     sticky="w", pady=4)
-        ttk.Label(grid, text="(pages without slides: total clip length)",
-                  style="Sub.TLabel").grid(row=1, column=2, columnspan=2,
-                                           sticky="w", padx=(20, 0), pady=4)
-
-        self.match_var = tk.BooleanVar(value=False)
-        ttk.Checkbutton(grid, text="Match voiceover length — splits the audio "
-                        "evenly across slides",
-                        variable=self.match_var).grid(
-            row=2, column=0, columnspan=5, sticky="w", pady=(4, 0))
+        ttk.Label(grid, text="(each slide switches automatically after this "
+                             "many seconds)", style="Sub.TLabel").grid(
+            row=1, column=2, columnspan=2, sticky="w", padx=(20, 0), pady=4)
 
         # advanced disclosure
         self.adv_open = False
@@ -368,8 +362,6 @@ class App:
 
     def _set_audio(self, p: str):
         self.audio_var.set(p)
-        if not p:
-            self.match_var.set(False)
 
     def _scan(self, path: Path):
         if self.ffmpeg is None:
@@ -400,7 +392,6 @@ class App:
             crf=QUALITY[self.q_var.get()],
             seconds_per_slide=float(self.sec_var.get()),
             selector=self.sel_var.get().strip(),
-            match_audio=bool(self.match_var.get() and self.audio_var.get()),
             capture_detail=CAPTURE_DETAIL.get(self.detail_var.get(), "normal"),
         )
 
@@ -430,11 +421,6 @@ class App:
             messagebox.showwarning("HTML Video Studio",
                                    "Please choose an HTML file first.\n"
                                    "বাংলা: আগে একটি HTML ফাইল নির্বাচন করুন।")
-            return
-        if self.match_var.get() and not self.audio_var.get():
-            messagebox.showinfo("HTML Video Studio",
-                                "Pick a voiceover file first to use "
-                                "'Match voiceover length'.")
             return
         s = self._settings()
         out = s.output_path()

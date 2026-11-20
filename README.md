@@ -32,9 +32,8 @@ Turn **any animated HTML page** into a high-quality **HD / Full-HD / 4K MP4 vide
 |---|---|
 | **Resolution** | Output video quality: 720p / 1080p / 1440p / **4K** |
 | **Quality** | Compression quality: Normal / High / **Best** (file size grows) |
-| **Seconds per slide** | How long each slide stays on screen (default 8s) |
-| **Voiceover** | Optional audio mixed into the video |
-| **Match voiceover length** | Splits the audio duration evenly across all slides, so video length = audio length |
+| **Seconds per slide** | Each slide switches automatically after this many seconds (default 8s) |
+| **Voiceover** | Optional audio mixed into the video (trimmed to the video length) |
 | FPS *(advanced)* | Frames per second: 24 (cinematic) / 30 (default) / 60 (smoothest) |
 | Slide selector *(advanced)* | CSS selector for slides. Leave empty for auto-detect (`.slide`, `[data-slide]`, …) |
 

@@ -44,7 +44,8 @@ CAPTURE_DETAIL = {"Faster (recommended)": "normal",
 
 ANIM_WAIT = 1.2          # real-time settle after page load (seconds)
 ACTIVATORS = ["go", "goTo", "gotoSlide", "showSlide", "selectSlide",
-              "goToSlide", "navigateTo", "jumpTo", "setSlide", "changeSlide"]
+              "goToSlide", "navigateTo", "jumpTo", "setSlide", "changeSlide",
+              "next", "nextSlide", "advance"]
 AUTO_SELECTORS = [".slide", "[data-slide]", ".slide-frame",
                   ".slides > section", "#slides > section", "section.slide",
                   ".reveal .slides > section"]
@@ -59,7 +60,6 @@ class Settings:
     crf: int = 18                     # x264 quality (lower = better)
     seconds_per_slide: float = 8.0
     selector: str = ""                # custom CSS selector, "" = auto
-    match_audio: bool = False         # split voiceover duration evenly
     capture_detail: str = "normal"    # "normal" = adaptive capture fps
 
     def output_path(self) -> Path:

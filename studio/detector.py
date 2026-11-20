@@ -60,6 +60,37 @@ ACTIVE_INDEX_JS = """
 """
 
 
+# Generic "step forward" strategies for decks that wire navigation inside
+# a closure (no global activator function). Each snippet dispatches ONE
+# forward-navigation event; Python then verifies the active slide changed.
+STEP_STRATEGIES = [
+    # 1) right-arrow key — the most common deck shortcut
+    "() => { const ev = new KeyboardEvent('keydown',"
+    "{key: 'ArrowRight', code: 'ArrowRight', bubbles: true, cancelable: true});"
+    "(document.body || document.documentElement).dispatchEvent(ev);"
+    " return true; }",
+    # 2) a visible Next button
+    "() => { const b = document.getElementById('nextBtn') "
+    "|| document.querySelector('[id*=\"next\" i], [class*=\"nextbtn\" i]');"
+    " if (b) { b.click(); return true; } return false; }",
+    # 3) click the right half of the page (many decks advance on click)
+    "() => { const x = innerWidth - 20, y = Math.round(innerHeight / 2);"
+    " const t = document.elementFromPoint(x, y) || document.body;"
+    " const ev = new MouseEvent('click', {bubbles: true, cancelable: true,"
+    " clientX: x, clientY: y}); t.dispatchEvent(ev); return true; }",
+    # 4) pagedown shortcut
+    "() => { const ev = new KeyboardEvent('keydown',"
+    "{key: 'PageDown', code: 'PageDown', bubbles: true, cancelable: true});"
+    "(document.body || document.documentElement).dispatchEvent(ev);"
+    " return true; }",
+]
+STEP_BACK_JS = (
+    "() => { const ev = new KeyboardEvent('keydown',"
+    "{key: 'ArrowLeft', code: 'ArrowLeft', bubbles: true, cancelable: true});"
+    "(document.body || document.documentElement).dispatchEvent(ev);"
+    " return true; }")
+
+
 class SlideDetector:
     def __init__(self, page):
         self.page = page
@@ -79,6 +110,9 @@ class SlideDetector:
 
         `advance(seconds)` — optional callback that advances page time
         (virtual or real) so class/opacity transitions can settle.
+
+        Strategy order: named global activator function → generic step
+        navigation (keyboard / next button / click) → scrollIntoView.
         """
         fn = getattr(self, "_activator", None)
         if fn is None:
@@ -92,6 +126,9 @@ class SlideDetector:
                     fn = None
                     continue
             else:
+                # generic navigation (works for closure-based decks)
+                if self._step_to(index, advance):
+                    return True
                 # scroll-based decks: bring the element into view
                 try:
                     self.page.evaluate(
@@ -105,3 +142,52 @@ class SlideDetector:
             if self.active_index() == index:
                 return True
         return False
+
+    def _step_to(self, index: int, advance=None, max_steps: int = 8) -> bool:
+        """Reach slide `index` by stepping through the deck with generic
+        forward navigation. Caches whichever strategy works. Forward-only
+        decks start at slide 0, so stepping reaches every index."""
+        for _ in range(max_steps):
+            try:
+                cur = self.active_index()
+            except Exception:
+                return False
+            if cur == index:
+                return True
+
+            if cur > index:
+                js = STEP_BACK_JS          # overshot — step back
+            else:
+                js = getattr(self, "_step_js", None)
+                if js is None:
+                    # discover a working forward strategy by trial
+                    for cand in STEP_STRATEGIES:
+                        try:
+                            self.page.evaluate(cand)
+                        except Exception:
+                            continue
+                        if advance:
+                            advance(0.15)
+                        try:
+                            new = self.active_index()
+                        except Exception:
+                            return False
+                        if new != cur:
+                            self._step_js = cand
+                            if new == index:
+                                return True
+                            break
+                    else:
+                        return False       # nothing moved the deck
+                    continue
+            try:
+                self.page.evaluate(js)
+            except Exception:
+                self._step_js = None
+                continue
+            if advance:
+                advance(0.15)
+        try:
+            return self.active_index() == index
+        except Exception:
+            return False
