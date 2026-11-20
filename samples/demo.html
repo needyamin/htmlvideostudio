@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HTML Video Studio — Sample Presentation</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI', Arial, sans-serif; background:#0b1020;
+         color:#eef2ff; overflow:hidden; width:100vw; height:100vh; }
+  .slide { position:absolute; inset:0; display:none; padding:8vh 10vw;
+           flex-direction:column; justify-content:center; }
+  .slide.active { display:flex; }
+  .pop   { opacity:0; transform:translateY(40px) scale(.94);
+           animation:pop .9s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes pop { to { opacity:1; transform:none; } }
+  .d1{animation-delay:.15s}.d2{animation-delay:.45s}.d3{animation-delay:.75s}
+  h1 { font-size:5.4vw; background:linear-gradient(90deg,#7dd3fc,#e879f9,#fbbf24);
+       background-size:200% 100%; -webkit-background-clip:text;
+       background-clip:text; color:transparent;
+       animation:shimmer 3s linear infinite; }
+  @keyframes shimmer { to { background-position:200% 0; } }
+  p  { font-size:1.7vw; opacity:.85; margin-top:2vh; max-width:70ch; }
+  .card { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+          border-radius:16px; padding:3vh 2vw; margin-top:3vh;
+          animation:pop .9s .6s cubic-bezier(.2,.8,.2,1) forwards;
+          opacity:0; transform:translateY(30px); }
+  canvas { position:absolute; inset:0; }
+  .term { font-family:Consolas,monospace; font-size:1.6vw; line-height:1.7;
+          background:#05080f; border:1px solid #233; border-radius:12px;
+          padding:3vh 2vw; white-space:pre-wrap; min-height:30vh; }
+  .cursor { display:inline-block; width:.6em; height:1.1em; background:#7dd3fc;
+            vertical-align:-0.15em; animation:blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .glow { width:16vw; height:16vw; border-radius:50%; margin:0 auto;
+          background:radial-gradient(circle,#f472b6,#7c3aed 70%,transparent);
+          animation:breathe 3s ease-in-out infinite; }
+  @keyframes breathe { 0%,100%{transform:scale(.85);opacity:.7}
+                       50%{transform:scale(1.05);opacity:1} }
+</style>
+</head>
+<body>
+
+<section class="slide active">
+  <h1 class="pop">HTML Video Studio</h1>
+  <p class="pop d1">This sample presentation exists to test video export.</p>
+  <p class="pop d2">Every animation on this page is captured frame by frame —
+     CSS, canvas and typing effects.</p>
+</section>
+
+<section class="slide">
+  <canvas id="sky"></canvas>
+  <div style="position:relative">
+    <h1 class="pop">Canvas animation test</h1>
+    <p class="pop d1">The moving stars behind this text are drawn with
+       requestAnimationFrame. If they appear in your video, JS canvas
+       capture works.</p>
+  </div>
+  <script>
+    const cv = document.getElementById('sky'), cx = cv.getContext('2d');
+    function fit(){ cv.width = innerWidth; cv.height = innerHeight; }
+    fit(); addEventListener('resize', fit);
+    const stars = Array.from({length:140}, () => ({
+      x: Math.random(), y: Math.random(), r: Math.random()*2+0.4,
+      s: Math.random()*0.0006+0.0002 }));
+    function draw(t){
+      cx.clearRect(0,0,cv.width,cv.height);
+      for (const st of stars){
+        st.y -= st.s; if (st.y < 0) st.y = 1;
+        cx.globalAlpha = .4 + .6*Math.abs(Math.sin(t/900 + st.x*7));
+        cx.fillStyle = '#c7d2fe';
+        cx.beginPath(); cx.arc(st.x*cv.width, st.y*cv.height, st.r, 0, 7);
+        cx.fill();
+      }
+      cx.globalAlpha = 1;
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  </script>
+</section>
+
+<section class="slide">
+  <h1 class="pop">Typing effect test</h1>
+  <div class="term pop d1"><span id="typed"></span><span class="cursor"></span></div>
+  <script>
+    const lines = ['$ export --quality 4k','> rendering slides 1..4 ...',
+                   '> done in one click ✓'];
+    let li = 0, ci = 0, tt = null;
+    const typed = document.getElementById('typed');
+    function type(){
+      if (li >= lines.length) return;
+      typed.textContent = lines.slice(0,li).join('\n') +
+        (li ? '\n' : '') + lines[li].slice(0, ci);
+      if (ci < lines[li].length){ ci++; tt = setTimeout(type, 55); }
+      else { li++; ci = 0; tt = setTimeout(type, 400); }
+    }
+    function startTyping(){
+      clearTimeout(tt); li = 0; ci = 0; typed.textContent = '';
+      tt = setTimeout(type, 300);
+    }
+    setTimeout(startTyping, 500);
+  </script>
+</section>
+
+<section class="slide">
+  <div class="glow"></div>
+  <h1 class="pop" style="text-align:center;margin-top:4vh">It works!</h1>
+  <p class="pop d1" style="text-align:center">Replace this sample with your own
+     HTML file and press Export.</p>
+</section>
+
+<script>
+  let cur = 0;
+  const slides = [...document.querySelectorAll('.slide')];
+  function go(n){
+    cur = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+    if (cur === 2) startTyping();
+  }
+  addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') go(cur + 1);
+    if (e.key === 'ArrowLeft') go(cur - 1);
+  });
+</script>
+</body>
+</html>

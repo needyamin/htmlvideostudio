@@ -1,0 +1,30 @@
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ── App-generated files ─────────────────────────────────
+# crash log written by studio.pyw
+studio_error.log
+# temp frame directories (normally in %TEMP%, but be safe)
+hvs_frames_*/
+
+# ── Rendered media (outputs — never commit) ─────────────
+*.mp4
+*.webm
+*.mkv
+*.wav
+*.mp3
+*.kdenlive
+
+# ── OS / editor noise ───────────────────────────────────
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.tmp
+~$*
+
+# ── WorkBuddy workspace data (local only) ───────────────
+.workbuddy-ai/
