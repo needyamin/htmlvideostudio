@@ -400,7 +400,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
       <span class="badge">v1.1.0</span>
     </div>
     <div class="chrome-hint"></div>
-    <div id="counter"><b>1</b> / 22</div>
+    <div id="counter"><b>1</b> / 21</div>
   </header>
 
   <main id="deck">
@@ -436,7 +436,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
           <div class="stat"><div class="bignum cnt" data-v="6">0</div><div class="lbl">primitive types</div></div>
           <div class="stat"><div class="bignum cnt" data-v="40">0</div><div class="lbl">reserved keywords</div></div>
           <div class="stat"><div class="bignum">20+</div><div class="lbl">data structures</div></div>
-          <div class="stat"><div class="bignum cnt" data-v="29">0</div><div class="lbl">stdlib modules</div></div>
+          <div class="stat"><div class="bignum cnt" data-v="26">0</div><div class="lbl">stdlib modules</div></div>
         </div>
       </div>
       <div class="foot-note">Spid3r — Introduction · zero dependencies, dual engines, cycle collector, WASM core</div>
@@ -452,7 +452,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         <div class="gap-m">
           <div class="three" style="gap:var(--sp-2)">
             <div class="card card--tight rv" style="--i:1"><h4>Linux / macOS</h4><p class="mono" style="font-size:24px">install.sh | sh</p></div>
-            <div class="card card--tight rv" style="--i:2"><h4>Windows</h4><p>Setup <code>.exe</code> · LLVM-C.dll</p></div>
+            <div class="card card--tight rv" style="--i:2"><h4>Windows</h4><p>Setup <code>.exe</code></p></div>
             <div class="card card--tight rv" style="--i:3"><h4>Cargo</h4><p class="mono" style="font-size:24px">cargo install</p></div>
           </div>
           <div class="code code--tight rv" style="--i:4"><span class="line"><span class="o">$</span> spid3r version</span><span class="line">spid3r 1.1.0 (language 1.0)</span><span class="line">Rust host, no runtime dependencies.</span></div>
@@ -509,10 +509,10 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
           <div class="card card--tight rv" style="--i:9"><h4 style="color:var(--green)">Bytecode VM</h4><p>60 opcodes · optimizer &amp; profiler</p></div>
           <div class="card card--tight rv" style="--i:10"><h4 style="color:var(--purple)">Native AOT</h4><p>LLVM 23 · scalar unboxing · bump-slab arenas</p></div>
         </div>
-        <div class="caveat caveat--tight rv" style="--i:11"><b>One front end, four backends.</b> WASM is the same VM (<code>wasm32-unknown-unknown</code>). stdout, error phase and exit code must match exactly · <code>.matrixc v3</code>: magic + version + checksum before first instruction · <code>exit 4</code> if corrupt.</div>
-        <div class="caveat caveat--rose caveat--tight rv" style="--i:12"><b>Parity bug, fixed &amp; pinned:</b> early 1.0 builds miscompiled <code>not (A or B)</code> on VM when <code>A</code> was falsy — two peephole holes closed in <code>tests/engine_matrix.rs</code>.</div>
+        <div class="caveat caveat--tight rv" style="--i:11"><b>One front end, four backends.</b> The WebAssembly build is the same VM. stdout, error phase and exit code must match exactly — a corrupt bytecode container is rejected before the first instruction runs.</div>
+        <div class="caveat caveat--rose caveat--tight rv" style="--i:12"><b>Parity bug, fixed &amp; pinned:</b> early 1.0 builds miscompiled <code>not (A or B)</code> on the VM when <code>A</code> was falsy — caught and closed by the engine parity tests.</div>
       </div>
-      <div class="foot-note">Spid3r — Architecture · src/lexer · src/parser · src/semantic · src/lower · src/vm · src/value/gc.rs</div>
+      <div class="foot-note">Spid3r — Architecture · lexer → parser → semantic → lowering → VM → GC</div>
     </section>
 
     <!-- ══ 5. CI, releases & one source → five outputs ══ -->
@@ -523,9 +523,9 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
       </div>
       <div class="grow gap-m">
         <div class="three">
-          <div class="card card--tight rv" style="--i:1"><h4>ci.yml — 6-job CI</h4><p>Core, GUI, WASM legs · LLVM 23 AOT · Linux self-host bootstrap · Self-host Parity Gate over the 134-program frozen corpus · 87 trampolines + 257 natives.</p></div>
-          <div class="card card--tight rv" style="--i:2"><h4>release.yml</h4><p>4 platform tarballs · Windows NSIS installer packaging <code>spid3r-self</code>, <code>spid3r</code> and pinned runtime artifacts.</p></div>
-          <div class="card card--tight rv" style="--i:3"><h4>fuzz.yml</h4><p>Scheduled + PR-triggered libfuzzer regression fuzzing of the compiler front end.</p></div>
+          <div class="card card--tight rv" style="--i:1"><h4>Automated testing — 6-job CI</h4><p>Core, GUI and WASM builds · native compilation · automated engine-parity testing on every change.</p></div>
+          <div class="card card--tight rv" style="--i:2"><h4>Releases</h4><p>4 platform tarballs · a Windows installer with the compiler and runtime bundled.</p></div>
+          <div class="card card--tight rv" style="--i:3"><h4>Fuzzing</h4><p>Scheduled, continuous fuzzing of the compiler front end to shake out crashes.</p></div>
         </div>
         <h3 class="h3 rv" style="--i:4">One source, five outputs</h3>
         <div class="flow-stack">
@@ -540,7 +540,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
           </div>
         </div>
       </div>
-      <div class="foot-note">Spid3r — CI &amp; Releases · .github/workflows</div>
+      <div class="foot-note">Spid3r — CI &amp; Releases</div>
     </section>
 
     <!-- ══ 6. Imports & registries ══ -->
@@ -559,75 +559,36 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
           <div class="ladder-step ladder-step--last" style="--i:6"><span class="num">6</span><span>stdlib table compiled into the binary</span></div>
         </div>
         <div class="gap-m">
-          <div class="caveat caveat--good caveat--tight rv" style="--i:1"><b>Disk always wins</b> over the embedded table — a project can pin a patched <code>stdlib/semver.matrix</code>.</div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:1"><b>Disk always wins</b> over the embedded table — a project can pin a patched standard library module.</div>
           <div class="caveat caveat--rose caveat--tight rv" style="--i:2"><b>Paths can't escape:</b> absolute paths, drive letters, angle brackets or <code>..</code> are rejected with <code>invalid module path</code> on every backend.</div>
-          <div class="caveat caveat--tight rv" style="--i:3"><b>Signed &amp; immutable:</b> <code>sha256.txt</code> + Ed25519 <code>sha256.txt.sig</code> · <code>publish --to-dir</code> · republishing a version is refused.</div>
-          <div class="caveat caveat--tight rv" style="--i:4"><b><code>verify</code></b> re-hashes vendored trees — editing one file fails the build gate (<code>exit 1</code>).</div>
+          <div class="caveat caveat--tight rv" style="--i:3"><b>Signed &amp; immutable:</b> a SHA-256 checksum plus an Ed25519 signature · republishing a version is refused.</div>
+          <div class="caveat caveat--tight rv" style="--i:4"><b><code>verify</code></b> re-hashes vendored trees — editing one file fails the build gate.</div>
           <p class="note rv" style="--i:5">Semver: <code>^1.2</code> · <code>&gt;=1.2.3</code> · <code>=1.2.3</code> — plain <code>major.minor.patch</code> only, no pre-releases.</p>
         </div>
       </div>
-      <div class="foot-note rv" style="--i:6">Lifecycle: <span class="mono">add → tree → verify → publish → install</span> · zero cargo calls to rebuild the self-hosted compiler</div>
+      <div class="foot-note rv" style="--i:6">Lifecycle: <span class="mono">add → tree → verify → publish → install</span></div>
     </section>
 
-    <!-- ══ 7. Trust tiers T0–T5 ══ -->
+    <!-- ══ 7. Trust tiers T0–T3 ══ -->
     <section class="slide" data-slide="7">
       <div class="slide-head rv" style="--i:0">
         <div class="kicker">Ecosystem</div>
-        <h2 class="h">Trust tiers T0–T5</h2>
+        <h2 class="h">Trust tiers T0–T3</h2>
       </div>
       <div class="grow gap-m">
-        <p class="lead rv" style="--i:1">Seven routes — not the same authority.</p>
+        <p class="lead rv" style="--i:1">Four routes — not the same authority.</p>
         <div class="ladder" style="max-width:1400px;margin:0 auto;width:100%">
           <div class="ladder-step ladder-step--first ladder-step--tight" style="--i:2"><span class="num">T0</span><span>Built-in stdlib — embedded, immutable, no disk override</span></div>
           <div class="ladder-step ladder-step--tight" style="--i:3"><span class="num">T1</span><span>Project <code>.matrix</code> files — same trust as your own source</span></div>
-          <div class="ladder-step ladder-step--tight" style="--i:4"><span class="num">T1</span><span>Spid3r plugins (<code>kind="matrix"</code>) — script authority from disk</span></div>
-          <div class="ladder-step ladder-step--tight" style="--i:5"><span class="num">T2</span><span>Vendored packages — checksummed vs <code>spider.lock</code>; <code>verify</code> re-checks</span></div>
-          <div class="ladder-step ladder-step--last ladder-step--tight" style="--i:6"><span class="num">T3</span><span>WASM plugins — sandboxed, manifest permissions, fuel-limited</span></div>
-          <div class="ladder-step ladder-step--tight" style="--i:7"><span class="num">T4</span><span>Host plugins — trusted code, cannot be sandboxed</span></div>
-          <div class="ladder-step ladder-step--tight" style="--i:8;border-color:var(--caveat-rose-bd);background:var(--caveat-rose-bg)"><span class="num" style="color:var(--rose)">T5</span><span style="color:var(--rose)">FFI (<code>extern fn</code>) — trusted, AOT-only; rejected under <code>run</code></span></div>
+          <div class="ladder-step ladder-step--last ladder-step--tight" style="--i:4"><span class="num">T2</span><span>Vendored packages — checksum-verified; <code>verify</code> re-checks</span></div>
+          <div class="ladder-step ladder-step--tight" style="--i:5;border-color:var(--caveat-rose-bd);background:var(--caveat-rose-bg)"><span class="num" style="color:var(--rose)">T3</span><span style="color:var(--rose)">FFI (<code>extern fn</code>) — trusted code, native builds only</span></div>
         </div>
         <div class="two" style="max-width:1600px;width:100%;margin:0 auto">
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:9"><b>Capability filter ≠ sandbox.</b> It is a policy filter: known builtin natives become stubs, but a host function a plugin registered keeps its authority.</div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:10"><b>No install-time code.</b> Dependency installation never executes package code — no Cargo-style build scripts. Deliberate, and a real security win.</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:6"><b>FFI is trusted code.</b> <code>extern fn</code> runs outside every sandbox — use it only for your own trusted native libraries.</div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:7"><b>No install-time code.</b> Dependency installation never executes package code — no Cargo-style build scripts. Deliberate, and a real security win.</div>
         </div>
       </div>
-      <div class="foot-note">Spid3r — Ecosystem &amp; Trust · tiers T0–T5</div>
-    </section>
-
-    <!-- ══ 8. Plugins ══ -->
-    <section class="slide" data-slide="8">
-      <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Plugins</div>
-        <h2 class="h">Three kinds, one sandboxed</h2>
-      </div>
-      <div class="grow gap-m">
-        <div class="three">
-          <div class="card card--tight rv" style="--i:1"><h4 style="color:var(--cyan-light)">kind = "matrix"</h4><p>Script code. Own interpreter + globals, full stdlib, throws reach the caller's <code>catch</code>.</p></div>
-          <div class="card card--tight rv" style="--i:2"><h4 style="color:var(--emerald)">kind = "wasm"</h4><p><code>wasmi</code>, empty linker. 50M fuel makes <code>loop {}</code> trap as a catchable error.</p></div>
-          <div class="card card--tight rv" style="--i:3"><h4 style="color:var(--rose)">kind = "host"</h4><p>Trusted native code, same address space. No <code>dlopen</code> — <code>Value</code> has no stable C ABI.</p></div>
-        </div>
-        <div class="two" style="align-items:start">
-          <div class="gap-s">
-            <h3 class="h3 rv" style="--i:4">The manifest is the contract</h3>
-            <div class="code code--tight rv" style="--i:5">
-<span class="line">[plugin]</span>
-<span class="line">name = <span class="s">"hello"</span></span>
-<span class="line">abi = <span class="s">"spid3r-plugin-abi-1"</span></span>
-<span class="line">capabilities = [<span class="s">"environment"</span>]</span>
-<span class="line">[[function]]</span>
-<span class="line">name = <span class="s">"hello_env"</span></span>
-<span class="line">arity = <span class="n">1</span></span>
-<span class="line">permission = <span class="s">"environment"</span></span>
-            </div>
-          </div>
-          <div class="gap-s">
-            <h3 class="h3 rv" style="--i:6">Rejected before plugin code runs</h3>
-            <p class="sub rv" style="--i:7;font-size:var(--fs-meta)">Non-exact <code>abi</code> · undeclared functions or wrong arity · unannounced permissions · duplicate names or builtin shadowing · failed <code>start()</code> → <code>Failed</code>, host keeps running.</p>
-            <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>Registration payoff:</b> plugin functions merge into <code>stdlib::native_defs()</code> — the one native table all three engines install from. No per-engine code.</div>
-          </div>
-        </div>
-      </div>
-      <div class="foot-note">Spid3r — Plugins · ABI v1 · wire format in src/plugin/abi.rs</div>
+      <div class="foot-note">Spid3r — Ecosystem &amp; Trust · trust tiers</div>
     </section>
 
     <!-- ══ 9. AOT ══ -->
@@ -651,16 +612,16 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         <div class="gap-m">
           <h3 class="h3 rv" style="--i:4">Desktop build flags</h3>
           <div class="two" style="gap:var(--sp-2)">
-            <div class="card card--tight rv" style="--i:5"><h4 style="font-size:24px">--icon</h4><p>embeds <code>RT_ICON</code> + <code>RT_GROUP_ICON</code></p></div>
-            <div class="card card--tight rv" style="--i:6"><h4 style="font-size:24px">--subsystem windows</h4><p>PE subsystem 2 (GUI), no console (Windows-only)</p></div>
-            <div class="card card--tight rv" style="--i:7"><h4 style="font-size:24px">--embed / --bytecode</h4><p>assets (XOR-obfuscated) · <code>.matrixc</code>, no source or literals</p></div>
-            <div class="card card--tight rv" style="--i:8"><h4 style="font-size:24px">--bundle-runtime</h4><p>appends <code>spid3r.exe</code>; runs on machines with no install</p></div>
-            <div class="card card--tight rv" style="--i:9"><h4 style="font-size:24px">--product-name/--version</h4><p>writes <code>RT_VERSION</code> metadata</p></div>
+            <div class="card card--tight rv" style="--i:5"><h4 style="font-size:24px">--icon</h4><p>embeds a custom application icon</p></div>
+            <div class="card card--tight rv" style="--i:6"><h4 style="font-size:24px">--subsystem windows</h4><p>GUI app with no console window (Windows-only)</p></div>
+            <div class="card card--tight rv" style="--i:7"><h4 style="font-size:24px">--embed / --bytecode</h4><p>assets · compiled bytecode, no source or literals</p></div>
+            <div class="card card--tight rv" style="--i:8"><h4 style="font-size:24px">--bundle-runtime</h4><p>bundles the runtime; runs on machines with no install</p></div>
+            <div class="card card--tight rv" style="--i:9"><h4 style="font-size:24px">--product-name/--version</h4><p>writes version metadata</p></div>
             <div class="card card--tight rv" style="--i:10"><h4 style="font-size:24px">--allow-gui</h4><p>permits GUI-native programs in a launcher build</p></div>
           </div>
         </div>
       </div>
-      <div class="foot-note">Spid3r — AOT &amp; Desktop Builds · launcher: <span class="mono">fn main() { return run_payload(); }</span></div>
+      <div class="foot-note">Spid3r — AOT &amp; Desktop Builds</div>
     </section>
 
     <!-- ══ 10. Single self-contained file ══ -->
@@ -679,15 +640,15 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
 <span class="line">    --bundle-runtime</span>
           </div>
           <h3 class="h3 rv" style="--i:2">Inside the payload</h3>
-          <p class="sub rv" style="--i:3;font-size:var(--fs-meta)"><code>app.matrixc</code> — no <code>.matrix</code> shipped · <code>ui/index.html</code> + assets served from memory · <code>__spid3r_runtime/spid3r.exe</code> extracted to <code>%LOCALAPPDATA%\Spid3r\runtime\&lt;hash&gt;\</code> on first launch.</p>
+          <p class="sub rv" style="--i:3;font-size:var(--fs-meta)">Compiled bytecode — no source shipped · UI assets served from memory · the bundled runtime is extracted on first launch.</p>
         </div>
         <div class="gap-m">
           <div class="caveat caveat--tight rv" style="--i:4"><b>What <code>--bytecode</code> buys:</b> removes source text, symbols and string literals. <b>What it doesn't:</b> not secrecy — the VM is open source; it raises the cost from opening a text file to reverse-engineering bytecode.</div>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b>XOR obfuscation ≠ secrecy.</b> Don't put secrets in client binaries. One system dependency remains: the WebView2 runtime (default on Win11); everything else links the C runtime statically, <code>LLVM-C.dll</code> delay-loaded.</div>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:6"><b>Launcher trap:</b> working directory ≠ program folder. Call <code>exe_path()</code> + <code>chdir()</code> first; spawn children with <code>hidden: true</code> (<code>CREATE_NO_WINDOW</code>).</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b>XOR obfuscation ≠ secrecy.</b> Don't put secrets in client binaries. One system dependency remains: the WebView2 runtime (default on Win11); everything else is linked statically.</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:6"><b>Launcher trap:</b> the working directory is not the program folder — point it at the app folder first, and launch helper processes hidden.</div>
         </div>
       </div>
-      <div class="foot-note">Spid3r — Single-File Shipping · run_payload() vs run_payload_strict()</div>
+      <div class="foot-note">Spid3r — Single-File Shipping</div>
     </section>
 
     <!-- ══ 11. Six types + forty keywords ══ -->
@@ -831,10 +792,10 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
           </div>
           <div class="caveat caveat--tight rv" style="--i:6"><b><code>finally</code> is guaranteed</b> — even when <code>try</code> issues <code>return</code>, <code>break</code>, <code>continue</code>, or an unhandled <code>throw</code>.</div>
           <p class="note rv" style="--i:7"><code>Option</code>: <code>some(v) / none</code> · <code>Result</code>: <code>ok(v) / err(e)</code> · all filesystem primitives return <code>result</code>.</p>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>VM detail:</b> each handler records catch target, finally target, catch slot, operand-stack length + frame depth — on throw the VM restores both exactly, so handlers see a clean stack.</div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>Clean error state:</b> on a throw, the VM restores the stack exactly — every catch sees a clean state.</div>
         </div>
       </div>
-      <div class="foot-note">Spid3r — Enums &amp; Errors · up to 25 syntax errors recovered with <code>E1xxx</code> codes</div>
+      <div class="foot-note">Spid3r — Enums &amp; Errors · up to 25 syntax errors recovered per pass</div>
     </section>
 
     <!-- ══ 15. OOP ══ -->
@@ -877,7 +838,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Interfaces:</b> <code>interface Drawable { fn draw(self); fn area(self); }</code> can carry default method bodies; <code>class Circle implements Drawable</code> dispatches through a heterogeneous list.</div>
         <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b>Gradual unchecked case:</b> <code>let c: C = C(); c.secret</code> is rejected when the receiver's class is statically known; untyped <code>let c = C(); c.secret</code> is a gradual unchecked case.</div>
       </div>
-      <div class="foot-note">Spid3r — OOP · Chapter 10 · Classes · Inheritance · Interfaces</div>
+      <div class="foot-note">Spid3r — OOP · Classes · Inheritance · Interfaces</div>
     </section>
 
     <!-- ══ 16. Generics + 20+ collections ══ -->
@@ -887,8 +848,8 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         <h2 class="h">Generics &amp; 20+ data structures</h2>
       </div>
       <div class="grow gap-m">
-        <div class="chips rv" style="--i:1"><span class="chip">&lt;T: Numeric&gt;</span><span class="chip">&lt;T: Comparable&gt;</span><span class="chip">&lt;T: Printable&gt;</span><span class="chip">&lt;T: Drawable&gt;</span><span class="chip">&lt;T: Numeric + Comparable&gt;</span><span class="chip">identity&lt;int&gt;(42)</span><span class="chip">spid3r_mono_*</span></div>
-        <p class="note rv" style="--i:2">Unannotated generics fall back to type erasure in Tree &amp; VM · 12 specialized trampolines (<code>spid3r_ulist_i64_*</code>, <code>spid3r_ulist_f64_*</code>) on the 8–18× container gap · Value v2: compact 64-bit tagged value.</p>
+        <div class="chips rv" style="--i:1"><span class="chip">&lt;T: Numeric&gt;</span><span class="chip">&lt;T: Comparable&gt;</span><span class="chip">&lt;T: Printable&gt;</span><span class="chip">&lt;T: Drawable&gt;</span><span class="chip">&lt;T: Numeric + Comparable&gt;</span><span class="chip">identity&lt;int&gt;(42)</span></div>
+        <p class="note rv" style="--i:2">Unannotated generics fall back to type erasure in Tree &amp; VM — with zero behavioral divergence from native code.</p>
         <div class="four rv" style="--i:3;grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
           <div class="card card--tight"><h4 class="mono">List</h4><p>O(1) append/index</p></div>
           <div class="card card--tight"><h4 class="mono">Map</h4><p>O(1) via FxHash</p></div>
@@ -968,20 +929,20 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
 <span class="line"><span class="k">let</span> result = worker.<span class="f">join</span>();</span>
           </div>
           <div class="gap-s">
-            <div class="chips rv" style="--i:6"><span class="chip">SPID3R_MAX_WORKERS 256</span><span class="chip">async / await</span><span class="chip">task.join()</span><span class="chip">mutex(v)</span><span class="chip">atomic_int(0)</span><span class="chip">ref(v) / weak(r)</span></div>
+            <div class="chips rv" style="--i:6"><span class="chip">up to 256 workers</span><span class="chip">async / await</span><span class="chip">task.join()</span><span class="chip">mutex(v)</span><span class="chip">atomic_int(0)</span><span class="chip">ref(v) / weak(r)</span></div>
             <div class="caveat caveat--rose caveat--tight rv" style="--i:7"><b>No global interpreter lock.</b> Two CPU-bound tasks really do run at the same time — up to 256 OS threads, grow on demand.</div>
-            <div class="caveat caveat--tight rv" style="--i:8"><b>Deadlock safety:</b> <code>deadlock_abort = true</code> aborts when no task can wake a wait; exit waits <code>task_drain_ms</code> (default 2000) for still-running tasks.</div>
+            <div class="caveat caveat--tight rv" style="--i:8"><b>Deadlock safety:</b> built-in deadlock detection aborts when no task can make progress; exit waits briefly for still-running tasks.</div>
           </div>
         </div>
       </div>
       <div class="foot-note">Spid3r — Concurrency · Erlang/Go-style channels</div>
     </section>
 
-    <!-- ══ 19. Stdlib & the 29 modules ══ -->
+    <!-- ══ 18. Stdlib & the 26 modules ══ -->
     <section class="slide" data-slide="19">
       <div class="slide-head rv" style="--i:0">
         <div class="kicker">Standard library</div>
-        <h2 class="h">Stdlib &amp; the 29 modules</h2>
+        <h2 class="h">Stdlib &amp; the 26 modules</h2>
       </div>
       <div class="grow gap-s">
         <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
@@ -992,14 +953,12 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
           <div class="card card--tight rv" style="--i:5"><h4 style="font-size:24px;color:var(--rose)">Crypto</h4><p>sha256 · hmac · ed25519 · argon2</p></div>
           <div class="card card--tight rv" style="--i:6"><h4 style="font-size:24px;color:var(--indigo-light)">Formats</h4><p>json · csv · gzip · regex NFA</p></div>
         </div>
-        <h3 class="h3 rv" style="--i:7;font-size:var(--fs-kicker);line-height:var(--lh-kicker)">29 modules — compiled into the binary</h3>
+        <h3 class="h3 rv" style="--i:7;font-size:var(--fs-kicker);line-height:var(--lh-kicker)">26 modules — compiled into the binary</h3>
         <div class="modgrid rv" style="--i:8">
           <div class="card card--tight"><h4>web</h4><p>HTTP server</p></div>
           <div class="card card--tight"><h4>http</h4><p>HTTP/1.1 router</p></div>
           <div class="card card--tight"><h4>fastcgi</h4><p>nginx/Apache</p></div>
-          <div class="card card--tight"><h4>dataframe</h4><p>filter/group/join</p></div>
           <div class="card card--tight"><h4>stats</h4><p>regression/ANOVA</p></div>
-          <div class="card card--tight"><h4>ml</h4><p>K-Means/kNN</p></div>
           <div class="card card--tight"><h4>mathx</h4><p>FFT/roots</p></div>
           <div class="card card--tight"><h4>toml</h4><p>TOML I/O</p></div>
           <div class="card card--tight"><h4>yaml</h4><p>YAML I/O</p></div>
@@ -1008,7 +967,6 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
           <div class="card card--tight"><h4>unicode</h4><p>UCD 15.1</p></div>
           <div class="card card--tight"><h4>smtp</h4><p>mail</p></div>
           <div class="card card--tight"><h4>ftp</h4><p>file transfer</p></div>
-          <div class="card card--tight"><h4>ssh</h4><p>OpenSSH/SFTP</p></div>
           <div class="card card--tight"><h4>session</h4><p>signed cookies</p></div>
           <div class="card card--tight"><h4>middleware</h4><p>CORS/rate limit</p></div>
           <div class="card card--tight"><h4>multipart</h4><p>file uploads</p></div>
@@ -1026,7 +984,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         </div>
         <div class="caveat caveat--rose caveat--tight rv" style="--i:9"><b>Module-prefix exports:</b> <code>uuid.uuid_v4()</code> — not <code>uuid4()</code> · <code>toml.toml_parse(text)</code> — not <code>parse()</code> · <code>ev.start()</code> — not <code>new()</code>.</div>
       </div>
-      <div class="foot-note">Spid3r — Stdlib · all 29 modules compiled in · top-level symbols must be <code>public</code> to export</div>
+      <div class="foot-note">Spid3r — Stdlib · all 26 modules compiled in · top-level symbols must be <code>public</code> to export</div>
     </section>
 
     <!-- ══ 20. Crypto trust ══ -->
@@ -1036,7 +994,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         <h2 class="h">The cryptography trust statement</h2>
       </div>
       <div class="grow gap-m">
-        <div class="caveat caveat--rose rv" style="--i:1"><b>R12.1 — not independently audited.</b> Primitives (sha256/512, hmac, pbkdf2, ed25519_*, bcrypt_*, argon2) and the TLS 1.3 client in <code>src/stdlib/net.rs</code> are pure Rust with zero dependencies — verified by internal RFC vectors and negative/malleability tests, but <b>not formally proven side-channel hardened</b>. R12.1 stays open pending external review.</div>
+        <div class="caveat caveat--rose rv" style="--i:1"><b>Not independently audited.</b> The crypto primitives (sha256/512, hmac, pbkdf2, ed25519, bcrypt, argon2) and the TLS 1.3 client are pure Rust with zero dependencies — verified by internal RFC test vectors and negative/malleability tests, but <b>not formally proven side-channel hardened</b>. External review is pending.</div>
         <div class="caveat caveat--tight rv" style="--i:2"><b>For high-stakes production:</b> terminate TLS or run secret-key operations behind an audited reverse proxy or HSM.</div>
         <div class="two">
           <div class="card card--tight rv" style="--i:3"><h4>Ed25519</h4><p>Constant-time <code>cswap</code> Montgomery ladder, canonical <code>S &lt; L</code>, small-order-key and off-curve rejection. Verification is strict but <b style="color:var(--rose)">not constant-time</b>.</p></div>
@@ -1045,47 +1003,45 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b><code>jwt_verify</code>:</b> constant-time with 60-second <code>exp/nbf</code> skew, but checks <code>HS256</code> only and doesn't pin <code>alg</code> to a policy — don't feed it tokens from an issuer you don't control.</div>
         <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>Constant-time by construction:</b> <code>bcrypt_verify</code> and <code>secure_compare</code>.</div>
       </div>
-      <div class="foot-note">Spid3r — Crypto Trust · Chapter 14 · R12.1 — open pending external review</div>
+      <div class="foot-note">Spid3r — Crypto Trust · external review pending</div>
     </section>
 
-    <!-- ══ 21. Config & the no-shell agent ══ -->
+    <!-- ══ 20. Config & control panel ══ -->
     <section class="slide" data-slide="21">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Runtime config &amp; agent</div>
-        <h2 class="h">One INI, one no-shell agent</h2>
+        <div class="kicker">Runtime config</div>
+        <h2 class="h">One INI file, one control panel</h2>
       </div>
       <div class="grow two" style="align-items:start">
         <div class="gap-m">
           <h3 class="h3 rv" style="--i:1">Discovery — first hit wins</h3>
-          <p class="sub rv" style="--i:2;font-size:var(--fs-meta)"><code>$SPID3R_INI</code> (only candidate; broken pin = commands refuse to start, <code>exit 1</code>) → <code>spid3r.ini</code> beside executable → platform config dir → <code>./spid3r.ini</code>.</p>
-          <p class="note rv" style="--i:3">Precedence: environment → <code>[env.&lt;name&gt;]</code> → INI → compiled defaults · invalid values ignored with a note (<code>ture</code> is an error) · reload via <code>config reload</code> or <code>SIGHUP</code>.</p>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:4"><b><code>basedir</code> is NOT a jail.</b> Process natives reach any path the OS user can — pair with <code>disable_natives = spawn_process, exec_capture, run_payload, run_payload_strict</code> or <code>--sandbox</code>. TOCTOU is inherent (200k-iteration race test: 0 escapes — an observation, not a guarantee).</div>
-          <p class="note rv" style="--i:9">Config dir: <code>%APPDATA%\Spid3r</code> or <code>$XDG_CONFIG_HOME/spid3r</code></p>
+          <p class="sub rv" style="--i:2;font-size:var(--fs-meta)">An optional environment pin → <code>spid3r.ini</code> beside the executable → platform config dir → local <code>spid3r.ini</code>.</p>
+          <p class="note rv" style="--i:3">Precedence: environment → INI file → compiled defaults · invalid values are ignored with a note · reload via <code>config reload</code>.</p>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:4"><b><code>basedir</code> is NOT a jail.</b> Process tools reach any path the OS user can — pair it with sandboxing or disabled native calls.</div>
         </div>
         <div class="gap-m">
-          <div class="chips rv" style="--i:5"><span class="chip">pairing: 48 hex, single use</span><span class="chip">ChaCha20 + HMAC-SHA256</span><span class="chip">SHA-256(code), key never on wire</span><span class="chip">replay 4096 frames, ~1 h</span></div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>No shell, ever.</b> Every operation is a predefined, role-checked name: <code>viewer → operator → admin</code>. Remote <code>config.set</code> refuses every <code>security.*</code>/<code>logging.*</code> key, <code>agent.role_*</code>, listener switches, trust &amp; path keys.</div>
-          <div class="caveat caveat--tight rv" style="--i:7"><b>Audit &amp; redaction:</b> each accepted or rejected operation is one JSON line in <code>audit.log</code>, rotating at 1 MiB · remote <code>info</code> and <code>config.get</code> are redacted to <code>[redacted sha256:&lt;12 hex&gt;]</code>.</div>
-          <p class="note rv" style="--i:8">Frame: <code>magic "SPID3R01" | version | kind | device[16] | nonce[12] | len u32 | payload</code> — encrypt-then-MAC, header as AAD.</p>
+          <div class="card card--tight rv" style="--i:5"><h4>INI schema</h4><p>45 keys across 12 sections · invalid values are ignored with a note</p></div>
+          <div class="card card--tight rv" style="--i:6"><h4><code>spid3r control</code></h4><p>local control — <code>status · safety · ini · config · logs</code></p></div>
+          <div class="card card--tight rv" style="--i:7"><h4>Desktop control panel</h4><p><code>spid3r-control.exe</code> — Overview · Language · Safety · Configuration · Logs</p></div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>Everything is local.</b> Config, control and logs — all on your machine.</div>
         </div>
       </div>
-      <div class="foot-note">Spid3r — Management Agent · spid3r-agent/1 over TCP · zero third-party crates</div>
+      <div class="foot-note">Spid3r — Runtime Config &amp; Control Panel</div>
     </section>
 
     <!-- ══ 22. One language. Everything built in. ══ -->
     <section class="slide slide--center" data-slide="22">
       <div class="title-glyph float rv" style="--i:0">🕷️</div>
       <h1 class="h1 h1--sm rv" style="--i:1">One language. <span class="grad-t">Everything built in.</span></h1>
-      <p class="lead rv" style="--i:2;font-size:var(--fs-body)">Compiler · two interpreters · LLVM native backend · browser runtime · package registry · plugin system · remote management agent · container engine · bare-metal kernel track</p>
+      <p class="lead rv" style="--i:2;font-size:var(--fs-body)">Compiler · two interpreters · LLVM native backend · browser runtime · package registry</p>
       <div class="stat-grid" style="margin-top:var(--sp-6)">
         <div class="stat rv" style="--i:3"><div class="bignum bignum--sm cnt" data-v="40">0</div><div class="lbl">reserved keywords</div></div>
         <div class="stat rv" style="--i:4"><div class="bignum bignum--sm cnt" data-v="6">0</div><div class="lbl">primitive types</div></div>
         <div class="stat rv" style="--i:5"><div class="bignum bignum--sm">20+</div><div class="lbl">data structures</div></div>
-        <div class="stat rv" style="--i:6"><div class="bignum bignum--sm cnt" data-v="29">0</div><div class="lbl">stdlib modules</div></div>
+        <div class="stat rv" style="--i:6"><div class="bignum bignum--sm cnt" data-v="26">0</div><div class="lbl">stdlib modules</div></div>
         <div class="stat rv" style="--i:7"><div class="bignum bignum--sm cnt" data-v="3">0</div><div class="lbl">engines (1 oracle)</div></div>
         <div class="stat rv" style="--i:8"><div class="bignum bignum--sm cnt" data-v="60">0</div><div class="lbl">VM opcodes</div></div>
-        <div class="stat rv" style="--i:9"><div class="bignum bignum--sm cnt" data-v="134">0</div><div class="lbl">corpus programs</div></div>
-        <div class="stat rv" style="--i:10"><div class="bignum bignum--sm cnt" data-v="0">0</div><div class="lbl">external dependencies</div></div>
+        <div class="stat rv" style="--i:9"><div class="bignum bignum--sm cnt" data-v="0">0</div><div class="lbl">external dependencies</div></div>
       </div>
       <p class="note rv pulse" style="--i:11;margin-top:var(--sp-6)">ANSNEW TECH · © 2026 Spid3r Language Project · needyamin.github.io/spid3r</p>
     </section>
