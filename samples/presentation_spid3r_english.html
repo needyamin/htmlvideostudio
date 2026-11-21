@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spid3r — Big-Picture English Keynote</title>
+<!--
+  DESIGN SYSTEM: Linear (structure + motion) × Spid3r Tech Utility (palette + voice)
+  Rebuilt from: samples/presentation_spid3r.html
+  Stage / CSS / JS machinery copied from presentation_spid3r_bangla_big.html.
+  Every number, name, API, flag, code line and caveat is sourced from the original
+  English deck. Condensed for large-format presentation; no invented facts.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --stage-w:1920px; --stage-h:1080px; --content-max:1600px;
+  --safe-x:116px; --safe-top:112px; --safe-bottom:120px;
+  --chrome-top-h:76px; --chrome-bottom-h:96px; --chrome-bg:rgba(11,15,23,.94);
+  --bg:#0b0f17; --surface:#111722; --card:#161e2e; --card-alt:#1a2335; --code:#080c13;
+  --border:#1e293b; --border-sub:rgba(255,255,255,.08); --border-strong:rgba(255,255,255,.16);
+  --border-w:2px;
+  --fg1:#f1f5f9; --fg2:#a9b8cb; --fg3:#64748b; --fg3-read:#7a899f; --text-muted:#a9b8cb; --code-fg:#d7e2ef;
+  --green:#04AA6D; --cyan:#38bdf8; --indigo:#818cf8; --purple:#c084fc;
+  --amber:#fbbf24; --rose:#fb7185; --emerald:#34d399;
+  --cyan-light:#7dd3fc; --indigo-light:#a5b4fc; --purple-light:#d8b4fe; --fn:#a78bfa;
+  --grad:linear-gradient(135deg,#04AA6D 0%,#38bdf8 100%);
+  --tint-green:rgba(4,170,109,.12); --tint-cyan:rgba(56,189,248,.12);
+  --tint-indigo:rgba(129,140,248,.14); --tint-purple:rgba(192,132,252,.14);
+  --tint-amber:rgba(251,191,36,.08); --tint-rose:rgba(251,113,133,.09);
+  --caveat-amber-bg:var(--tint-amber); --caveat-amber-bd:rgba(251,191,36,.42);
+  --caveat-rose-bg:var(--tint-rose);   --caveat-rose-bd:rgba(251,113,133,.42);
+  --caveat-good-bg:rgba(4,170,109,.09); --caveat-good-bd:rgba(4,170,109,.40);
+  --font-head:'Outfit','Inter','Segoe UI',sans-serif;
+  --font-body:'Inter','Segoe UI',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
+  --font-num:var(--font-head);
+  --fs-h1:112px; --lh-h1:1.12; --fw-h1:800;  --fs-h1-sm:96px;
+  --fs-h2:64px;  --lh-h2:1.20; --fw-h2:700;
+  --fs-h3:40px;  --lh-h3:1.30; --fw-h3:700;
+  --fs-lead:34px; --lh-lead:1.50; --fs-body:32px; --lh-body:1.55; --fw-body:500;
+  --fs-caveat:28px; --lh-caveat:1.50;
+  --fs-code:28px; --lh-code:1.60; --fs-code-tight:26px;
+  --fs-chip:26px; --lh-chip:1.40; --fs-kicker:26px; --lh-kicker:1.40;
+  --fs-meta:24px; --lh-meta:1.40;                 /* ABSOLUTE FLOOR */
+  --fs-stat-lbl:26px; --lh-stat-lbl:1.40;
+  --fs-bignum:168px; --lh-bignum:1.20; --fw-bignum:800; --fs-bignum-sm:110px;
+  --fs-glyph:120px;
+  --sp-1:8px; --sp-2:12px; --sp-3:16px; --sp-4:24px; --sp-5:32px;
+  --sp-6:40px; --sp-7:48px; --sp-8:64px; --sp-9:80px; --sp-10:96px;
+  --r-sm:10px; --r-md:16px; --r-lg:24px; --r-xl:32px; --r-pill:999px;
+  --shadow-1:0 2px 8px rgba(0,0,0,.24); --shadow-2:0 12px 40px rgba(0,0,0,.36);
+  --glow-green:0 0 0 1px rgba(4,170,109,.28),0 8px 40px rgba(4,170,109,.10);
+  --dur-fast:320ms; --dur-reveal:520ms; --dur-draw:1000ms; --dur-count:1400ms;
+  --dur-slide:600ms; --dur-ambient:4200ms;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-soft:cubic-bezier(.22,1,.36,1);
+  --ease-inout:cubic-bezier(.65,0,.35,1);
+  --stagger:220ms; --stagger-tight:150ms; --reveal-y:28px;
+  --z-slide:1; --z-chrome:50; --z-progress:100;
+}
+
+/* ── Reset / stage ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%}
+body{
+  background:var(--bg);color:var(--fg1);font-family:var(--font-body);
+  line-height:var(--lh-body);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+#stage{
+  position:relative;flex:0 0 auto;
+  width:var(--stage-w);height:var(--stage-h);
+  transform-origin:center center;transform:scale(1);
+  background:var(--bg);overflow:hidden;
+}
+#progress{
+  position:absolute;top:0;left:0;height:5px;width:0;
+  background:var(--grad);z-index:var(--z-progress);
+  transition:width var(--dur-slide) var(--ease-out);
+}
+
+/* ── Chrome ────────────────────────────────────────────────────── */
+.chrome{
+  position:absolute;left:0;right:0;display:flex;align-items:center;
+  padding:0 var(--safe-x);background:var(--chrome-bg);z-index:var(--z-chrome);
+}
+.chrome--top{
+  top:0;height:var(--chrome-top-h);border-bottom:var(--border-w) solid var(--border);
+  justify-content:space-between;
+}
+.chrome--bottom{
+  bottom:0;height:var(--chrome-bottom-h);border-top:var(--border-w) solid var(--border);
+  justify-content:space-between;gap:var(--sp-4);
+}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-kicker);font-weight:700}
+.brand .logo{
+  width:46px;height:46px;border-radius:var(--r-sm);background:var(--tint-green);
+  border:var(--border-w) solid rgba(4,170,109,.42);
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+}
+.brand .en{color:var(--green)}
+.badge{
+  display:inline-flex;align-items:center;gap:var(--sp-2);
+  font-size:var(--fs-chip);font-weight:700;line-height:var(--lh-chip);
+  padding:8px 20px;border-radius:var(--r-pill);
+  border:var(--border-w) solid rgba(4,170,109,.42);
+  color:var(--green);background:var(--tint-green);
+}
+.badge--cyan{border-color:rgba(56,189,248,.42);color:var(--cyan);background:var(--tint-cyan)}
+.badge--purple{border-color:rgba(192,132,252,.42);color:var(--purple);background:var(--tint-purple)}
+.chrome-hint{font-size:var(--fs-meta);color:var(--fg3-read);line-height:var(--lh-meta)}
+#counter{font-family:var(--font-num);font-size:var(--fs-meta);color:var(--fg2);white-space:nowrap}
+#counter b{color:var(--fg1);font-weight:800}
+.navbtn{
+  background:var(--card);color:var(--fg1);border:var(--border-w) solid var(--border);
+  border-radius:var(--r-sm);padding:10px 26px;
+  font-family:var(--font-body);font-size:var(--fs-meta);font-weight:600;cursor:pointer;
+  transition:border-color var(--dur-fast),color var(--dur-fast);
+}
+.navbtn:hover{border-color:var(--green);color:var(--green)}
+.attribution{font-size:var(--fs-meta);color:var(--fg3-read);text-align:center;line-height:var(--lh-meta)}
+
+/* Explicit display faces (English adaptation) */
+h1.h1,h1.h1--sm,h2.h,h3.h3,.card h4,.kicker,.brand,.chip.grp{font-family:var(--font-head)}
+#counter,.bignum,.pipe-step .pn,.ladder-step .num{font-family:var(--font-num)}
+
+/* ── Slides ────────────────────────────────────────────────────── */
+#deck{position:absolute;inset:0;z-index:var(--z-slide)}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  padding:var(--safe-top) var(--safe-x) var(--safe-bottom);
+  overflow:hidden;
+}
+.slide.active{display:flex}
+.slide--center{justify-content:center;align-items:center;text-align:center}
+.slide-head{margin-bottom:var(--sp-6);flex:0 0 auto}
+.kicker{
+  font-size:var(--fs-kicker);line-height:var(--lh-kicker);font-weight:700;
+  letter-spacing:.05em;color:var(--green);margin-bottom:var(--sp-2);
+}
+h2.h{
+  font-size:var(--fs-h2);line-height:var(--lh-h2);font-weight:var(--fw-h2);
+  letter-spacing:-.01em;color:var(--fg1);
+}
+h3.h3{font-size:var(--fs-h3);line-height:var(--lh-h3);font-weight:var(--fw-h3)}
+.lead{font-size:var(--fs-lead);line-height:var(--lh-lead);color:var(--fg2)}
+.sub{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--fg2)}
+.note{font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--fg3-read)}
+/* Source traces are kept in the footer chrome; slide foot-notes hidden to protect the large-type layout. */
+.foot-note{display:none;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--fg3-read);margin-top:auto;padding-top:var(--sp-3)}
+.grow{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.grow>*{flex-shrink:0}
+.gap-s{display:flex;flex-direction:column;gap:var(--sp-3)}
+.gap-m{display:flex;flex-direction:column;gap:var(--sp-4)}
+.gap-l{display:flex;flex-direction:column;gap:var(--sp-5)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-6);align-items:center}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:var(--sp-6);align-items:start}
+
+/* ── Cards / chips / caveats ───────────────────────────────────── */
+.card{
+  background:var(--card);border:var(--border-w) solid var(--border);
+  border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);
+}
+.card .ico{font-size:44px;line-height:1;margin-bottom:var(--sp-2)}
+.card h4{font-size:var(--fs-h3);line-height:var(--lh-h3);font-weight:700;margin-bottom:var(--sp-2)}
+.card p{font-size:var(--fs-body);line-height:1.5;color:var(--fg2)}
+.card--tight{padding:var(--sp-3) var(--sp-4)}
+.card--tight h4{font-size:var(--fs-chip);line-height:var(--lh-chip);margin-bottom:var(--sp-1)}
+.card--tight p{font-size:var(--fs-meta);line-height:1.4}
+.card--tight .ico{font-size:32px;margin-bottom:var(--sp-1)}
+.card--glyph h4{color:var(--cyan-light)}
+.mono{font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate;color:var(--cyan-light)}
+code{
+  font-family:var(--font-mono);font-size:var(--fs-meta);direction:ltr;unicode-bidi:isolate;
+  background:var(--card-alt);border:1px solid var(--border-sub);
+  padding:2px 10px;border-radius:var(--r-sm);color:var(--cyan-light);white-space:normal;overflow-wrap:anywhere;
+}
+.grad-t{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center}
+.chip{
+  font-family:var(--font-mono);font-size:var(--fs-chip);line-height:var(--lh-chip);
+  padding:6px 16px;border-radius:var(--r-sm);
+  background:var(--card-alt);border:var(--border-w) solid var(--border);
+  color:var(--cyan-light);white-space:nowrap;
+}
+.chip.grp{
+  font-family:var(--font-head);font-weight:700;color:var(--green);
+  background:var(--tint-green);border-color:rgba(4,170,109,.42);
+}
+.caveat{
+  background:var(--caveat-amber-bg);border:var(--border-w) solid var(--caveat-amber-bd);
+  border-radius:var(--r-md);padding:var(--sp-3) var(--sp-5);
+  font-size:var(--fs-caveat);line-height:var(--lh-caveat);color:var(--fg1);
+}
+.caveat b{color:var(--amber)}
+.caveat--rose{background:var(--caveat-rose-bg);border-color:var(--caveat-rose-bd)}
+.caveat--rose b{color:var(--rose)}
+.caveat--good{background:var(--caveat-good-bg);border-color:var(--caveat-good-bd)}
+.caveat--good b{color:var(--emerald)}
+.caveat--tight{font-size:var(--fs-meta);line-height:var(--lh-meta)}
+
+/* ── Code ──────────────────────────────────────────────────────── */
+.code{
+  background:var(--code);border:var(--border-w) solid var(--border);
+  border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);
+  font-family:var(--font-mono);font-size:var(--fs-code);line-height:var(--lh-code);
+  color:var(--code-fg);
+  direction:ltr;unicode-bidi:isolate;text-align:left;white-space:normal;overflow:hidden;
+}
+.code--tight{font-size:var(--fs-code-tight);line-height:1.5;padding:var(--sp-3) var(--sp-4)}
+.code .line{display:block;white-space:pre-wrap}
+.code .k{color:var(--fn)}
+.code .s{color:var(--emerald)}
+.code .n{color:var(--amber)}
+.code .c{color:var(--fg3)}
+.code .f{color:var(--fn)}
+.code .t{color:var(--cyan-light)}
+.code .o{color:var(--amber)}
+
+/* ── Pipeline ──────────────────────────────────────────────────── */
+.pipe{display:flex;align-items:center;width:100%}
+.pipe-step{
+  flex:1 1 0;min-width:0;text-align:center;
+  background:var(--card);border:var(--border-w) solid var(--border);
+  border-radius:var(--r-md);padding:var(--sp-4) var(--sp-2);
+}
+.pipe-step .pn{font-family:var(--font-num);font-size:var(--fs-h3);font-weight:800;color:var(--green);line-height:1}
+.pipe-step .pt{font-size:var(--fs-h3);font-weight:700;line-height:var(--lh-h3);margin-top:var(--sp-1)}
+.pipe-step .ps{font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--fg2);margin-top:var(--sp-1)}
+.pipe-step--hot{background:var(--tint-green);border-color:rgba(4,170,109,.42)}
+.pipe-step--hot .pt{color:var(--emerald)}
+.pipe-link{position:relative;flex:0 0 46px;height:var(--border-w);background:var(--border)}
+.pipe-link::after{
+  content:'';position:absolute;inset:0;background:var(--green);
+  transform:scaleX(0);transform-origin:left center;
+}
+.slide.active .pipe-link::after{
+  animation:linkGrow var(--dur-draw) var(--ease-out) both;
+  animation-delay:calc(var(--i,0)*var(--stagger) + 200ms);
+}
+@keyframes linkGrow{to{transform:scaleX(1)}}
+
+/* ── Ladder (bottom→top reveal via reversed --i) ───────────────── */
+.ladder{display:flex;flex-direction:column;gap:var(--sp-3)}
+.ladder-step{
+  background:var(--card);border:var(--border-w) solid var(--border);
+  border-radius:var(--r-sm);padding:var(--sp-3) var(--sp-5);
+  font-size:var(--fs-body);line-height:var(--lh-body);color:var(--fg1);
+  display:flex;align-items:center;gap:var(--sp-4);opacity:0;
+}
+.ladder-step .num{
+  font-family:var(--font-num);font-size:var(--fs-h3);font-weight:800;
+  color:var(--green);min-width:52px;text-align:center;
+}
+.ladder-step--first{background:var(--tint-green);border-color:rgba(4,170,109,.42)}
+.ladder-step--last{background:var(--tint-cyan);border-color:rgba(56,189,248,.42);color:var(--cyan-light)}
+.ladder-step--tight{font-size:var(--fs-meta);line-height:var(--lh-meta);padding:var(--sp-2) var(--sp-4)}
+.slide.active .ladder-step{
+  animation:rvIn var(--dur-reveal) var(--ease-out) both;
+  animation-delay:calc(var(--i,0)*var(--stagger));
+}
+
+/* ── Stats / counters ──────────────────────────────────────────── */
+.stat{text-align:center}
+.bignum{
+  font-family:var(--font-num);font-size:var(--fs-bignum);line-height:var(--lh-bignum);
+  font-weight:var(--fw-bignum);background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.stat .lbl{font-size:var(--fs-stat-lbl);line-height:var(--lh-stat-lbl);color:var(--fg2)}
+.bignum--sm{font-size:var(--fs-bignum-sm)}
+
+/* ── Reveal / ambient ──────────────────────────────────────────── */
+.rv{opacity:0}
+.slide.active .rv{
+  animation:rvIn var(--dur-reveal) var(--ease-out) both;
+  animation-delay:calc(var(--i,0)*var(--stagger));
+}
+@keyframes rvIn{from{opacity:0;transform:translateY(var(--reveal-y))}to{opacity:1;transform:none}}
+.float{animation:floaty var(--dur-ambient) var(--ease-inout) infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+.pulse{animation:pulseK var(--dur-ambient) var(--ease-inout) infinite}
+@keyframes pulseK{0%,100%{opacity:1}50%{opacity:.48}}
+
+/* ── Title / final ─────────────────────────────────────────────── */
+.title-glyph{font-size:var(--fs-glyph);line-height:1;margin-bottom:var(--sp-5)}
+h1.h1{
+  font-size:var(--fs-h1);line-height:var(--lh-h1);font-weight:var(--fw-h1);
+  letter-spacing:-.012em;
+}
+h1.h1--sm{font-size:var(--fs-h1-sm)}
+.badge-row{display:flex;flex-wrap:wrap;gap:var(--sp-4);justify-content:center;margin-top:var(--sp-6)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-6) var(--sp-8);width:100%;max-width:var(--content-max)}
+
+/* ── English-specific: module micro-grid / source→five outputs ── */
+.modgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--sp-2)}
+.modgrid .card--tight{min-height:72px}
+.modgrid .card--tight h4{font-family:var(--font-mono);font-size:24px;line-height:1.2;margin-bottom:2px}
+.modgrid .card--tight p{font-size:24px;line-height:1.25}
+.flow-stack{display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);width:100%}
+.flow-src{max-width:620px;text-align:center}
+.flow-stem{position:relative;width:var(--border-w);height:26px;background:var(--border)}
+.flow-stem::before{
+  content:'';position:absolute;inset:0;background:var(--grad);
+  transform:scaleY(0);transform-origin:top center;
+}
+.flow-stem::after{
+  content:'';position:absolute;left:-5px;bottom:0;
+  border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--green);
+}
+.slide.active .flow-stem::before{
+  animation:stemGrow var(--dur-draw) var(--ease-out) both;
+  animation-delay:calc(var(--i,0)*var(--stagger));
+}
+@keyframes stemGrow{to{transform:scaleY(1)}}
+.flow-out{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--sp-3);width:100%}
+.flow-out .card--tight{text-align:center}
+.pairlist{display:flex;flex-wrap:wrap;gap:var(--sp-2)}
+
+/* ── Density tuning (keeps every type ≥24px) ──────────────────── */
+.slide-head{margin-bottom:var(--sp-4)}
+.kicker{margin-bottom:var(--sp-1)}
+.card{padding:var(--sp-3) var(--sp-4)}
+.card .ico{margin-bottom:var(--sp-1)}
+.card h4{margin-bottom:var(--sp-1)}
+.card p{line-height:1.35}
+.card--tight{padding:var(--sp-2) var(--sp-3)}
+.card--tight .ico{font-size:30px;margin-bottom:2px}
+.card--tight p{line-height:1.3}
+.code{padding:var(--sp-3) var(--sp-4);line-height:1.4}
+.code--tight{font-size:var(--fs-code-tight);line-height:1.35;padding:var(--sp-2) var(--sp-3)}
+.caveat{padding:var(--sp-2) var(--sp-4);line-height:1.4}
+.caveat--tight{padding:var(--sp-2) var(--sp-3)}
+.chip{padding:4px 12px}
+.pipe-step{padding:var(--sp-2) var(--sp-3)}
+.ladder-step{padding:var(--sp-2) var(--sp-4)}
+.grow.gap-l{gap:var(--sp-4)}
+.grow.gap-m{gap:var(--sp-3)}
+
+/* Grid tracks must not be widened by long inline code tokens */
+.two,.three,.four,.split{min-width:0}
+.two>*,.three>*,.four>*,.split>*{min-width:0}
+
+/* Density tuning for the tallest slides */
+.slide[data-slide="2"] .grow.gap-l{gap:var(--sp-1)}
+.slide[data-slide="2"] .bignum{font-size:150px}
+.slide[data-slide="3"] .grow.gap-m{gap:var(--sp-2)}
+.slide[data-slide="4"] .grow.gap-m{gap:var(--sp-2)}
+.slide[data-slide="14"] .grow.gap-m{gap:var(--sp-2)}
+.slide[data-slide="16"] .grow.gap-m{gap:var(--sp-3)}
+
+.slide[data-slide="7"] .grow.gap-m{gap:var(--sp-2)}
+.slide[data-slide="7"] .lead{font-size:var(--fs-body);line-height:1.3}
+.slide[data-slide="7"] .ladder{gap:4px}
+.slide[data-slide="7"] .ladder-step{padding:4px var(--sp-4)}
+.slide[data-slide="7"] .caveat{padding:4px var(--sp-4)}
+
+.slide[data-slide="11"] .grow.gap-m{gap:var(--sp-2)}
+.slide[data-slide="11"] .gap-s{gap:6px}
+.slide[data-slide="11"] .chip{padding:2px 10px}
+
+.slide[data-slide="19"] .grow.gap-s{gap:var(--sp-1)}
+.slide[data-slide="19"] .modgrid .card--tight{min-height:64px;padding:5px 8px}
+.slide[data-slide="19"] .modgrid .card--tight h4{margin-bottom:0}
+.slide[data-slide="19"] .modgrid .card--tight p{line-height:1.16}
+.slide[data-slide="19"] .caveat--tight{padding:6px 12px;line-height:1.32}
+.slide[data-slide="19"] .h3{margin:0}
+
+.slide[data-slide="21"] .grow.gap-m{gap:var(--sp-3)}
+
+.slide[data-slide="15"] .slide-head{margin-bottom:var(--sp-2)}
+.slide[data-slide="15"] .grow.gap-m{gap:var(--sp-2)}
+.slide[data-slide="15"] .code--tight{font-size:24px;line-height:1.28;padding:8px 12px}
+.slide[data-slide="15"] .caveat--tight{padding:6px 12px;line-height:1.3}
+
+/* ── Reduced motion (forced-visible .rv fix included) ──────────── */
+@media (prefers-reduced-motion:reduce){
+  :root{
+    --dur-fast:1ms;--dur-reveal:1ms;--dur-draw:1ms;--dur-count:1ms;
+    --dur-slide:1ms;--dur-ambient:1ms;--stagger:0ms;--stagger-tight:0ms;--reveal-y:0px;
+  }
+  .float,.pulse{animation:none!important}
+  .slide.active .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <div id="progress"></div>
+
+  <header class="chrome chrome--top">
+    <div class="brand">
+      <span class="logo">🕷️</span>
+      <span>Spid<span class="en">3</span>r</span>
+      <span class="badge">v1.1.0</span>
+    </div>
+    <div class="chrome-hint">← → · Space · PageUp/Down · Home/End · click halves · #sN</div>
+    <div id="counter"><b>1</b> / 22</div>
+  </header>
+
+  <main id="deck">
+
+    <!-- ══ 1. Meet Spid3r ══ -->
+    <section class="slide slide--center" data-slide="1">
+      <div class="title-glyph float rv" style="--i:0">🕷️</div>
+      <h1 class="h1 rv" style="--i:1">Meet <span class="grad-t">Spid3r</span></h1>
+      <p class="lead rv" style="--i:2">A modern, high-performance, memory-safe, embeddable general-purpose programming language</p>
+      <p class="sub rv" style="--i:3">Built from scratch in Rust · <b style="color:var(--green)">zero external dependencies</b></p>
+      <div class="badge-row">
+        <span class="badge rv" style="--i:4">v1.1.0</span>
+        <span class="badge badge--cyan rv" style="--i:5">Language 1.0</span>
+        <span class="badge badge--purple rv pulse" style="--i:6">WASM</span>
+      </div>
+      <p class="note rv" style="--i:7;margin-top:var(--sp-6)">ANSNEW TECH · © 2026 Spid3r Language Project · needyamin.github.io/spid3r</p>
+    </section>
+
+    <!-- ══ 2. What is Spid3r — four tenets ══ -->
+    <section class="slide" data-slide="2">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Introduction</div>
+        <h2 class="h">What is Spid3r?</h2>
+      </div>
+      <div class="grow gap-l">
+        <div class="four">
+          <div class="card rv" style="--i:1"><div class="ico">🧩</div><h4>Zero External Dependencies</h4><p>Compiler, VM, AST interpreter, stdlib — regex, crypto, calendars, compression — all pure Rust.</p></div>
+          <div class="card rv" style="--i:2"><div class="ico">⚙️</div><h4>Dual Execution Engines</h4><p><code>--engine vm</code> or <code>--engine tree</code> — 100% byte-for-byte behavioral parity.</p></div>
+          <div class="card rv" style="--i:3"><div class="ico">♻️</div><h4>Zero-Leak Tracing GC</h4><p>Deterministic mark-and-sweep cycle collector · first pass after 1,024 tracked allocations.</p></div>
+          <div class="card rv" style="--i:4"><div class="ico">🌐</div><h4>Native WebAssembly Core</h4><p>Self-contained linear-memory engine in browsers, Node.js, Deno and Edge Workers.</p></div>
+        </div>
+        <div class="four rv" style="--i:5">
+          <div class="stat"><div class="bignum cnt" data-v="6">0</div><div class="lbl">primitive types</div></div>
+          <div class="stat"><div class="bignum cnt" data-v="40">0</div><div class="lbl">reserved keywords</div></div>
+          <div class="stat"><div class="bignum">20+</div><div class="lbl">data structures</div></div>
+          <div class="stat"><div class="bignum cnt" data-v="29">0</div><div class="lbl">stdlib modules</div></div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Introduction · zero dependencies, dual engines, cycle collector, WASM core</div>
+    </section>
+
+    <!-- ══ 3. One binary, full DevEnv: install + Hello World ══ -->
+    <section class="slide" data-slide="3">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Getting Started</div>
+        <h2 class="h">One binary, full DevEnv</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="gap-m">
+          <div class="three" style="gap:var(--sp-2)">
+            <div class="card card--tight rv" style="--i:1"><h4>Linux / macOS</h4><p class="mono" style="font-size:24px">install.sh | sh</p></div>
+            <div class="card card--tight rv" style="--i:2"><h4>Windows</h4><p>Setup <code>.exe</code> · LLVM-C.dll</p></div>
+            <div class="card card--tight rv" style="--i:3"><h4>Cargo</h4><p class="mono" style="font-size:24px">cargo install</p></div>
+          </div>
+          <div class="code code--tight rv" style="--i:4"><span class="line"><span class="o">$</span> spid3r version</span><span class="line">spid3r 1.1.0 (language 1.0)</span><span class="line">Rust host, no runtime dependencies.</span></div>
+          <p class="note rv" style="--i:5">CLI: <code>check</code> · <code>repl</code> (500-entry history) · <code>debug</code> · <code>lsp</code></p>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>No runtime to install.</b> Only GUI mode borrows the system webview · <code>.matrix</code> files</div>
+        </div>
+        <div class="gap-m">
+          <h3 class="h3 rv" style="--i:7">Hello, World! — <code>hello.matrix</code></h3>
+          <div class="code code--tight rv" style="--i:8">
+<span class="line"><span class="k">fn</span> <span class="f">main</span>() {</span>
+<span class="line">    <span class="f">println</span>(<span class="s">"Hello, World!"</span>);</span>
+<span class="line">    <span class="k">let</span> language = <span class="s">"Spid3r"</span>;</span>
+<span class="line">    <span class="k">let</span> year = <span class="n">2026</span>;</span>
+<span class="line">    <span class="f">println</span>(<span class="s">"Welcome to the "</span> + language</span>
+<span class="line">        + <span class="s">" developer guide! (v1.1.0)"</span>);</span>
+<span class="line">    <span class="k">return</span> <span class="n">0</span>;</span>
+<span class="line">}</span>
+          </div>
+          <div class="caveat caveat--tight rv" style="--i:9"><b>Tip:</b> playground runs top-level code and synthesizes an empty <code>main</code>; the CLI needs <code>fn main() { ... return 0; }</code>.</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:10"><b><code>run --sandbox</code></b> denies filesystem, network, process &amp; environment — denied calls raise a catchable <code>sandboxed: … access denied</code>.</div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Getting Started · installation, version output, first program</div>
+    </section>
+
+    <!-- ══ 4. Compiler & VM pipeline ══ -->
+    <section class="slide" data-slide="4">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Architecture</div>
+        <h2 class="h">Compiler &amp; VM pipeline</h2>
+      </div>
+      <div class="grow gap-m">
+        <div class="pipe">
+          <div class="pipe-step rv" style="--i:1"><div class="pn">1</div><div class="pt">Lexer</div><div class="ps">token stream</div></div>
+          <div class="pipe-link" style="--i:1"></div>
+          <div class="pipe-step rv" style="--i:2"><div class="pn">2</div><div class="pt">Parser</div><div class="ps">AST</div></div>
+          <div class="pipe-link" style="--i:2"></div>
+          <div class="pipe-step rv" style="--i:3"><div class="pn">3</div><div class="pt">Semantic</div><div class="ps">validated AST</div></div>
+          <div class="pipe-link" style="--i:3"></div>
+          <div class="pipe-step rv" style="--i:4"><div class="pn">4</div><div class="pt">Lowering</div><div class="ps">core primitives</div></div>
+          <div class="pipe-link" style="--i:4"></div>
+          <div class="pipe-step rv" style="--i:5"><div class="pn">5</div><div class="pt">Backends</div><div class="ps">stdout</div></div>
+          <div class="pipe-link" style="--i:5"></div>
+          <div class="pipe-step pipe-step--hot rv" style="--i:6"><div class="pn">6</div><div class="pt">GC</div><div class="ps">reclaimed cells</div></div>
+        </div>
+        <div class="four rv" style="--i:7">
+          <div class="card card--tight"><h4 style="font-size:var(--fs-h3);color:var(--amber)">25</h4><p>syntax errors per check pass</p></div>
+          <div class="card card--tight"><h4 style="font-size:var(--fs-h3);color:var(--amber)">64</h4><p>strict nesting depth</p></div>
+          <div class="card card--tight"><h4 style="font-size:var(--fs-h3);color:var(--green)">60</h4><p>VM opcodes</p></div>
+          <div class="card card--tight"><h4 style="font-size:var(--fs-h3);color:var(--purple)">LLVM 23</h4><p>native AOT backend</p></div>
+        </div>
+        <div class="three">
+          <div class="card card--tight rv" style="--i:8;background:var(--tint-cyan)"><h4 style="color:var(--cyan-light)">Tree walker</h4><p>reference semantics oracle</p></div>
+          <div class="card card--tight rv" style="--i:9"><h4 style="color:var(--green)">Bytecode VM</h4><p>60 opcodes · optimizer &amp; profiler</p></div>
+          <div class="card card--tight rv" style="--i:10"><h4 style="color:var(--purple)">Native AOT</h4><p>LLVM 23 · scalar unboxing · bump-slab arenas</p></div>
+        </div>
+        <div class="caveat caveat--tight rv" style="--i:11"><b>One front end, four backends.</b> WASM is the same VM (<code>wasm32-unknown-unknown</code>). stdout, error phase and exit code must match exactly · <code>.matrixc v3</code>: magic + version + checksum before first instruction · <code>exit 4</code> if corrupt.</div>
+        <div class="caveat caveat--rose caveat--tight rv" style="--i:12"><b>Parity bug, fixed &amp; pinned:</b> early 1.0 builds miscompiled <code>not (A or B)</code> on VM when <code>A</code> was falsy — two peephole holes closed in <code>tests/engine_matrix.rs</code>.</div>
+      </div>
+      <div class="foot-note">Spid3r — Architecture · src/lexer · src/parser · src/semantic · src/lower · src/vm · src/value/gc.rs</div>
+    </section>
+
+    <!-- ══ 5. CI, releases & one source → five outputs ══ -->
+    <section class="slide" data-slide="5">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Automation</div>
+        <h2 class="h">CI, releases &amp; one source → five outputs</h2>
+      </div>
+      <div class="grow gap-m">
+        <div class="three">
+          <div class="card card--tight rv" style="--i:1"><h4>ci.yml — 6-job CI</h4><p>Core, GUI, WASM legs · LLVM 23 AOT · Linux self-host bootstrap · Self-host Parity Gate over the 134-program frozen corpus · 87 trampolines + 257 natives.</p></div>
+          <div class="card card--tight rv" style="--i:2"><h4>release.yml</h4><p>4 platform tarballs · Windows NSIS installer packaging <code>spid3r-self</code>, <code>spid3r</code> and pinned runtime artifacts.</p></div>
+          <div class="card card--tight rv" style="--i:3"><h4>fuzz.yml</h4><p>Scheduled + PR-triggered libfuzzer regression fuzzing of the compiler front end.</p></div>
+        </div>
+        <h3 class="h3 rv" style="--i:4">One source, five outputs</h3>
+        <div class="flow-stack">
+          <div class="card card--tight flow-src rv" style="--i:5"><h4>.matrix source</h4><p>one front end</p></div>
+          <div class="flow-stem" style="--i:6"></div>
+          <div class="flow-out">
+            <div class="card card--tight rv" style="--i:7"><h4 style="font-size:24px">spid3r run</h4><p>direct execution</p></div>
+            <div class="card card--tight rv" style="--i:8"><h4 style="font-size:24px">spid3r build</h4><p>AOT native exe</p></div>
+            <div class="card card--tight rv" style="--i:9"><h4 style="font-size:24px">bundle --target wasm</h4><p>browser module</p></div>
+            <div class="card card--tight rv" style="--i:10"><h4 style="font-size:24px">spid3r gui</h4><p>desktop webview app</p></div>
+            <div class="card card--tight rv" style="--i:11"><h4 style="font-size:24px">spid3r_lang crate</h4><p>embed in Rust host</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — CI &amp; Releases · .github/workflows</div>
+    </section>
+
+    <!-- ══ 6. Imports & registries ══ -->
+    <section class="slide" data-slide="6">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Imports &amp; packages</div>
+        <h2 class="h">Where code comes from</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="ladder">
+          <div class="ladder-step ladder-step--first" style="--i:1"><span class="num">1</span><span>The importing file's own directory</span></div>
+          <div class="ladder-step" style="--i:2"><span class="num">2</span><span><code>SPID3R_PATH</code> (; separated)</span></div>
+          <div class="ladder-step" style="--i:3"><span class="num">3</span><span><code>./stdlib</code> relative to working dir</span></div>
+          <div class="ladder-step" style="--i:4"><span class="num">4</span><span><code>stdlib/</code> beside (or above) the executable</span></div>
+          <div class="ladder-step" style="--i:5"><span class="num">5</span><span><code>vendor/</code> from nearest enclosing package</span></div>
+          <div class="ladder-step ladder-step--last" style="--i:6"><span class="num">6</span><span>stdlib table compiled into the binary</span></div>
+        </div>
+        <div class="gap-m">
+          <div class="caveat caveat--good caveat--tight rv" style="--i:1"><b>Disk always wins</b> over the embedded table — a project can pin a patched <code>stdlib/semver.matrix</code>.</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:2"><b>Paths can't escape:</b> absolute paths, drive letters, angle brackets or <code>..</code> are rejected with <code>invalid module path</code> on every backend.</div>
+          <div class="caveat caveat--tight rv" style="--i:3"><b>Signed &amp; immutable:</b> <code>sha256.txt</code> + Ed25519 <code>sha256.txt.sig</code> · <code>publish --to-dir</code> · republishing a version is refused.</div>
+          <div class="caveat caveat--tight rv" style="--i:4"><b><code>verify</code></b> re-hashes vendored trees — editing one file fails the build gate (<code>exit 1</code>).</div>
+          <p class="note rv" style="--i:5">Semver: <code>^1.2</code> · <code>&gt;=1.2.3</code> · <code>=1.2.3</code> — plain <code>major.minor.patch</code> only, no pre-releases.</p>
+        </div>
+      </div>
+      <div class="foot-note rv" style="--i:6">Lifecycle: <span class="mono">add → tree → verify → publish → install</span> · zero cargo calls to rebuild the self-hosted compiler</div>
+    </section>
+
+    <!-- ══ 7. Trust tiers T0–T5 ══ -->
+    <section class="slide" data-slide="7">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Ecosystem</div>
+        <h2 class="h">Trust tiers T0–T5</h2>
+      </div>
+      <div class="grow gap-m">
+        <p class="lead rv" style="--i:1">Seven routes — not the same authority.</p>
+        <div class="ladder" style="max-width:1400px;margin:0 auto;width:100%">
+          <div class="ladder-step ladder-step--first ladder-step--tight" style="--i:2"><span class="num">T0</span><span>Built-in stdlib — embedded, immutable, no disk override</span></div>
+          <div class="ladder-step ladder-step--tight" style="--i:3"><span class="num">T1</span><span>Project <code>.matrix</code> files — same trust as your own source</span></div>
+          <div class="ladder-step ladder-step--tight" style="--i:4"><span class="num">T1</span><span>Spid3r plugins (<code>kind="matrix"</code>) — script authority from disk</span></div>
+          <div class="ladder-step ladder-step--tight" style="--i:5"><span class="num">T2</span><span>Vendored packages — checksummed vs <code>spider.lock</code>; <code>verify</code> re-checks</span></div>
+          <div class="ladder-step ladder-step--last ladder-step--tight" style="--i:6"><span class="num">T3</span><span>WASM plugins — sandboxed, manifest permissions, fuel-limited</span></div>
+          <div class="ladder-step ladder-step--tight" style="--i:7"><span class="num">T4</span><span>Host plugins — trusted code, cannot be sandboxed</span></div>
+          <div class="ladder-step ladder-step--tight" style="--i:8;border-color:var(--caveat-rose-bd);background:var(--caveat-rose-bg)"><span class="num" style="color:var(--rose)">T5</span><span style="color:var(--rose)">FFI (<code>extern fn</code>) — trusted, AOT-only; rejected under <code>run</code></span></div>
+        </div>
+        <div class="two" style="max-width:1600px;width:100%;margin:0 auto">
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:9"><b>Capability filter ≠ sandbox.</b> It is a policy filter: known builtin natives become stubs, but a host function a plugin registered keeps its authority.</div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:10"><b>No install-time code.</b> Dependency installation never executes package code — no Cargo-style build scripts. Deliberate, and a real security win.</div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Ecosystem &amp; Trust · tiers T0–T5</div>
+    </section>
+
+    <!-- ══ 8. Plugins ══ -->
+    <section class="slide" data-slide="8">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Plugins</div>
+        <h2 class="h">Three kinds, one sandboxed</h2>
+      </div>
+      <div class="grow gap-m">
+        <div class="three">
+          <div class="card card--tight rv" style="--i:1"><h4 style="color:var(--cyan-light)">kind = "matrix"</h4><p>Script code. Own interpreter + globals, full stdlib, throws reach the caller's <code>catch</code>.</p></div>
+          <div class="card card--tight rv" style="--i:2"><h4 style="color:var(--emerald)">kind = "wasm"</h4><p><code>wasmi</code>, empty linker. 50M fuel makes <code>loop {}</code> trap as a catchable error.</p></div>
+          <div class="card card--tight rv" style="--i:3"><h4 style="color:var(--rose)">kind = "host"</h4><p>Trusted native code, same address space. No <code>dlopen</code> — <code>Value</code> has no stable C ABI.</p></div>
+        </div>
+        <div class="two" style="align-items:start">
+          <div class="gap-s">
+            <h3 class="h3 rv" style="--i:4">The manifest is the contract</h3>
+            <div class="code code--tight rv" style="--i:5">
+<span class="line">[plugin]</span>
+<span class="line">name = <span class="s">"hello"</span></span>
+<span class="line">abi = <span class="s">"spid3r-plugin-abi-1"</span></span>
+<span class="line">capabilities = [<span class="s">"environment"</span>]</span>
+<span class="line">[[function]]</span>
+<span class="line">name = <span class="s">"hello_env"</span></span>
+<span class="line">arity = <span class="n">1</span></span>
+<span class="line">permission = <span class="s">"environment"</span></span>
+            </div>
+          </div>
+          <div class="gap-s">
+            <h3 class="h3 rv" style="--i:6">Rejected before plugin code runs</h3>
+            <p class="sub rv" style="--i:7;font-size:var(--fs-meta)">Non-exact <code>abi</code> · undeclared functions or wrong arity · unannounced permissions · duplicate names or builtin shadowing · failed <code>start()</code> → <code>Failed</code>, host keeps running.</p>
+            <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>Registration payoff:</b> plugin functions merge into <code>stdlib::native_defs()</code> — the one native table all three engines install from. No per-engine code.</div>
+          </div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Plugins · ABI v1 · wire format in src/plugin/abi.rs</div>
+    </section>
+
+    <!-- ══ 9. AOT ══ -->
+    <section class="slide" data-slide="9">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Native</div>
+        <h2 class="h">Script → standalone native exe</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="gap-m">
+          <div class="code code--tight rv" style="--i:1">
+<span class="line">spid3r build examples/hello.matrix -o hello.exe</span>
+<span class="line">./hello.exe</span>
+<span class="line"><span style="color:var(--green)">// Output: hello</span></span>
+<span class="line">spid3r build app.matrix -o App.exe --release \</span>
+<span class="line">    --icon app.ico --subsystem windows</span>
+          </div>
+          <p class="lead rv" style="--i:2;font-size:var(--fs-body)">LLVM 23 · no external runtime dependencies.</p>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>Two documented AOT trades:</b> the GUI bridge is not linked, and the execution budget is not enforced — a counter in generated code is not free.</div>
+        </div>
+        <div class="gap-m">
+          <h3 class="h3 rv" style="--i:4">Desktop build flags</h3>
+          <div class="two" style="gap:var(--sp-2)">
+            <div class="card card--tight rv" style="--i:5"><h4 style="font-size:24px">--icon</h4><p>embeds <code>RT_ICON</code> + <code>RT_GROUP_ICON</code></p></div>
+            <div class="card card--tight rv" style="--i:6"><h4 style="font-size:24px">--subsystem windows</h4><p>PE subsystem 2 (GUI), no console (Windows-only)</p></div>
+            <div class="card card--tight rv" style="--i:7"><h4 style="font-size:24px">--embed / --bytecode</h4><p>assets (XOR-obfuscated) · <code>.matrixc</code>, no source or literals</p></div>
+            <div class="card card--tight rv" style="--i:8"><h4 style="font-size:24px">--bundle-runtime</h4><p>appends <code>spid3r.exe</code>; runs on machines with no install</p></div>
+            <div class="card card--tight rv" style="--i:9"><h4 style="font-size:24px">--product-name/--version</h4><p>writes <code>RT_VERSION</code> metadata</p></div>
+            <div class="card card--tight rv" style="--i:10"><h4 style="font-size:24px">--allow-gui</h4><p>permits GUI-native programs in a launcher build</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — AOT &amp; Desktop Builds · launcher: <span class="mono">fn main() { return run_payload(); }</span></div>
+    </section>
+
+    <!-- ══ 10. Single self-contained file ══ -->
+    <section class="slide" data-slide="10">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Distribution</div>
+        <h2 class="h">One self-contained file</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="gap-m">
+          <div class="code code--tight rv" style="--i:1">
+<span class="line">spid3r compile app.matrix -o app.matrixc</span>
+<span class="line">spid3r build app.matrix -o App.exe --release \</span>
+<span class="line">    --icon app.ico --subsystem windows \</span>
+<span class="line">    --bytecode app.matrixc --embed ui \</span>
+<span class="line">    --bundle-runtime</span>
+          </div>
+          <h3 class="h3 rv" style="--i:2">Inside the payload</h3>
+          <p class="sub rv" style="--i:3;font-size:var(--fs-meta)"><code>app.matrixc</code> — no <code>.matrix</code> shipped · <code>ui/index.html</code> + assets served from memory · <code>__spid3r_runtime/spid3r.exe</code> extracted to <code>%LOCALAPPDATA%\Spid3r\runtime\&lt;hash&gt;\</code> on first launch.</p>
+        </div>
+        <div class="gap-m">
+          <div class="caveat caveat--tight rv" style="--i:4"><b>What <code>--bytecode</code> buys:</b> removes source text, symbols and string literals. <b>What it doesn't:</b> not secrecy — the VM is open source; it raises the cost from opening a text file to reverse-engineering bytecode.</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b>XOR obfuscation ≠ secrecy.</b> Don't put secrets in client binaries. One system dependency remains: the WebView2 runtime (default on Win11); everything else links the C runtime statically, <code>LLVM-C.dll</code> delay-loaded.</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:6"><b>Launcher trap:</b> working directory ≠ program folder. Call <code>exe_path()</code> + <code>chdir()</code> first; spawn children with <code>hidden: true</code> (<code>CREATE_NO_WINDOW</code>).</div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Single-File Shipping · run_payload() vs run_payload_strict()</div>
+    </section>
+
+    <!-- ══ 11. Six types + forty keywords ══ -->
+    <section class="slide" data-slide="11">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Language</div>
+        <h2 class="h">Six types · exactly 40 keywords</h2>
+      </div>
+      <div class="grow gap-m">
+        <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
+          <div class="card card--tight rv" style="--i:1"><h4 class="mono" style="color:var(--amber)">int</h4><p>64-bit signed · <code>0xFF</code>, <code>0o755</code>, <code>0b1010</code> · <code>n</code> = bigint</p></div>
+          <div class="card card--tight rv" style="--i:2"><h4 class="mono" style="color:var(--cyan)">float</h4><p>IEEE 754 double · <code>1.5e3</code> · <code>nan()</code>, <code>inf()</code></p></div>
+          <div class="card card--tight rv" style="--i:3"><h4 class="mono" style="color:var(--green)">bool</h4><p>falsy: <code>null false 0 0.0 ""</code> · empty <code>[]</code> is truthy</p></div>
+          <div class="card card--tight rv" style="--i:4"><h4 class="mono" style="color:var(--purple)">string</h4><p>immutable UTF-8 · <code>r"..."</code> · negative indexing</p></div>
+          <div class="card card--tight rv" style="--i:5"><h4 class="mono" style="color:var(--rose)">null</h4><p>absence of value · <code>??</code> coalescing · <code>?.</code> chaining</p></div>
+          <div class="card card--tight rv" style="--i:6"><h4 class="mono" style="color:var(--indigo-light)">bytes</h4><p>8-bit buffer capped at 16 MiB · hex + base64 built in</p></div>
+        </div>
+        <div class="caveat caveat--tight rv" style="--i:7"><b>Casting with <code>as</code></b> desugars to conversion builtins: <code>x as int</code> → <code>int(x)</code> — likewise <code>float</code>, <code>string</code>, <code>bool</code>.</div>
+        <div class="gap-s">
+          <div class="chips rv" style="--i:8"><span class="chip grp">Declaration</span><span class="chip">let</span><span class="chip">const</span><span class="chip">fn</span></div>
+          <div class="chips rv" style="--i:9"><span class="chip grp">Control Flow</span><span class="chip">if</span><span class="chip">elif</span><span class="chip">else</span><span class="chip">while</span><span class="chip">for</span><span class="chip">in</span><span class="chip">break</span><span class="chip">continue</span><span class="chip">return</span><span class="chip">match</span></div>
+          <div class="chips rv" style="--i:10"><span class="chip grp">Error Handling</span><span class="chip">try</span><span class="chip">catch</span><span class="chip">finally</span><span class="chip">throw</span></div>
+          <div class="chips rv" style="--i:11"><span class="chip grp">Logic &amp; Literals</span><span class="chip">true</span><span class="chip">false</span><span class="chip">null</span><span class="chip">and</span><span class="chip">or</span><span class="chip">not</span></div>
+          <div class="chips rv" style="--i:12"><span class="chip grp">OOP</span><span class="chip">class</span><span class="chip">interface</span><span class="chip">new</span><span class="chip">self</span><span class="chip">super</span><span class="chip">extends</span><span class="chip">implements</span><span class="chip">public</span><span class="chip">private</span><span class="chip">abstract</span></div>
+          <div class="chips rv" style="--i:13"><span class="chip grp">Generators &amp; Enums</span><span class="chip">yield</span><span class="chip">enum</span></div>
+          <div class="chips rv" style="--i:14"><span class="chip grp">Concurrency</span><span class="chip">spawn</span><span class="chip">async</span><span class="chip">await</span></div>
+          <div class="chips rv" style="--i:15"><span class="chip grp">Modules &amp; Casting</span><span class="chip">import</span><span class="chip">as</span></div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Types &amp; Keywords · every reserved keyword has dedicated syntactic meaning</div>
+    </section>
+
+    <!-- ══ 12. Operators, null safety & strings ══ -->
+    <section class="slide" data-slide="12">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Expressions &amp; strings</div>
+        <h2 class="h">Operators, null safety &amp; strings</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="gap-m">
+          <h3 class="h3 rv" style="--i:1">Precedence that matters</h3>
+          <div class="chips rv" style="--i:2"><span class="chip">as &gt; multiplication</span><span class="chip">shifts 0..=63</span><span class="chip">&amp; &gt; ^ &gt; |</span><span class="chip">?? strictly null</span></div>
+          <div class="code code--tight rv" style="--i:3">
+<span class="line"><span class="k">let</span> user_name = <span class="t">null</span>;</span>
+<span class="line"><span class="k">let</span> display = user_name ?? <span class="s">"Guest User"</span>;</span>
+<span class="line"><span class="k">let</span> account = <span class="t">null</span>;</span>
+<span class="line"><span class="k">let</span> balance = account?.wallet?.balance ?? <span class="n">0.0</span>;</span>
+          </div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b><code>T?</code> narrows to <code>T</code></b> in <code>if (x != null)</code>, after early exits, after <code>?</code> propagation, through <code>?.</code>, in <code>while (x != null)</code>, on <code>catch (e)</code> binders.</div>
+        </div>
+        <div class="gap-m">
+          <h3 class="h3 rv" style="--i:5">Interpolation &amp; formatting</h3>
+          <div class="code code--tight rv" style="--i:6">
+<span class="line"><span class="k">let</span> user = <span class="s">"Dev"</span>; <span class="k">let</span> score = <span class="n">98.5</span>;</span>
+<span class="line"><span class="f">println</span>(<span class="s">"Welcome {user}! Score: {score}"</span>);</span>
+<span class="line"><span class="s">"Result: {:.2}"</span>.<span class="f">format</span>(<span class="n">88.6875</span>); <span class="c">// "88.69"</span></span>
+<span class="line"><span class="s">"{:.0}"</span>.<span class="f">format</span>(<span class="n">2.5</span>);             <span class="c">// "2"</span></span>
+<span class="line"><span class="f">println</span>(<span class="s">"[-1]: "</span> + <span class="s">"Spid3r"</span>[-<span class="n">1</span>]);  <span class="c">// 'r'</span></span>
+          </div>
+          <div class="chips rv" style="--i:7"><span class="chip">.len()</span><span class="chip">.trim()</span><span class="chip">.split()</span><span class="chip">.replace()</span><span class="chip">.contains()</span><span class="chip">.format()</span></div>
+          <div class="caveat caveat--tight rv" style="--i:8"><b><code>"{ name }"</code> stays literal text</b> (templating compatibility) — use <code>"{name}"</code>; escape braces with <code>\{</code> or raw strings <code>r"..."</code>.</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:9"><b><code>{:.N}</code>:</b> N in <code>0..=15</code>, rounds half-to-even — unlike <code>round(x)</code>, which rounds halves away from zero.</div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Operators &amp; Strings · C-style precedence, null coalescing, UTF-8 methods</div>
+    </section>
+
+    <!-- ══ 13. Control flow, functions & closures ══ -->
+    <section class="slide" data-slide="13">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Control flow &amp; functions</div>
+        <h2 class="h">Flow, closures &amp; HOF chains</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="gap-m">
+          <h3 class="h3 rv" style="--i:1"><code>if</code> is an expression · three loops</h3>
+          <div class="code code--tight rv" style="--i:2">
+<span class="line"><span class="k">if</span> (marks &gt;= <span class="n">90</span>) { grade = <span class="s">"A"</span>; }</span>
+<span class="line"><span class="k">elif</span> (marks &gt;= <span class="n">80</span>) { grade = <span class="s">"B"</span>; }</span>
+<span class="line"><span class="k">else</span> { grade = <span class="s">"F"</span>; }</span>
+<span class="line"><span class="k">let</span> status = <span class="k">if</span> (marks &gt;= <span class="n">60</span>) { <span class="s">"Passed"</span> }</span>
+<span class="line">             <span class="k">else</span> { <span class="s">"Failed"</span> };</span>
+          </div>
+          <div class="chips rv" style="--i:3"><span class="chip">while (cond)</span><span class="chip">for let i = 0; ...</span><span class="chip">for item in list</span><span class="chip">for (k, v) in map</span></div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Fresh defaults:</b> <code>items = []</code> and <code>{}</code> allocate a new mutable collection on every call — never shared.</div>
+        </div>
+        <div class="gap-m">
+          <div class="code code--tight rv" style="--i:5">
+<span class="line"><span class="k">fn</span> <span class="f">make_accumulator</span>(start: <span class="t">int</span>) {</span>
+<span class="line">    <span class="k">let</span> total = start;</span>
+<span class="line">    <span class="k">return fn</span>(val: <span class="t">int</span>) {</span>
+<span class="line">        total += val;</span>
+<span class="line">        <span class="k">return</span> total;</span>
+<span class="line">    };</span>
+<span class="line">}</span>
+<span class="line"><span class="k">let</span> acc = <span class="f">make_accumulator</span>(<span class="n">100</span>);</span>
+          </div>
+          <div class="code code--tight rv" style="--i:6">
+<span class="line"><span class="k">let</span> sq = nums</span>
+<span class="line">    .<span class="f">filter</span>(x =&gt; x % <span class="n">2</span> == <span class="n">0</span>)</span>
+<span class="line">    .<span class="f">map</span>(x =&gt; x * x);</span>
+<span class="line"><span class="k">let</span> sum = nums.<span class="f">reduce</span>(<span class="n">0</span>, (acc, n) =&gt; acc + n);</span>
+          </div>
+          <p class="note rv" style="--i:7">HOF: <code>map / filter / reduce / for_each / all / any</code> + <code>sort_by / sorted_by / argsort</code></p>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Control Flow &amp; Functions · lexical closures, first-class values</div>
+    </section>
+
+    <!-- ══ 14. Enums, match & error handling ══ -->
+    <section class="slide" data-slide="14">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Enums &amp; errors</div>
+        <h2 class="h">Match, narrowing &amp; guaranteed finally</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="gap-m">
+          <div class="chips rv" style="--i:1"><span class="chip grp">enum</span><span class="chip">Move(x, y)</span><span class="chip">Rotate(degrees)</span><span class="chip">Stop</span></div>
+          <div class="code code--tight rv" style="--i:2">
+<span class="line"><span class="k">return match</span> (cmd) {</span>
+<span class="line">        <span class="f">Move</span>(x, y) <span class="k">if</span> x == <span class="n">0</span> <span class="k">and</span> y == <span class="n">0</span> =&gt; <span class="s">"Hold"</span>,</span>
+<span class="line">        <span class="f">Move</span>(x, y) =&gt; <span class="s">"Move to ({x}, {y})"</span>,</span>
+<span class="line">        <span class="f">Rotate</span>(deg) =&gt; <span class="s">"Rotate {deg} deg"</span>,</span>
+<span class="line">        <span class="f">Stop</span> =&gt; <span class="s">"Emergency Stop!"</span>,</span>
+<span class="line">        _ =&gt; <span class="s">"Unknown"</span></span>
+<span class="line">    };</span>
+          </div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>Unit-variant trap:</b> build with <code>Stop()</code>. Bare <code>Stop</code> is the constructor function, valid only in a pattern; as a value it yields “function does not support indexing”.</div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Scrutinee-driven exhaustiveness:</b> a static enum <code>match</code> must cover every variant unless <code>_</code> or a binding is present.</div>
+        </div>
+        <div class="gap-m">
+          <div class="code code--tight rv" style="--i:5">
+<span class="line"><span class="k">try</span> {</span>
+<span class="line">    <span class="k">let</span> val = <span class="f">int</span>(s);</span>
+<span class="line">} <span class="k">catch</span> (err) {</span>
+<span class="line">    <span class="f">println</span>(<span class="s">"Caught: "</span> + <span class="f">string</span>(err));</span>
+<span class="line">    <span class="k">return</span> -<span class="n">1</span>;</span>
+<span class="line">} <span class="k">finally</span> {</span>
+<span class="line">    <span class="f">println</span>(<span class="s">"Cleanup: completed"</span>);</span>
+<span class="line">}</span>
+          </div>
+          <div class="caveat caveat--tight rv" style="--i:6"><b><code>finally</code> is guaranteed</b> — even when <code>try</code> issues <code>return</code>, <code>break</code>, <code>continue</code>, or an unhandled <code>throw</code>.</div>
+          <p class="note rv" style="--i:7"><code>Option</code>: <code>some(v) / none</code> · <code>Result</code>: <code>ok(v) / err(e)</code> · all filesystem primitives return <code>result</code>.</p>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>VM detail:</b> each handler records catch target, finally target, catch slot, operand-stack length + frame depth — on throw the VM restores both exactly, so handlers see a clean stack.</div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Enums &amp; Errors · up to 25 syntax errors recovered with <code>E1xxx</code> codes</div>
+    </section>
+
+    <!-- ══ 15. OOP ══ -->
+    <section class="slide" data-slide="15">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">OOP</div>
+        <h2 class="h">Classes, inheritance &amp; interfaces</h2>
+      </div>
+      <div class="grow two" style="align-items:start;gap:var(--sp-3)">
+        <div class="code code--tight rv" style="--i:1">
+<span class="line"><span class="k">class</span> <span class="t">Animal</span> {</span>
+<span class="line">    <span class="k">public let</span> name;</span>
+<span class="line">    <span class="k">private let</span> energy;</span>
+<span class="line">
+</span>
+<span class="line">    <span class="k">public fn new</span>(name: <span class="t">string</span>) {</span>
+<span class="line">        <span class="k">self</span>.name = name;</span>
+<span class="line">        <span class="k">self</span>.energy = <span class="n">100</span>;</span>
+<span class="line">    }</span>
+<span class="line">    <span class="k">public fn</span> <span class="f">speak</span>(<span class="k">self</span>) -&gt; <span class="t">string</span> {</span>
+<span class="line">        <span class="k">return self</span>.name + <span class="s">" makes a sound"</span>;</span>
+<span class="line">    }</span>
+<span class="line">}</span>
+        </div>
+        <div class="code code--tight rv" style="--i:2">
+<span class="line"><span class="k">class</span> <span class="t">Dog</span> <span class="k">extends</span> <span class="t">Animal</span> {</span>
+<span class="line">    <span class="k">public let</span> breed;</span>
+<span class="line">    <span class="k">public fn new</span>(name: <span class="t">string</span>, breed: <span class="t">string</span>) {</span>
+<span class="line">        <span class="k">super</span>(name);   <span class="c">// delegate to parent ctor</span></span>
+<span class="line">        <span class="k">self</span>.breed = breed;</span>
+<span class="line">    }</span>
+<span class="line">    <span class="k">public fn</span> <span class="f">speak</span>(<span class="k">self</span>) -&gt; <span class="t">string</span> {</span>
+<span class="line">        <span class="k">return super</span>.<span class="f">speak</span>() + <span class="s">" -&gt; Woof!"</span>;</span>
+<span class="line">    }</span>
+<span class="line">}</span>
+        </div>
+      </div>
+      <div class="grow gap-m" style="justify-content:flex-end">
+        <div class="caveat caveat--tight rv" style="--i:3"><b>Core rules:</b> explicit <code>self</code> as first parameter · default visibility is private · single inheritance via <code>extends</code> · <code>super(args)</code> and <code>super.method()</code> · <code>abstract class</code> · <code>public static fn</code>.</div>
+        <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Interfaces:</b> <code>interface Drawable { fn draw(self); fn area(self); }</code> can carry default method bodies; <code>class Circle implements Drawable</code> dispatches through a heterogeneous list.</div>
+        <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b>Gradual unchecked case:</b> <code>let c: C = C(); c.secret</code> is rejected when the receiver's class is statically known; untyped <code>let c = C(); c.secret</code> is a gradual unchecked case.</div>
+      </div>
+      <div class="foot-note">Spid3r — OOP · Chapter 10 · Classes · Inheritance · Interfaces</div>
+    </section>
+
+    <!-- ══ 16. Generics + 20+ collections ══ -->
+    <section class="slide" data-slide="16">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Generics &amp; collections</div>
+        <h2 class="h">Generics &amp; 20+ data structures</h2>
+      </div>
+      <div class="grow gap-m">
+        <div class="chips rv" style="--i:1"><span class="chip">&lt;T: Numeric&gt;</span><span class="chip">&lt;T: Comparable&gt;</span><span class="chip">&lt;T: Printable&gt;</span><span class="chip">&lt;T: Drawable&gt;</span><span class="chip">&lt;T: Numeric + Comparable&gt;</span><span class="chip">identity&lt;int&gt;(42)</span><span class="chip">spid3r_mono_*</span></div>
+        <p class="note rv" style="--i:2">Unannotated generics fall back to type erasure in Tree &amp; VM · 12 specialized trampolines (<code>spid3r_ulist_i64_*</code>, <code>spid3r_ulist_f64_*</code>) on the 8–18× container gap · Value v2: compact 64-bit tagged value.</p>
+        <div class="four rv" style="--i:3;grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
+          <div class="card card--tight"><h4 class="mono">List</h4><p>O(1) append/index</p></div>
+          <div class="card card--tight"><h4 class="mono">Map</h4><p>O(1) via FxHash</p></div>
+          <div class="card card--tight"><h4 class="mono">Set</h4><p>O(1) membership</p></div>
+          <div class="card card--tight"><h4 class="mono">Bag</h4><p>no set algebra</p></div>
+          <div class="card card--tight"><h4 class="mono">Tuple</h4><p>fixed, immutable</p></div>
+          <div class="card card--tight"><h4 class="mono">Stack/Queue/Deque</h4><p>O(1) LIFO/FIFO</p></div>
+          <div class="card card--tight"><h4 class="mono">Heap</h4><p>O(log n) push/pop</p></div>
+          <div class="card card--tight"><h4 class="mono">Trie</h4><p>O(L) prefix</p></div>
+          <div class="card card--tight"><h4 class="mono">Graph</h4><p>Dijkstra/BFS</p></div>
+          <div class="card card--tight"><h4 class="mono">ring_buffer</h4><p>fixed ring</p></div>
+          <div class="card card--tight"><h4 class="mono">linked_list</h4><p>node chain</p></div>
+          <div class="card card--tight"><h4 class="mono">hash_table</h4><p>custom capacity</p></div>
+          <div class="card card--tight"><h4 class="mono">bst</h4><p>binary search tree</p></div>
+          <div class="card card--tight"><h4 class="mono">binary_tree</h4><p>tree container</p></div>
+          <div class="card card--tight"><h4 class="mono">priority_queue</h4><p>priority order</p></div>
+          <div class="card card--tight"><h4 class="mono">vec</h4><p>dynamic vector</p></div>
+          <div class="card card--tight"><h4 class="mono">bytes</h4><p>16 MiB buffer</p></div>
+        </div>
+        <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Stable comparator sorts:</b> <code>sort_by / sorted_by / argsort</code> snapshot the list and hold no lock while a comparator runs — a throwing or mutating comparator never deadlocks or panics the host.</div>
+      </div>
+      <div class="foot-note">Spid3r — Generics &amp; Collections · Tree &amp; VM run generics polymorphically with zero behavioral divergence from AOT</div>
+    </section>
+
+    <!-- ══ 17. Linear algebra ══ -->
+    <section class="slide" data-slide="17">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Linear algebra</div>
+        <h2 class="h">NumPy, replaced — no install</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="gap-m">
+          <div class="card card--tight rv" style="--i:1"><h4 style="font-size:var(--fs-h3);color:var(--green)">16,777,216 elements</h4><p>contiguous 64-bit float buffers · capped, zero external dependencies</p></div>
+          <div class="chips rv" style="--i:2"><span class="chip">A.mul(B)</span><span class="chip">v1.dot(v2)</span><span class="chip">.hadamard()</span><span class="chip">.transpose()</span><span class="chip">.det() Gaussian</span><span class="chip">.inverse() LU</span><span class="chip">.solve() partial pivot</span><span class="chip">.mean/.sum/.trace</span></div>
+          <div class="caveat caveat--tight rv" style="--i:3"><b>Row-major layout:</b> flat <code>m[i]</code> addresses <code>row * cols + col</code> and returns a float — <code>m[i][j]</code> is not used. Use <code>m.get(row, col)</code> / <code>m.set(row, col, v)</code> for 2-D.</div>
+        </div>
+        <div class="gap-m">
+          <div class="code code--tight rv" style="--i:4">
+<span class="line"><span class="k">let</span> v1 = <span class="f">vector</span>([<span class="n">1.0</span>, <span class="n">2.0</span>, <span class="n">3.0</span>]);</span>
+<span class="line"><span class="k">let</span> v2 = <span class="f">vector</span>([<span class="n">4.0</span>, <span class="n">5.0</span>, <span class="n">6.0</span>]);</span>
+<span class="line">v1.<span class="f">dot</span>(v2);     <span class="c">// 32.0</span></span>
+<span class="line"><span class="k">let</span> A = <span class="f">matrix</span>(<span class="n">2</span>, <span class="n">2</span>, <span class="n">0.0</span>);</span>
+<span class="line">A.<span class="f">set</span>(<span class="n">0</span>, <span class="n">0</span>, <span class="n">4.0</span>);  A.<span class="f">set</span>(<span class="n">0</span>, <span class="n">1</span>, <span class="n">7.0</span>);</span>
+<span class="line">A.<span class="f">set</span>(<span class="n">1</span>, <span class="n">0</span>, <span class="n">2.0</span>);  A.<span class="f">set</span>(<span class="n">1</span>, <span class="n">1</span>, <span class="n">6.0</span>);</span>
+<span class="line">A.<span class="f">det</span>();    <span class="c">// 10.0</span></span>
+<span class="line">A.<span class="f">solve</span>(<span class="f">vector</span>([<span class="n">18.0</span>, <span class="n">10.0</span>])); <span class="c">// [3.8, 0.4]</span></span>
+          </div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:5"><b><code>save_npy</code> / <code>load_npy</code></b> — standard NumPy v1.0 <code>&lt;f8</code> little-endian · <code>A.trace()</code> = 10.0.</div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Linear Algebra · BLAS-style computing</div>
+    </section>
+
+    <!-- ══ 18. Real concurrency, no GIL ══ -->
+    <section class="slide" data-slide="18">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Concurrency</div>
+        <h2 class="h">Real concurrency, no GIL</h2>
+      </div>
+      <div class="grow gap-m">
+        <div class="pipe">
+          <div class="pipe-step rv" style="--i:1"><div class="pt">spawn</div><div class="ps">task handle</div></div>
+          <div class="pipe-link" style="--i:1"></div>
+          <div class="pipe-step rv" style="--i:2"><div class="pt">M:N scheduler</div><div class="ps">one shared ready queue</div></div>
+          <div class="pipe-link" style="--i:2"></div>
+          <div class="pipe-step rv" style="--i:3"><div class="pt">channel()</div><div class="ps">unbounded FIFO</div></div>
+          <div class="pipe-link" style="--i:3"></div>
+          <div class="pipe-step pipe-step--hot rv" style="--i:4"><div class="pt">recv()</div><div class="ps">blocks until value</div></div>
+        </div>
+        <div class="two" style="align-items:start">
+          <div class="code code--tight rv" style="--i:5">
+<span class="line"><span class="k">let</span> worker = <span class="k">spawn fn</span>() {</span>
+<span class="line">    <span class="k">let</span> acc = <span class="n">0</span>;</span>
+<span class="line">    <span class="k">for let</span> i = <span class="n">1</span>; i &lt;= <span class="n">100</span>; i += <span class="n">1</span> { acc += i; }</span>
+<span class="line">    <span class="k">return</span> acc;</span>
+<span class="line">};</span>
+<span class="line"><span class="k">let</span> result = worker.<span class="f">join</span>();</span>
+          </div>
+          <div class="gap-s">
+            <div class="chips rv" style="--i:6"><span class="chip">SPID3R_MAX_WORKERS 256</span><span class="chip">async / await</span><span class="chip">task.join()</span><span class="chip">mutex(v)</span><span class="chip">atomic_int(0)</span><span class="chip">ref(v) / weak(r)</span></div>
+            <div class="caveat caveat--rose caveat--tight rv" style="--i:7"><b>No global interpreter lock.</b> Two CPU-bound tasks really do run at the same time — up to 256 OS threads, grow on demand.</div>
+            <div class="caveat caveat--tight rv" style="--i:8"><b>Deadlock safety:</b> <code>deadlock_abort = true</code> aborts when no task can wake a wait; exit waits <code>task_drain_ms</code> (default 2000) for still-running tasks.</div>
+          </div>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Concurrency · Erlang/Go-style channels</div>
+    </section>
+
+    <!-- ══ 19. Stdlib & the 29 modules ══ -->
+    <section class="slide" data-slide="19">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Standard library</div>
+        <h2 class="h">Stdlib &amp; the 29 modules</h2>
+      </div>
+      <div class="grow gap-s">
+        <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
+          <div class="card card--tight rv" style="--i:1"><h4 style="font-size:24px;color:var(--cyan)">Console / Runtime</h4><p>println · spid3rinfo · config_get</p></div>
+          <div class="card card--tight rv" style="--i:2"><h4 style="font-size:24px;color:var(--green)">Filesystem</h4><p>streaming handles · max 1,024</p></div>
+          <div class="card card--tight rv" style="--i:3"><h4 style="font-size:24px;color:var(--purple)">Process / Net / Events</h4><p>http_fetch · UDS · poll</p></div>
+          <div class="card card--tight rv" style="--i:4"><h4 style="font-size:24px;color:var(--amber)">Math / Random</h4><p>random_bytes · OS CSPRNG</p></div>
+          <div class="card card--tight rv" style="--i:5"><h4 style="font-size:24px;color:var(--rose)">Crypto</h4><p>sha256 · hmac · ed25519 · argon2</p></div>
+          <div class="card card--tight rv" style="--i:6"><h4 style="font-size:24px;color:var(--indigo-light)">Formats</h4><p>json · csv · gzip · regex NFA</p></div>
+        </div>
+        <h3 class="h3 rv" style="--i:7;font-size:var(--fs-kicker);line-height:var(--lh-kicker)">29 modules — compiled into the binary</h3>
+        <div class="modgrid rv" style="--i:8">
+          <div class="card card--tight"><h4>web</h4><p>HTTP server</p></div>
+          <div class="card card--tight"><h4>http</h4><p>HTTP/1.1 router</p></div>
+          <div class="card card--tight"><h4>fastcgi</h4><p>nginx/Apache</p></div>
+          <div class="card card--tight"><h4>dataframe</h4><p>filter/group/join</p></div>
+          <div class="card card--tight"><h4>stats</h4><p>regression/ANOVA</p></div>
+          <div class="card card--tight"><h4>ml</h4><p>K-Means/kNN</p></div>
+          <div class="card card--tight"><h4>mathx</h4><p>FFT/roots</p></div>
+          <div class="card card--tight"><h4>toml</h4><p>TOML I/O</p></div>
+          <div class="card card--tight"><h4>yaml</h4><p>YAML I/O</p></div>
+          <div class="card card--tight"><h4>xml</h4><p>XML I/O</p></div>
+          <div class="card card--tight"><h4>tz</h4><p>tzdata 2026e · 598 zones</p></div>
+          <div class="card card--tight"><h4>unicode</h4><p>UCD 15.1</p></div>
+          <div class="card card--tight"><h4>smtp</h4><p>mail</p></div>
+          <div class="card card--tight"><h4>ftp</h4><p>file transfer</p></div>
+          <div class="card card--tight"><h4>ssh</h4><p>OpenSSH/SFTP</p></div>
+          <div class="card card--tight"><h4>session</h4><p>signed cookies</p></div>
+          <div class="card card--tight"><h4>middleware</h4><p>CORS/rate limit</p></div>
+          <div class="card card--tight"><h4>multipart</h4><p>file uploads</p></div>
+          <div class="card card--tight"><h4>event</h4><p>epoll/kqueue</p></div>
+          <div class="card card--tight"><h4>gen</h4><p>yield generators</p></div>
+          <div class="card card--tight"><h4>bigint</h4><p>arbitrary precision</p></div>
+          <div class="card card--tight"><h4>complex</h4><p>complex numbers</p></div>
+          <div class="card card--tight"><h4>decimal</h4><p>exact money math</p></div>
+          <div class="card card--tight"><h4>rational</h4><p>fractions</p></div>
+          <div class="card card--tight"><h4>semver</h4><p>version ranges</p></div>
+          <div class="card card--tight"><h4>uuid</h4><p>CSPRNG UUID v4</p></div>
+          <div class="card card--tight"><h4>testkit</h4><p>test runner</p></div>
+          <div class="card card--tight"><h4>assert</h4><p>assertions</p></div>
+          <div class="card card--tight"><h4>mock</h4><p>stubs &amp; spies</p></div>
+        </div>
+        <div class="caveat caveat--rose caveat--tight rv" style="--i:9"><b>Module-prefix exports:</b> <code>uuid.uuid_v4()</code> — not <code>uuid4()</code> · <code>toml.toml_parse(text)</code> — not <code>parse()</code> · <code>ev.start()</code> — not <code>new()</code>.</div>
+      </div>
+      <div class="foot-note">Spid3r — Stdlib · all 29 modules compiled in · top-level symbols must be <code>public</code> to export</div>
+    </section>
+
+    <!-- ══ 20. Crypto trust ══ -->
+    <section class="slide" data-slide="20">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Security honesty</div>
+        <h2 class="h">The cryptography trust statement</h2>
+      </div>
+      <div class="grow gap-m">
+        <div class="caveat caveat--rose rv" style="--i:1"><b>R12.1 — not independently audited.</b> Primitives (sha256/512, hmac, pbkdf2, ed25519_*, bcrypt_*, argon2) and the TLS 1.3 client in <code>src/stdlib/net.rs</code> are pure Rust with zero dependencies — verified by internal RFC vectors and negative/malleability tests, but <b>not formally proven side-channel hardened</b>. R12.1 stays open pending external review.</div>
+        <div class="caveat caveat--tight rv" style="--i:2"><b>For high-stakes production:</b> terminate TLS or run secret-key operations behind an audited reverse proxy or HSM.</div>
+        <div class="two">
+          <div class="card card--tight rv" style="--i:3"><h4>Ed25519</h4><p>Constant-time <code>cswap</code> Montgomery ladder, canonical <code>S &lt; L</code>, small-order-key and off-curve rejection. Verification is strict but <b style="color:var(--rose)">not constant-time</b>.</p></div>
+          <div class="card card--tight rv" style="--i:4"><h4>Randomness discipline</h4><p>Only <code>random_bytes(n)</code> is cryptographic. <code>random_int/float/normal</code> are clock-seeded xorshift — never suitable for tokens.</p></div>
+        </div>
+        <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b><code>jwt_verify</code>:</b> constant-time with 60-second <code>exp/nbf</code> skew, but checks <code>HS256</code> only and doesn't pin <code>alg</code> to a policy — don't feed it tokens from an issuer you don't control.</div>
+        <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>Constant-time by construction:</b> <code>bcrypt_verify</code> and <code>secure_compare</code>.</div>
+      </div>
+      <div class="foot-note">Spid3r — Crypto Trust · Chapter 14 · R12.1 — open pending external review</div>
+    </section>
+
+    <!-- ══ 21. Config & the no-shell agent ══ -->
+    <section class="slide" data-slide="21">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Runtime config &amp; agent</div>
+        <h2 class="h">One INI, one no-shell agent</h2>
+      </div>
+      <div class="grow two" style="align-items:start">
+        <div class="gap-m">
+          <h3 class="h3 rv" style="--i:1">Discovery — first hit wins</h3>
+          <p class="sub rv" style="--i:2;font-size:var(--fs-meta)"><code>$SPID3R_INI</code> (only candidate; broken pin = commands refuse to start, <code>exit 1</code>) → <code>spid3r.ini</code> beside executable → platform config dir → <code>./spid3r.ini</code>.</p>
+          <p class="note rv" style="--i:3">Precedence: environment → <code>[env.&lt;name&gt;]</code> → INI → compiled defaults · invalid values ignored with a note (<code>ture</code> is an error) · reload via <code>config reload</code> or <code>SIGHUP</code>.</p>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:4"><b><code>basedir</code> is NOT a jail.</b> Process natives reach any path the OS user can — pair with <code>disable_natives = spawn_process, exec_capture, run_payload, run_payload_strict</code> or <code>--sandbox</code>. TOCTOU is inherent (200k-iteration race test: 0 escapes — an observation, not a guarantee).</div>
+          <p class="note rv" style="--i:9">Config dir: <code>%APPDATA%\Spid3r</code> or <code>$XDG_CONFIG_HOME/spid3r</code></p>
+        </div>
+        <div class="gap-m">
+          <div class="chips rv" style="--i:5"><span class="chip">pairing: 48 hex, single use</span><span class="chip">ChaCha20 + HMAC-SHA256</span><span class="chip">SHA-256(code), key never on wire</span><span class="chip">replay 4096 frames, ~1 h</span></div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>No shell, ever.</b> Every operation is a predefined, role-checked name: <code>viewer → operator → admin</code>. Remote <code>config.set</code> refuses every <code>security.*</code>/<code>logging.*</code> key, <code>agent.role_*</code>, listener switches, trust &amp; path keys.</div>
+          <div class="caveat caveat--tight rv" style="--i:7"><b>Audit &amp; redaction:</b> each accepted or rejected operation is one JSON line in <code>audit.log</code>, rotating at 1 MiB · remote <code>info</code> and <code>config.get</code> are redacted to <code>[redacted sha256:&lt;12 hex&gt;]</code>.</div>
+          <p class="note rv" style="--i:8">Frame: <code>magic "SPID3R01" | version | kind | device[16] | nonce[12] | len u32 | payload</code> — encrypt-then-MAC, header as AAD.</p>
+        </div>
+      </div>
+      <div class="foot-note">Spid3r — Management Agent · spid3r-agent/1 over TCP · zero third-party crates</div>
+    </section>
+
+    <!-- ══ 22. One language. Everything built in. ══ -->
+    <section class="slide slide--center" data-slide="22">
+      <div class="title-glyph float rv" style="--i:0">🕷️</div>
+      <h1 class="h1 h1--sm rv" style="--i:1">One language. <span class="grad-t">Everything built in.</span></h1>
+      <p class="lead rv" style="--i:2;font-size:var(--fs-body)">Compiler · two interpreters · LLVM native backend · browser runtime · package registry · plugin system · remote management agent · container engine · bare-metal kernel track</p>
+      <div class="stat-grid" style="margin-top:var(--sp-6)">
+        <div class="stat rv" style="--i:3"><div class="bignum bignum--sm cnt" data-v="40">0</div><div class="lbl">reserved keywords</div></div>
+        <div class="stat rv" style="--i:4"><div class="bignum bignum--sm cnt" data-v="6">0</div><div class="lbl">primitive types</div></div>
+        <div class="stat rv" style="--i:5"><div class="bignum bignum--sm">20+</div><div class="lbl">data structures</div></div>
+        <div class="stat rv" style="--i:6"><div class="bignum bignum--sm cnt" data-v="29">0</div><div class="lbl">stdlib modules</div></div>
+        <div class="stat rv" style="--i:7"><div class="bignum bignum--sm cnt" data-v="3">0</div><div class="lbl">engines (1 oracle)</div></div>
+        <div class="stat rv" style="--i:8"><div class="bignum bignum--sm cnt" data-v="60">0</div><div class="lbl">VM opcodes</div></div>
+        <div class="stat rv" style="--i:9"><div class="bignum bignum--sm cnt" data-v="134">0</div><div class="lbl">corpus programs</div></div>
+        <div class="stat rv" style="--i:10"><div class="bignum bignum--sm cnt" data-v="0">0</div><div class="lbl">external dependencies</div></div>
+      </div>
+      <p class="note rv pulse" style="--i:11;margin-top:var(--sp-6)">ANSNEW TECH · © 2026 Spid3r Language Project · needyamin.github.io/spid3r</p>
+    </section>
+
+  </main>
+
+  <footer class="chrome chrome--bottom">
+    <button class="navbtn" id="prevBtn">‹ Prev</button>
+    <div class="attribution">needyamin.github.io/spid3r · Developed by ANSNEW TECH · © 2026 Spid3r Language Project</div>
+    <button class="navbtn" id="nextBtn">Next ›</button>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var stage    = document.getElementById('stage');
+  var slides   = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var counter  = document.getElementById('counter');
+  var progress = document.getElementById('progress');
+  var prevBtn  = document.getElementById('prevBtn');
+  var nextBtn  = document.getElementById('nextBtn');
+  var reduce   = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cur      = 0;
+
+  /* Fixed 1920×1080 stage, scaled to fill the viewport */
+  function fit(){
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stage.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  /* ASCII count-ups, replay on every (re)visit */
+  function resetCounters(slide){
+    slide.querySelectorAll('.cnt').forEach(function(el){
+      el._tok = (el._tok || 0) + 1;
+      delete el.dataset.done;
+      el.textContent = '0';
+    });
+  }
+  function runCounters(slide){
+    slide.querySelectorAll('.cnt').forEach(function(el){
+      if (el.dataset.done) return;
+      el.dataset.done = '1';
+      var target = parseInt(el.dataset.v, 10) || 0;
+      var tok = (el._tok = (el._tok || 0) + 1);
+      if (reduce){ el.textContent = String(target); return; }
+      var t0 = null;
+      function step(ts){
+        if (el._tok !== tok) return;
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / 1400, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(Math.round(target * eased));
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  function show(n){
+    if (n < 0) n = 0;
+    if (n > slides.length - 1) n = slides.length - 1;
+    if (n === cur && slides[cur].classList.contains('active')){
+      runCounters(slides[cur]);
+      return;
+    }
+    var leaving = slides[cur];
+    leaving.classList.remove('active');
+    resetCounters(leaving);
+    cur = n;
+    var entering = slides[cur];
+    entering.classList.add('active');
+    counter.innerHTML = '<b>' + (cur + 1) + '</b> / ' + slides.length;
+    progress.style.width = ((cur + 1) / slides.length * 100) + '%';
+    runCounters(entering);
+    try { location.hash = 's' + (cur + 1); } catch (_) {}
+  }
+  function next(){ show(cur + 1); }
+  function prev(){ show(cur - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); prev(); }
+    else if (e.key === 'Home'){ e.preventDefault(); show(0); }
+    else if (e.key === 'End'){ e.preventDefault(); show(slides.length - 1); }
+  });
+
+  document.getElementById('deck').addEventListener('click', function(e){
+    if (e.target.closest('a,button')) return;
+    var r = this.getBoundingClientRect();
+    (e.clientX - r.left) > r.width / 2 ? next() : prev();
+  });
+
+  var m = (location.hash || '').match(/^#s(\d+)$/);
+  show(m ? parseInt(m[1], 10) - 1 : 0);
+})();
+</script>
+</body>
+</html>
