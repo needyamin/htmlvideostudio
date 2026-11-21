@@ -29,10 +29,6 @@ echo  Python with GUI support was not found on this computer.
 echo  Please install Python 3.10 or newer from https://www.python.org
 echo  (tick "Add python.exe to PATH" during install - the default
 echo  installer includes everything needed), then run this again.
-echo.
-echo  Bangla: computer-e Python GUI support pay nai - python.org theke
-echo  Python 3.10+ install korun ("Add python.exe to PATH" tick din),
-echo  tarpor abar ei file-e double-click korun.
 echo ============================================================
 pause
 exit /b 1

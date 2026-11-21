@@ -1,8 +1,6 @@
-# 🎬 HTML Video Studio
+# HTML Video Studio
 
 Turn **any animated HTML page** into a high-quality **HD / Full-HD / 4K MP4 video** — no coding required.
-
-> বাংলা: যেকোনো অ্যানিমেটেড HTML প্রেজেন্টেশন থেকে কোডিং ছাড়াই HD বা 4K ভিডিও বানান।
 
 ---
 
@@ -10,19 +8,15 @@ Turn **any animated HTML page** into a high-quality **HD / Full-HD / 4K MP4 vide
 
 1. **Double-click `Start Studio.bat`**
    The app window opens. On the very first run it automatically installs
-   everything it needs (Python packages + browser engine, ~1-2 minutes).
-2. **Choose your HTML file** (and optionally a voiceover audio file).
-3. **Press `🎬 Export video`** and wait. When it finishes, the MP4 appears
+   everything it needs (Python packages + browser engine, ~1–2 minutes).
+2. **Choose your HTML file** (and optionally a narration script `.txt`
+   for text-to-speech — use *Play sample* to preview the voice).
+3. **Press `Export video`** and wait. When it finishes, the MP4 appears
    next to your HTML file — press `Open output folder` to find it.
 
 > Requirements: Windows with **Python 3.10+** installed
 > (tick *“Add python.exe to PATH”* during install).
 > Everything else is installed automatically.
-
-বাংলা গাইড:
-1. `Start Studio.bat`-এ ডাবল ক্লিক করুন — প্রথমবার চালালে সব দরকারি জিনিস নিজে থেকেই ইনস্টল হবে।
-2. আপনার HTML ফাইলটি নির্বাচন করুন (চাইলে ভয়েসওভার অডিওও দিতে পারেন)।
-3. `Export video` চাপুন — ভিডিও তৈরি হয়ে HTML ফাইলের পাশেই সেভ হবে।
 
 ---
 
@@ -30,15 +24,47 @@ Turn **any animated HTML page** into a high-quality **HD / Full-HD / 4K MP4 vide
 
 | Setting | Meaning |
 |---|---|
-| **Resolution** | Output video quality: 720p / 1080p / 1440p / **4K** |
-| **Quality** | Compression quality: Normal / High / **Best** (file size grows) |
-| **Seconds per slide** | Each slide switches automatically after this many seconds (default 8s) |
-| **Voiceover** | Optional audio mixed into the video (trimmed to the video length) |
+| **Resolution** | Output video size — shown as clickable boxes drawn to real scale: 720p / 1080p (default) / 1440p / **4K** |
+| **Quality** | Compression quality: Normal / High / **Best**. Higher = sharper text, bigger file |
+| **Seconds / slide** | Used for slides without narration (default 8s); narrated slides follow the voiceover instead |
+| **Voiceover script** | A `.txt` narration script — converted to speech and matched slide-by-slide (see below) |
+| **TTS voice** | Voice for the script: *Auto* matches each slide's language (English / Bangla), or pick a specific voice. **Play sample** previews it |
 | FPS *(advanced)* | Frames per second: 24 (cinematic) / 30 (default) / 60 (smoothest) |
 | Slide selector *(advanced)* | CSS selector for slides. Leave empty for auto-detect (`.slide`, `[data-slide]`, …) |
 
 **No slides in your HTML?** The app detects that and exports one continuous
 clip of your page instead — nothing breaks.
+
+---
+
+## Voiceover from text (text-to-speech)
+
+Write (or generate) a narration script as a plain `.txt` file — one block
+per slide:
+
+```
+[[SLIDE 1]]
+Welcome to the presentation. Today we will ...
+
+[[SLIDE 2]]
+The architecture has three parts ...
+```
+
+Pick it as **Voiceover script** and press Export. The app:
+
+1. Splits the script by the `[[SLIDE n]]` markers and matches block *n*
+   to slide *n* of your HTML.
+2. Converts each block to natural speech (free Microsoft neural voices —
+   no API key needed; internet required).
+3. **Times every slide to its narration** — the slide switches shortly
+   after the voice finishes, and the narration starts exactly when the
+   slide appears.
+
+The *Auto* voice reads English blocks with an English voice and Bangla
+blocks with a Bangla voice (bn-BD), so one deck can mix languages.
+A full example is in [`samples/english.txt`](samples/english.txt)
+(English) and [`samples/bangla.txt`](samples/bangla.txt) (Bangla).
+Slides without a matching block fall back to *Seconds per slide*.
 
 ---
 

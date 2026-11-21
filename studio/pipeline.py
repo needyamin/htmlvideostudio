@@ -14,6 +14,8 @@ from .capture import (LAUNCH_ARGS, Cancelled, create_engine)
 from .config import ANIM_CAP_FPS, RES_LABELS, RES_SIZE, Settings
 from .detector import SlideDetector
 from .encoder import encode_steps, join_segments
+from .tts import (LEAD, TAIL, build_track, mp3_to_wav, parse_script,
+                  read_script, synth, voice_for, wav_duration)
 
 
 class RenderError(Exception):
@@ -51,20 +53,21 @@ def render(settings: Settings, progress, cancel_event) -> Path:
     """Full export. Raises Cancelled or RenderError."""
     html = settings.html_path
     if not html.exists():
-        raise RenderError(
-            "HTML file not found.  |  ফাইল পাওয়া যায়নি।")
+        raise RenderError("HTML file not found.")
 
     audio = settings.audio_path
     if audio is not None and not audio.exists():
-        raise RenderError(
-            "Audio file not found.  |  অডিও ফাইল পাওয়া যায়নি।")
+        raise RenderError("Audio file not found.")
+
+    script = settings.script_path
+    if script is not None and not script.exists():
+        raise RenderError("Narration script file not found.")
 
     ffmpeg = _get_ffmpeg(progress)
     out = settings.output_path()
     out.parent.mkdir(parents=True, exist_ok=True)
-    progress("log", 0, f"🎬 Output will be saved to:  {out}")
-    progress("log", 0, "   (same folder as your HTML file  |  আপনার HTML "
-                      "ফাইলের একই ফোল্ডারে সেভ হবে)")
+    progress("log", 0, f"Output will be saved to:  {out}")
+    progress("log", 0, "   (same folder as your HTML file)")
 
     work = Path(tempfile.mkdtemp(prefix="hvs_frames_"))
     segments: list[Path] = []
@@ -74,7 +77,7 @@ def render(settings: Settings, progress, cancel_event) -> Path:
     browser = None
     engine = None
     try:
-        progress("phase", 2, "Opening page ...  |  পেজ খোলা হচ্ছে ...")
+        progress("phase", 2, "Opening page ...")
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True, args=LAUNCH_ARGS)
             ctx = browser.new_context(
@@ -94,7 +97,7 @@ def render(settings: Settings, progress, cancel_event) -> Path:
             time.sleep(1.2)  # settle layout
 
             # ── detect slides ────────────────────────────────────
-            progress("phase", 5, "Detecting slides ...  |  স্লাইড খোঁজা হচ্ছে ...")
+            progress("phase", 5, "Detecting slides ...")
             det = SlideDetector(page)
             found = det.detect(settings.selector)
             n_slides = found["count"]
@@ -105,8 +108,7 @@ def render(settings: Settings, progress, cancel_event) -> Path:
                 durations = [total]
                 progress("log", 0,
                          f"No slides detected — exporting one continuous "
-                         f"clip of {total:.1f}s.  |  স্লাইড পাওয়া যায়নি — "
-                         f"একটানা {total:.1f} সেকেন্ড রেকর্ড হবে।")
+                         f"clip of {total:.1f}s.")
             else:
                 mode = "slides"
                 durations = [settings.seconds_per_slide] * n_slides
@@ -124,6 +126,61 @@ def render(settings: Settings, progress, cancel_event) -> Path:
                     progress("log", 0, "Slides found but no navigation "
                                       "function — exporting one continuous "
                                       "clip instead.")
+
+            # ── text-to-speech voiceover ─────────────────────────
+            # A narration script overrides the fixed slide duration: each
+            # slide stays on screen exactly as long as its narration.
+            vo_track = None
+            if script is not None and mode == "slides":
+                blocks = parse_script(read_script(script))
+                if not blocks:
+                    raise RenderError(
+                        "The narration script has no \"[[SLIDE n]]\" "
+                        "blocks. See samples/english.txt for the format.")
+                extra = [n for n in sorted(blocks) if n > n_slides]
+                if extra:
+                    progress("log", 0, f"Script narrates slides "
+                                      f"{extra[0]}–{extra[-1]} but only "
+                                      f"{n_slides} slides were detected — "
+                                      f"those blocks are skipped.")
+                narrated = sum(1 for i in range(n_slides)
+                               if blocks.get(i + 1))
+                progress("phase", 5, "Generating voiceover ...")
+                progress("log", 0, f"Text-to-speech: {narrated}/{n_slides} "
+                                  f"slides have narration.")
+                tts_dir = work / "tts"
+                tts_dir.mkdir()
+                entries: list[tuple[Path, float]] = []
+                durations = []
+                cursor = 0.0
+                for i in range(n_slides):
+                    text = blocks.get(i + 1)
+                    if not text:
+                        durations.append(settings.seconds_per_slide)
+                        cursor += settings.seconds_per_slide
+                        continue
+                    mp3 = tts_dir / f"vo{i:03d}.mp3"
+                    synth(text, voice_for(text, settings.tts_voice), mp3)
+                    wav = tts_dir / f"vo{i:03d}.wav"
+                    mp3_to_wav(mp3, wav, ffmpeg)
+                    d = wav_duration(wav)
+                    entries.append((wav, cursor + LEAD))
+                    slide_d = LEAD + d + TAIL
+                    durations.append(round(slide_d, 3))
+                    cursor += slide_d
+                    progress("phase", 5 + (i + 1) / n_slides * 5,
+                             f"Generating voiceover {i + 1}/{n_slides} ...")
+                    progress("log", 0,
+                             f"✓ Narration {i + 1}/{n_slides}: {d:.1f}s")
+                total = sum(durations)
+                vo_track = work / "voiceover.wav"
+                build_track(entries, total, vo_track)
+                progress("log", 0, f"Voiceover ready ({total / 60:.1f} min) "
+                                  f"— slide timing follows the narration.")
+            elif script is not None:
+                progress("log", 0, "Narration script ignored — the page has "
+                                  "no navigable slides to match \"[[SLIDE "
+                                  "n]]\" blocks against.")
 
             fps = settings.fps
             # screenshots are the expensive step — cap capture rate in
@@ -179,12 +236,11 @@ def render(settings: Settings, progress, cancel_event) -> Path:
 
                     progress("phase", 10 + idx / len(durations) * 70,
                              f"Capturing slide {idx + 1}/{len(durations)} "
-                             f"({dur:.1f}s) ...  |  স্লাইড "
-                             f"{idx + 1}/{len(durations)} ক্যাপচার হচ্ছে ...")
+                             f"({dur:.1f}s) ...")
                 else:
                     def activate():
                         pass
-                    progress("phase", 10, "Recording ...  |  রেকর্ড হচ্ছে ...")
+                    progress("phase", 10, "Recording ...")
 
                 steps = engine.capture_steps(
                     activate, dur, seg_dir, on_frame=frame_cb,
@@ -203,13 +259,15 @@ def render(settings: Settings, progress, cancel_event) -> Path:
 
         # ── final join + optional voiceover ──────────────────────
         progress("phase", 82, "Encoding final video — real progress shown "
-                              "on the bar ...  |  চূড়ান্ত এনকোডিং চলছে ...")
+                              "on the bar ...")
         progress("log", 0, "⏳ Final encoding — this is the last step and "
                           "can take a few minutes at high resolution.")
 
         def _join_progress(frac):
             progress("progress", 82 + frac * 17, "")
 
+        if vo_track is not None:
+            audio = vo_track
         join_segments(segments, out, settings.fps, settings.res_h,
                       settings.crf, ffmpeg,
                       audio=audio,
@@ -257,4 +315,4 @@ def _friendly(e: Exception) -> str:
     for key, msg in table:
         if key.lower() in s.lower():
             return msg
-    return s[:500] if s.strip() else "Unknown error.  |  অজানা ত্রুটি।"
+    return s[:500] if s.strip() else "Unknown error."

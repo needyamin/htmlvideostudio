@@ -35,6 +35,25 @@ RES_SIZE = {720: (1280, 720), 1080: (1920, 1080),
 QUALITY = {"Normal": 22, "High": 18, "Best": 14}
 FPS_CHOICES = (24, 30, 60)
 
+# Text-to-speech voices (edge-tts). The Auto choice matches each slide's
+# language: Bangla text -> bn-BD voice, everything else -> en-US voice.
+VOICE_AUTO = "Auto — match each slide's language"
+VOICES = [
+    VOICE_AUTO,
+    "English — Aria (female)",
+    "English — Guy (male)",
+    "Bangla BD — Nabanita (female)",
+    "Bangla BD — Pradeep (male)",
+]
+VOICE_MAP = {
+    VOICES[1]: "en-US-AriaNeural",
+    VOICES[2]: "en-US-GuyNeural",
+    VOICES[3]: "bn-BD-NabanitaNeural",
+    VOICES[4]: "bn-BD-PradeepNeural",
+}
+VOICE_EN = "en-US-AriaNeural"      # auto-detect choice for non-Bengali text
+VOICE_BN = "bn-BD-NabanitaNeural"  # auto-detect choice for Bengali text
+
 # Max frames captured per second of animation (screenshots are the most
 # expensive step; identical/interpolated frames are duplicated smoothly
 # by the CFR encoder). "Maximum smoothness" mode bypasses this cap.
@@ -55,6 +74,8 @@ AUTO_SELECTORS = [".slide", "[data-slide]", ".slide-frame",
 class Settings:
     html_path: Path = Path("presentation.html")
     audio_path: Path | None = None
+    script_path: Path | None = None   # narration script (.txt) for TTS
+    tts_voice: str = VOICE_AUTO       # edge-tts voice choice
     res_h: int = 2160                 # 720 / 1080 / 1440 / 2160
     fps: int = 30
     crf: int = 18                     # x264 quality (lower = better)

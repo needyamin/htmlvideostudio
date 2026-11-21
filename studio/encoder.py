@@ -45,8 +45,7 @@ def _run_progressive(cmd: list[str], total: float, on_progress=None,
             last_err = errf.read().strip()[-1500:]
     if log:
         log(last_err or "ffmpeg failed")
-    raise RuntimeError("ffmpeg encoding failed "
-                       "(see log for details)  |  এনকোডিং ব্যর্থ")
+    raise RuntimeError("ffmpeg encoding failed (see log for details)")
 
 
 def probe_duration(path: Path, ffmpeg: str) -> float:

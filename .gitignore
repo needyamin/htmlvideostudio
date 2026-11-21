@@ -26,5 +26,9 @@ $RECYCLE.BIN/
 *.tmp
 ~$*
 
-# ── WorkBuddy workspace data (local only) ───────────────
+# ── Local tooling / AI workspace data ───────────────────
 .workbuddy-ai/
+# Mimosa security-scan output (scan reports, hook state, ledgers)
+.mimosa/
+# ZCode agent workspace data
+.zcode/

@@ -9,18 +9,22 @@ from .config import NO_WINDOW
 _REQUIRED = [
     ("playwright", "playwright>=1.40,<2"),
     ("imageio_ffmpeg", "imageio-ffmpeg>=0.4.9,<0.6"),
+    ("edge_tts", "edge-tts>=6.1,<8"),
 ]
 
-# i18n: short bilingual messages shown in the GUI log
+# Short English messages shown in the GUI log
 MSG = {
-    "pip_missing": "Installing required Python packages (one time only) ...  |  প্রয়োজনীয় প্যাকেজ ইনস্টল হচ্ছে (একবারই) ...",
-    "pip_done": "Python packages ready ✓  |  প্যাকেজ প্রস্তুত ✓",
-    "pip_fail": "Could not install Python packages. Check your internet connection, then try again.\nবাংলা: প্যাকেজ ইনস্টল করা যায়নি — ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।",
-    "chromium_missing": "Downloading Chromium browser (~150 MB, one time only) ...  |  ক্রোমিয়াম ব্রাউজার ডাউনলোড হচ্ছে (~১৫০ MB, একবারই) ...",
-    "chromium_done": "Chromium ready ✓  |  ক্রোমিয়াম প্রস্তুত ✓",
-    "chromium_fail": "Could not download the Chromium browser. Check your internet connection and try again.\nবাংলা: ব্রাউজার ডাউনলোড করা যায়নি — ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।",
-    "ffmpeg_ok": "Video encoder ready ✓  |  ভিডিও এনকোডার প্রস্তুত ✓",
-    "env_ready": "Setup complete — ready to export!  |  সেটআপ সম্পন্ন — এক্সপোর্ট করার জন্য প্রস্তুত!",
+    "pip_missing": "Installing required Python packages (one time only) ...",
+    "pip_done": "Python packages ready ✓",
+    "pip_fail": "Could not install Python packages. Check your internet "
+                "connection, then try again.",
+    "chromium_missing": "Downloading Chromium browser (~150 MB, one time "
+                        "only) ...",
+    "chromium_done": "Chromium ready ✓",
+    "chromium_fail": "Could not download the Chromium browser. Check your "
+                     "internet connection and try again.",
+    "ffmpeg_ok": "Video encoder ready ✓",
+    "env_ready": "Setup complete — ready to export!",
 }
 
 
@@ -44,7 +48,7 @@ def ensure_environment(log) -> str:
     """Install anything missing and return the path of an ffmpeg binary.
 
     `log` is a callable(str) used for progress messages.
-    Raises EnvironmentError with a bilingual, plain-language message on failure.
+    Raises EnvironmentError with a plain-language message on failure.
     """
     import importlib
 
