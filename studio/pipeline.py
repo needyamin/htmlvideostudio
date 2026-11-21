@@ -160,7 +160,8 @@ def render(settings: Settings, progress, cancel_event) -> Path:
                         cursor += settings.seconds_per_slide
                         continue
                     mp3 = tts_dir / f"vo{i:03d}.mp3"
-                    synth(text, voice_for(text, settings.tts_voice), mp3)
+                    voice = voice_for(text, settings.tts_voice)
+                    synth(text, voice, mp3)
                     wav = tts_dir / f"vo{i:03d}.wav"
                     mp3_to_wav(mp3, wav, ffmpeg)
                     d = wav_duration(wav)
@@ -171,7 +172,8 @@ def render(settings: Settings, progress, cancel_event) -> Path:
                     progress("phase", 5 + (i + 1) / n_slides * 5,
                              f"Generating voiceover {i + 1}/{n_slides} ...")
                     progress("log", 0,
-                             f"✓ Narration {i + 1}/{n_slides}: {d:.1f}s")
+                             f"✓ Narration {i + 1}/{n_slides}: {d:.1f}s "
+                             f"· {voice}")
                 total = sum(durations)
                 vo_track = work / "voiceover.wav"
                 build_track(entries, total, vo_track)
@@ -233,6 +235,10 @@ def render(settings: Settings, progress, cancel_event) -> Path:
                             progress("log", 0,
                                      f"Could not verify slide {idx + 1} "
                                      f"is visible — capturing anyway.")
+                        else:
+                            # replay the slide's entrance animations at
+                            # capture start (slide 1's ran at page load)
+                            det.restart_animations(idx)
 
                     progress("phase", 10 + idx / len(durations) * 70,
                              f"Capturing slide {idx + 1}/{len(durations)} "

@@ -90,6 +90,29 @@ STEP_BACK_JS = (
     "(document.body || document.documentElement).dispatchEvent(ev);"
     " return true; }")
 
+# Hide -> force reflow -> restore: every CSS animation inside the slide
+# restarts from its beginning (same as re-visiting the slide), so
+# entrance reveals play in the video for EVERY slide — including slide 1,
+# whose animations otherwise already ran during the page load.
+RESTART_ANIM_JS = """
+(i) => {
+  const el = (window.__hvs_slides || [])[i];
+  if (!el) return false;
+  const sx = scrollX, sy = scrollY;
+  const prev = el.style.display;
+  el.style.display = 'none';
+  void el.offsetWidth;              // force reflow
+  el.style.display = prev;          // restore deck-controlled visibility
+  scrollTo(sx, sy);                 // scroll decks: keep position stable
+  try {
+    document.getAnimations({subtree: el}).forEach(a => {
+      if (a.playState === 'finished') { a.currentTime = 0; a.play(); }
+    });
+  } catch (e) {}
+  return true;
+}
+"""
+
 
 class SlideDetector:
     def __init__(self, page):
@@ -189,5 +212,18 @@ class SlideDetector:
                 advance(0.15)
         try:
             return self.active_index() == index
+        except Exception:
+            return False
+
+    def restart_animations(self, index: int) -> bool:
+        """Restart every animation inside slide `index` (CSS keyframes,
+        reveals and WAAPI), as if the slide were visited fresh.
+
+        Called at capture start so entrance animations play in the video
+        for every slide — slide 1's animations otherwise already ran
+        during the page load and would appear finished.
+        """
+        try:
+            return bool(self.page.evaluate(RESTART_ANIM_JS, index))
         except Exception:
             return False
