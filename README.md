@@ -2,6 +2,8 @@
 
 Turn **any animated HTML page** into a high-quality **HD / Full-HD / 4K MP4 video** — no coding required.
 
+<img width="922" height="972" alt="videoStudio" src="https://github.com/user-attachments/assets/d4e451e9-b6f2-4974-a8fa-63dc3273d7b0" />
+
 ---
 
 ## Quick start (3 steps)
