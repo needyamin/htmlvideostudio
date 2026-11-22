@@ -43,14 +43,20 @@ class DeterministicEngine:
         self.fps = fps
         self.cdp = page.context.new_cdp_session(page)
         self._expired = threading.Event()
+        self._base_ticks = 0.0
+        self._elapsed_ms = 0.0
+        self._last_frame_ms = 0.0
         self.cdp.on("Emulation.virtualTimeBudgetExpired",
                     lambda *_: self._expired.set())
 
     # ── virtual-time control ──────────────────────────────────────
     def setup(self) -> None:
         try:
-            self.cdp.send("Emulation.setVirtualTimePolicy",
-                          {"policy": "pause"})
+            res = self.cdp.send("Emulation.setVirtualTimePolicy",
+                                {"policy": "pause"})
+            self._base_ticks = float(res.get("virtualTimeTicksBase", 0.0))
+            self._elapsed_ms = 0.0
+            self._last_frame_ms = 0.0
         except Exception as e:  # begin-frame control missing
             raise EngineUnsupported(str(e))
 
@@ -73,26 +79,41 @@ class DeterministicEngine:
 
     def advance(self, seconds: float, timeout: float = 60.0) -> None:
         """Advance virtual time by `seconds`, blocking until consumed."""
-        target = self._vnow() + seconds * 1000.0
+        ms = max(1.0, seconds * 1000.0)
+        self._expired.clear()
+        target = self._vnow() + ms
+        self._elapsed_ms += ms
         self.cdp.send("Emulation.setVirtualTimePolicy", {
             "policy": "pauseIfNetworkFetchesPending",
-            "budget": max(1, int(seconds * 1000) + 10),
+            "budget": ms,
         })
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             # budget-expired events only dispatch inside Playwright calls,
             # so poll the virtual clock directly (each _vnow() also lets
             # pending events through).
-            if self._expired.is_set() or self._vnow() >= target - 1.0:
+            if self._expired.is_set() or self._vnow() >= target - 0.5:
                 return
-            time.sleep(0.004)
+            time.sleep(0.002)
         raise EngineUnsupported("virtual-time budget did not expire")
 
     def snap(self) -> bytes | None:
+        # HeadlessExperimental.beginFrame requires strictly increasing
+        # frameTimeTicks (in milliseconds, matching virtualTimeTicksBase)
+        # so the compositor / Web Animations / rAF clock advances in lockstep
+        # with virtual time rather than wall-clock time.
+        if self._elapsed_ms <= self._last_frame_ms:
+            self._elapsed_ms = self._last_frame_ms + 0.01
+        self._last_frame_ms = self._elapsed_ms
+        params: dict = {
+            "interval": 1000.0 / self.fps,
+            "screenshot": {"format": "jpeg", "quality": 96},
+        }
+        if self._base_ticks > 0:
+            params["frameTimeTicks"] = self._base_ticks + self._elapsed_ms
         # jpeg q96 is dramatically faster to save/load than png while
         # being visually lossless for video frames
-        res = self.cdp.send("HeadlessExperimental.beginFrame",
-                            {"screenshot": {"format": "jpeg", "quality": 96}})
+        res = self.cdp.send("HeadlessExperimental.beginFrame", params)
         data = res.get("screenshotData")
         if not data:
             return None

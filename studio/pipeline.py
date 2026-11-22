@@ -30,7 +30,9 @@ def scan_html(html_path: Path, selector: str = "") -> dict:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, args=LAUNCH_ARGS)
         try:
-            ctx = browser.new_context(viewport={"width": 1920, "height": 1080})
+            ctx = browser.new_context(
+                viewport={"width": 1920, "height": 1080},
+                reduced_motion="no-preference")
             page = ctx.new_page()
             page.goto(html_path.resolve().as_uri(), timeout=30000)
             try:
@@ -82,7 +84,8 @@ def render(settings: Settings, progress, cancel_event) -> Path:
             browser = p.chromium.launch(headless=True, args=LAUNCH_ARGS)
             ctx = browser.new_context(
                 viewport={"width": 1920, "height": 1080},
-                device_scale_factor=settings.res_h / 1080.0)
+                device_scale_factor=settings.res_h / 1080.0,
+                reduced_motion="no-preference")
             page = ctx.new_page()
             page.goto(html.resolve().as_uri(), timeout=60000)
             try:
@@ -245,7 +248,16 @@ def render(settings: Settings, progress, cancel_event) -> Path:
                              f"({dur:.1f}s) ...")
                 else:
                     def activate():
-                        pass
+                        try:
+                            page.evaluate("""() => {
+                                document.getAnimations().forEach(a => {
+                                    try { a.cancel(); a.play(); } catch (e) {
+                                        try { a.currentTime = 0; a.play(); } catch (e2) {}
+                                    }
+                                });
+                            }""")
+                        except Exception:
+                            pass
                     progress("phase", 10, "Recording ...")
 
                 steps = engine.capture_steps(

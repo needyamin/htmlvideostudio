@@ -106,7 +106,9 @@ RESTART_ANIM_JS = """
   scrollTo(sx, sy);                 // scroll decks: keep position stable
   try {
     document.getAnimations({subtree: el}).forEach(a => {
-      if (a.playState === 'finished') { a.currentTime = 0; a.play(); }
+      try { a.cancel(); a.play(); } catch (e) {
+        try { a.currentTime = 0; a.play(); } catch (e2) {}
+      }
     });
   } catch (e) {}
   return true;
@@ -166,7 +168,7 @@ class SlideDetector:
                 return True
         return False
 
-    def _step_to(self, index: int, advance=None, max_steps: int = 8) -> bool:
+    def _step_to(self, index: int, advance=None, max_steps: int = 100) -> bool:
         """Reach slide `index` by stepping through the deck with generic
         forward navigation. Caches whichever strategy works. Forward-only
         decks start at slide 0, so stepping reaches every index."""
