@@ -2,13 +2,13 @@
 SOURCE: presentation_spid3r_bangla_big.html · মোট ১৯ স্লাইড · প্রতিটি "[[SLIDE n]]" একক স্লাইডের সাথে মিলে।
 
 [[SLIDE 1]]
-স্পিডার। একটি আধুনিক, দ্রুতগতির, মেমরি-নিরাপদ প্রোগ্রামিং ভাষা। সম্পূর্ণ রাস্ট দিয়ে তৈরি, শূন্য এক্সটার্নাল ডিপেন্ডেন্সি। ভার্সন v1.1.0। ব্রাউজারে WASM-এ চলে, আবার LLVM দিয়ে নেটিভ AOT-ও করা যায়।
+স্পিডার। একটি আধুনিক, দ্রুতগতির, মেমরি-নিরাপদ প্রোগ্রামিং ভাষা। সম্পূর্ণ রাস্ট দিয়ে তৈরি, শূন্য এক্সটার্নাল ডিপেন্ডেন্সি। ভার্সন v1.1.1। ব্রাউজারে WASM-এ চলে, আবার LLVM দিয়ে নেটিভ AOT-ও করা যায়।
 
 [[SLIDE 2]]
 স্পিডার এক নজরে। চারটি ভিত্তি। প্রথম, শূন্য ডিপেন্ডেন্সি — কম্পাইলার, ভার্চুয়াল মেশিন, স্ট্যান্ডার্ড লাইব্রেরি, সব নিজস্ব রাস্ট কোডে। দ্বিতীয়, দুটি ইঞ্জিন — বাইটকোড VM এবং AST ইন্টারপ্রেটার, একশত শতাংশ একই ফলাফল। তৃতীয়, লিক-শূন্য গার্বেজ কালেক্টর — সাইকেল সংগ্রাহক, রেফারেন্স লুপও কখনো মেমরি লিক করে না। চতুর্থ, WebAssembly — ব্রাউজার, Node.js, Deno আর Edge Worker, সবখানে একই ইঞ্জিন। সংখ্যায়: ছয়টি প্রিমিটিভ টাইপ, চল্লিশটি রিজার্ভড কীওয়ার্ড, কুড়ির বেশি ডেটা স্ট্রাকচার, ছাব্বিশটি স্ট্যান্ডার্ড লাইব্রেরি মডিউল।
 
 [[SLIDE 3]]
-এক বাইনারি, এক কমান্ড। তিনভাবে ইনস্টল: লিনাক্স ও ম্যাকওএসে install.sh স্ক্রিপ্ট, উইন্ডোজে GUI সেটআপ exe, অথবা Cargo install। একটাই বাইনারি — কোনো রানটাইম ইনস্টল লাগে না, ভিজ্যুয়াল সি প্লাস প্লাসও লাগে না। ফাইল এক্সটেনশন dot matrix। হ্যালো ওয়ার্ল্ড প্রোগ্রাম: fn main, তার ভেতরে println Hello World, language নামে ভ্যারিয়েবল Spid3r, বছর ২০২৬, স্বাগতম বার্তা v1.1.0 সহ, এবং return zero। ডকুমেন্টেশনের প্রতিটি উদাহরণ ব্রাউজারেই Try it Yourself বাটনে চালানো যায়।
+এক বাইনারি, এক কমান্ড। তিনভাবে ইনস্টল: লিনাক্স ও ম্যাকওএসে install.sh স্ক্রিপ্ট, উইন্ডোজে GUI সেটআপ exe, অথবা Cargo install। একটাই বাইনারি — কোনো রানটাইম ইনস্টল লাগে না, ভিজ্যুয়াল সি প্লাস প্লাসও লাগে না। ফাইল এক্সটেনশন dot matrix। হ্যালো ওয়ার্ল্ড প্রোগ্রাম: fn main, তার ভেতরে println Hello World, language নামে ভ্যারিয়েবল Spid3r, বছর ২০২৬, স্বাগতম বার্তা v1.1.1 সহ, এবং return zero। ডকুমেন্টেশনের প্রতিটি উদাহরণ ব্রাউজারেই Try it Yourself বাটনে চালানো যায়।
 
 [[SLIDE 4]]
 একটি কমান্ড spid3r, প্রায় পঁচিশটি সাবকমান্ড। তিনটি গ্রুপ। চালানো ও পরীক্ষা: run, check, repl, debug, lsp, test — যা তিন ইঞ্জিনের পার্থক্য যাচাই করে — এবং bench। বিল্ড ও ডেলিভারি: compile, যা কম্পাইলড বাইটকোড বানায়; build, native exe; gui; bundle; fmt; doc। প্রজেক্ট ও অপারেশন: init, install, add, verify, publish, info, config, control। আর আছে --sandbox — ফাইল, নেটওয়ার্ক, প্রসেস, এনভায়রনমেন্ট, সব বন্ধ করে দেয়, অবিশ্বস্ত কোডও নিরাপদে চালানো যায়।
@@ -50,7 +50,7 @@ SOURCE: presentation_spid3r_bangla_big.html · মোট ১৯ স্লাই�
 সত্যিকারের সমান্তরাল, GIL নেই। spawn দিয়ে টাস্ক, M:N শিডিউলার, Thread এক, Thread দুই, দুইশত ছাপ্পান্ন পর্যন্ত। channel দিয়ে বার্তা, recv দিয়ে অপেক্ষা। কোনো গ্লোবাল লক নেই। async/await, task.join, mutex, atomic_int lock-free, এবং বিল্ট-ইন ডেডলক সনাক্তকরণ। Erlang ও Go-স্টাইল চ্যানেল।
 
 [[SLIDE 17]]
-সবকিছু বিল্ট-ইন, ছাব্বিশটি মডিউল। কনসোলে println, read_line, spid3rinfo। ফাইলসিস্টেমে স্ট্রিমিং হ্যান্ডেল, lock আর fsync। নেটওয়ার্কে http_fetch, UDS, TLS 1.3। ম্যাথে random_bytes, CSPRNG। ক্রিপ্টো sha256, hmac, pbkdf2, ed25519, bcrypt, argon2। ফরম্যাট JSON, CSV, gzip, regex NFA। সময়ে সিভিল ক্যালেন্ডার আর strftime। পরীক্ষায় testkit, assert, mock। ছাব্বিশটি মডিউল সব বাইনারির ভেতরে: web, http, fastcgi, stats, mathx, toml, yaml, xml, tz পাঁচশত আশানব্বই IANA জোন, unicode, smtp, ftp, session, middleware, multipart, event, gen, bigint, decimal, rational, complex, semver, uuid। এক্সপোর্টেড ফাংশনে মডিউলের প্রিফিক্স থাকে, যেমন uuid.uuid_v4 আর toml.toml_parse। সততা-ঘোষণা: সব ক্রিপ্টো RFC টেস্ট-ভেক্টর দিয়ে যাচাইকৃত, কিন্তু এখনো স্বাধীন অডিট হয়নি; বড় প্রোডাকশনে অডিটেড প্রক্সি বা HSM ব্যবহার করুন।
+সবকিছু বিল্ট-ইন, ছাব্বিশটি মডিউল। কনসোলে println, read_line, spid3rinfo। ফাইলসিস্টেমে স্ট্রিমিং হ্যান্ডেল, lock আর fsync। নেটওয়ার্কে http_fetch, UDS, native-tls। ম্যাথে random_bytes, CSPRNG। ক্রিপ্টো sha256, hmac, pbkdf2, ed25519, bcrypt, argon2। ফরম্যাট JSON, CSV, gzip, regex NFA। সময়ে সিভিল ক্যালেন্ডার আর strftime। পরীক্ষায় testkit, assert, mock। ছাব্বিশটি মডিউল সব বাইনারির ভেতরে: web, http, fastcgi, stats, mathx, toml, yaml, xml, tz পাঁচশত আশানব্বই IANA জোন, unicode, smtp, ftp, session, middleware, multipart, event, gen, bigint, decimal, rational, complex, semver, uuid। এক্সপোর্টেড ফাংশনে মডিউলের প্রিফিক্স থাকে, যেমন uuid.uuid_v4 আর toml.toml_parse। সততা-ঘোষণা: সব ক্রিপ্টো RFC টেস্ট-ভেক্টর দিয়ে যাচাইকৃত, কিন্তু এখনো স্বাধীন অডিট হয়নি; বড় প্রোডাকশনে অডিটেড প্রক্সি বা HSM ব্যবহার করুন।
 
 [[SLIDE 18]]
 কনফিগ ও কন্ট্রোল প্যানেল। spid3r.ini-তে ইঞ্জিন, মেমরি লিমিট, নেট টাইমআউট, টাইমজোন — বারো সেকশনে পঁয়তাল্লিশটি কী। লাইভ রিলোড, config reload দিয়ে। সততা: basedir একা জেল নয়, disable_natives বা --sandbox-এর সাথে জোড়া দিন। সবকিছু লোকাল: spid3r control কমান্ডে status, safety, ini, config, logs; আর ডেস্কটপ কন্ট্রোল প্যানেলে Overview, Language, Safety, Configuration, Logs ট্যাব। কনফিগ, কন্ট্রোল আর লগ — সব আপনার মেশিনেই।

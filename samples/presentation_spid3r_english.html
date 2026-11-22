@@ -397,7 +397,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
     <div class="brand">
       <span class="logo">🕷️</span>
       <span>Spid<span class="en">3</span>r</span>
-      <span class="badge">v1.1.0</span>
+      <span class="badge">v1.1.1</span>
     </div>
     <div class="chrome-hint"></div>
     <div id="counter"><b>1</b> / 21</div>
@@ -412,7 +412,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
       <p class="lead rv" style="--i:2">A modern, high-performance, memory-safe, embeddable general-purpose programming language</p>
       <p class="sub rv" style="--i:3">Built from scratch in Rust · <b style="color:var(--green)">zero external dependencies</b></p>
       <div class="badge-row">
-        <span class="badge rv" style="--i:4">v1.1.0</span>
+        <span class="badge rv" style="--i:4">v1.1.1</span>
         <span class="badge badge--cyan rv" style="--i:5">Language 1.0</span>
         <span class="badge badge--purple rv pulse" style="--i:6">WASM</span>
       </div>
@@ -455,7 +455,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
             <div class="card card--tight rv" style="--i:2"><h4>Windows</h4><p>Setup <code>.exe</code></p></div>
             <div class="card card--tight rv" style="--i:3"><h4>Cargo</h4><p class="mono" style="font-size:24px">cargo install</p></div>
           </div>
-          <div class="code code--tight rv" style="--i:4"><span class="line"><span class="o">$</span> spid3r version</span><span class="line">spid3r 1.1.0 (language 1.0)</span><span class="line">Rust host, no runtime dependencies.</span></div>
+          <div class="code code--tight rv" style="--i:4"><span class="line"><span class="o">$</span> spid3r version</span><span class="line">spid3r 1.1.1 (language 1.0)</span><span class="line">Rust host, no runtime dependencies.</span></div>
           <p class="note rv" style="--i:5">CLI: <code>check</code> · <code>repl</code> (500-entry history) · <code>debug</code> · <code>lsp</code></p>
           <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>No runtime to install.</b> Only GUI mode borrows the system webview · <code>.matrix</code> files</div>
         </div>
@@ -467,7 +467,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
 <span class="line">    <span class="k">let</span> language = <span class="s">"Spid3r"</span>;</span>
 <span class="line">    <span class="k">let</span> year = <span class="n">2026</span>;</span>
 <span class="line">    <span class="f">println</span>(<span class="s">"Welcome to the "</span> + language</span>
-<span class="line">        + <span class="s">" developer guide! (v1.1.0)"</span>);</span>
+<span class="line">        + <span class="s">" developer guide! (v1.1.1)"</span>);</span>
 <span class="line">    <span class="k">return</span> <span class="n">0</span>;</span>
 <span class="line">}</span>
           </div>
@@ -506,8 +506,8 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         </div>
         <div class="three">
           <div class="card card--tight rv" style="--i:8;background:var(--tint-cyan)"><h4 style="color:var(--cyan-light)">Tree walker</h4><p>reference semantics oracle</p></div>
-          <div class="card card--tight rv" style="--i:9"><h4 style="color:var(--green)">Bytecode VM</h4><p>60 opcodes · optimizer &amp; profiler</p></div>
-          <div class="card card--tight rv" style="--i:10"><h4 style="color:var(--purple)">Native AOT</h4><p>LLVM 23 · scalar unboxing · bump-slab arenas</p></div>
+          <div class="card card--tight rv" style="--i:9"><h4 style="color:var(--green)">Bytecode VM</h4><p>60 opcodes · pre-decoded superinstructions</p></div>
+          <div class="card card--tight rv" style="--i:10"><h4 style="color:var(--purple)">Native AOT</h4><p>LLVM 23 · 2D row unboxing · split staticlib · 16B Value</p></div>
         </div>
         <div class="caveat caveat--tight rv" style="--i:11"><b>One front end, four backends.</b> The WebAssembly build is the same VM. stdout, error phase and exit code must match exactly — a corrupt bytecode container is rejected before the first instruction runs.</div>
         <div class="caveat caveat--rose caveat--tight rv" style="--i:12"><b>Parity bug, fixed &amp; pinned:</b> early 1.0 builds miscompiled <code>not (A or B)</code> on the VM when <code>A</code> was falsy — caught and closed by the engine parity tests.</div>
@@ -994,7 +994,7 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         <h2 class="h">The cryptography trust statement</h2>
       </div>
       <div class="grow gap-m">
-        <div class="caveat caveat--rose rv" style="--i:1"><b>Not independently audited.</b> The crypto primitives (sha256/512, hmac, pbkdf2, ed25519, bcrypt, argon2) and the TLS 1.3 client are pure Rust with zero dependencies — verified by internal RFC test vectors and negative/malleability tests, but <b>not formally proven side-channel hardened</b>. External review is pending.</div>
+        <div class="caveat caveat--rose rv" style="--i:1"><b>Not independently audited.</b> The standard hashing &amp; signing primitives (sha256/512, hmac, pbkdf2, ed25519, bcrypt, argon2) are pure Rust with zero dependencies — verified by internal RFC test vectors and negative/malleability tests, while TLS transport uses OS/vetted <code>native-tls</code> (<code>--features tls</code>) and primitives are <b>not formally proven side-channel hardened</b>. External review is pending.</div>
         <div class="caveat caveat--tight rv" style="--i:2"><b>For high-stakes production:</b> terminate TLS or run secret-key operations behind an audited reverse proxy or HSM.</div>
         <div class="two">
           <div class="card card--tight rv" style="--i:3"><h4>Ed25519</h4><p>Constant-time <code>cswap</code> Montgomery ladder, canonical <code>S &lt; L</code>, small-order-key and off-curve rejection. Verification is strict but <b style="color:var(--rose)">not constant-time</b>.</p></div>
