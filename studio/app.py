@@ -18,12 +18,13 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
 from .capture import Cancelled
-from .config import (CAPTURE_DETAIL, FPS_CHOICES, QUALITY, RES_LABELS,
-                     RESOLUTIONS, RES_SIZE, VOICE_AUTO, VOICES, Settings)
+from .config import (CAPTURE_DETAIL, FPS_CHOICES, GOOGLE_VOICE_DEFAULT,
+                     GOOGLE_VOICES, QUALITY, RES_LABELS, RESOLUTIONS, RES_SIZE,
+                     TTS_ENGINE_GOOGLE, TTS_ENGINE_WINDOWS, VOICE_AUTO, VOICES,
+                     Settings, load_gemini_api_key)
 from .pipeline import Cancelled as PipelineCancelled  # noqa: F401 (alias)
 from .pipeline import RenderError, render, scan_html
-from .tts import (is_bengali, mp3_to_wav, parse_script, read_script, synth,
-                  voice_for)
+from .tts import is_bengali, parse_script, read_script, synth_wav, voice_for
 
 BROWSER_HINT = ("Could not start the browser engine. Possible fixes:\n"
                 "1) Make sure no antivirus blocked Python.\n"
@@ -139,6 +140,9 @@ class App:
         st.configure("TRadiobutton", background=C["panel"],
                      foreground=C["ink"])
         st.map("TRadiobutton", background=[("active", C["panel"])])
+        st.configure("Card.TRadiobutton", background=C["card"],
+                     foreground=C["ink"])
+        st.map("Card.TRadiobutton", background=[("active", C["card"])])
         st.configure("Accent.TButton", foreground="white",
                      background=C["accent"], font=("Segoe UI", 11, "bold"),
                      padding=(30, 12), borderwidth=0)
@@ -218,23 +222,44 @@ class App:
                        [("Text files", "*.txt"), ("All files", "*.*")],
                        clear=self._clear_script)
 
-        voicerow = tk.Frame(f1, bg=C["card"])
-        voicerow.pack(fill="x", pady=(4, 0))
-        ttk.Label(voicerow, text="TTS voice", width=19,
+        self.engine_var = tk.StringVar(value=TTS_ENGINE_WINDOWS)
+
+        winrow = tk.Frame(f1, bg=C["card"])
+        winrow.pack(fill="x", pady=(4, 0))
+        ttk.Label(winrow, text="TTS voice", width=19,
                   anchor="e").pack(side="left", padx=(0, 8))
-        self.voice_var = tk.StringVar(value=VOICE_AUTO)
-        self.voice_cb = ttk.Combobox(voicerow, textvariable=self.voice_var,
-                                     state="disabled", width=34,
-                                     values=VOICES)
-        self.voice_cb.pack(side="left")
-        self.sample_btn = ttk.Button(voicerow, text="Play sample",
+        ttk.Radiobutton(
+            winrow, text="Windows TTS", value=TTS_ENGINE_WINDOWS,
+            variable=self.engine_var, style="Card.TRadiobutton", width=14,
+            command=self._on_engine_change).pack(side="left")
+        self.win_voice_var = tk.StringVar(value=VOICE_AUTO)
+        self.win_voice_cb = ttk.Combobox(
+            winrow, textvariable=self.win_voice_var,
+            state="readonly", width=33, values=VOICES)
+        self.win_voice_cb.pack(side="left", padx=(4, 0))
+        self.sample_btn = ttk.Button(winrow, text="Play sample",
                                      style="Ghost.TButton",
                                      command=self._play_sample,
                                      state="disabled")
         self.sample_btn.pack(side="left", padx=(8, 0))
-        ttk.Label(voicerow, text="Converts the script to speech — slide "
-                                 "timing follows the narration",
-                  style="Sub.TLabel").pack(side="left", padx=(8, 0))
+
+        googlerow = tk.Frame(f1, bg=C["card"])
+        googlerow.pack(fill="x", pady=(4, 0))
+        ttk.Label(googlerow, text="", width=19,
+                  anchor="e").pack(side="left", padx=(0, 8))
+        ttk.Radiobutton(
+            googlerow, text="Google TTS", value=TTS_ENGINE_GOOGLE,
+            variable=self.engine_var, style="Card.TRadiobutton", width=14,
+            command=self._on_engine_change).pack(side="left")
+        self.google_voice_var = tk.StringVar(value=GOOGLE_VOICE_DEFAULT)
+        self.google_voice_cb = ttk.Combobox(
+            googlerow, textvariable=self.google_voice_var,
+            state="disabled", width=33, values=GOOGLE_VOICES)
+        self.google_voice_cb.pack(side="left", padx=(4, 0))
+        self.tts_hint = ttk.Label(
+            googlerow, text="Windows TTS active · Google TTS disabled",
+            style="Sub.TLabel")
+        self.tts_hint.pack(side="left", padx=(8, 0))
 
         self.scan_label = tk.Label(
             f1, text="Checking the video engine ...",
@@ -341,6 +366,18 @@ class App:
                                 "— very slow", bg=C["panel"], fg=C["sub"],
                  font=("Segoe UI", 9)).grid(row=2, column=2, sticky="w",
                                             padx=(12, 0), pady=3)
+        tk.Label(adv_body, text="Gemini API key", bg=C["panel"], fg=C["ink"],
+                 font=("Segoe UI", 9), width=13,
+                 anchor="e").grid(row=3, column=0, sticky="e", padx=(0, 8),
+                                  pady=3)
+        self.gemini_key_var = tk.StringVar(value=load_gemini_api_key())
+        self.gemini_key_entry = ttk.Entry(
+            adv_body, width=28, textvariable=self.gemini_key_var, show="•")
+        self.gemini_key_entry.grid(row=3, column=1, sticky="w", pady=3)
+        tk.Label(adv_body, text="Loaded from root .env (or override here)",
+                 bg=C["panel"], fg=C["sub"],
+                 font=("Segoe UI", 9)).grid(row=3, column=2, sticky="w",
+                                            padx=(12, 0), pady=3)
         adv_body.columnconfigure(2, weight=1)
 
         # ── actions ──────────────────────────────────────────────
@@ -391,6 +428,7 @@ class App:
         self.html_var.trace_add("write", lambda *_: self._update_outname())
         self.res_var.trace_add("write", lambda *_: self._update_outname())
         self._update_res()
+        self._on_engine_change()
 
     # ───────────── graphical resolution picker ──────────────────────
     def _make_res_picker(self, parent):
@@ -565,7 +603,6 @@ class App:
         if not p:
             return
         self.script_var.set(p)
-        self.voice_cb.configure(state="readonly")
         try:
             blocks = parse_script(read_script(Path(p)))
         except Exception:
@@ -582,12 +619,32 @@ class App:
 
     def _clear_script(self):
         self.script_var.set("")
-        self.voice_cb.configure(state="disabled")
         self.script_lang_bn = None
+
+    def _on_engine_change(self):
+        google_on = self.engine_var.get() == TTS_ENGINE_GOOGLE
+        self.win_voice_cb.configure(state="disabled" if google_on else "readonly")
+        self.google_voice_cb.configure(
+            state="readonly" if google_on else "disabled")
+        self.gemini_key_entry.configure(
+            state="normal" if google_on else "disabled")
+        if google_on:
+            self.tts_hint.configure(
+                text="Google Gemini TTS active · Windows TTS disabled")
+        else:
+            self.tts_hint.configure(
+                text="Windows TTS active · Google TTS disabled")
+
+    def _active_voice_label(self) -> str:
+        if self.engine_var.get() == TTS_ENGINE_GOOGLE:
+            return self.google_voice_var.get()
+        return self.win_voice_var.get()
 
     # ───────────────────── voice sample playback ────────────────────
     def _sample_text(self) -> str:
-        label = self.voice_var.get()
+        if self.engine_var.get() == TTS_ENGINE_GOOGLE:
+            return SAMPLE_BN if self.script_lang_bn else SAMPLE_EN
+        label = self.win_voice_var.get()
         if label == VOICE_AUTO:
             bn = bool(self.script_lang_bn)   # match the loaded script
         else:
@@ -598,21 +655,23 @@ class App:
         if self._playing_sample or self.ffmpeg is None:
             return
         # read all Tk state HERE (main thread) — never from the worker
+        engine = self.engine_var.get()
         text = self._sample_text()
-        voice = voice_for(text, self.voice_var.get())
+        voice = voice_for(text, self._active_voice_label(), engine=engine)
+        api_key = self.gemini_key_var.get().strip() or load_gemini_api_key()
         self._playing_sample = True
         self.sample_btn.configure(state="disabled", text="Generating ...")
-        threading.Thread(target=self._sample_worker, args=(text, voice),
+        threading.Thread(target=self._sample_worker,
+                         args=(text, voice, engine, api_key),
                          daemon=True).start()
 
-    def _sample_worker(self, text: str, voice: str):
+    def _sample_worker(self, text: str, voice: str, engine: str, api_key: str):
         try:
             tmp = Path(tempfile.gettempdir()) / "hvs_voice_sample"
             tmp.mkdir(exist_ok=True)
-            mp3 = tmp / "sample.mp3"
-            synth(text, voice, mp3)
             wav = tmp / "sample.wav"
-            mp3_to_wav(mp3, wav, self.ffmpeg)
+            synth_wav(text, voice, wav, self.ffmpeg,
+                      engine=engine, api_key=api_key)
             import winsound  # stdlib on Windows
             winsound.PlaySound(str(wav), winsound.SND_FILENAME)
             self.q.put(("sample_done", None, None))
@@ -644,7 +703,10 @@ class App:
             html_path=Path(self.html_var.get()),
             script_path=Path(self.script_var.get())
             if self.script_var.get() else None,
-            tts_voice=self.voice_var.get(),
+            tts_engine=self.engine_var.get(),
+            tts_voice=self._active_voice_label(),
+            gemini_api_key=(self.gemini_key_var.get().strip()
+                            or load_gemini_api_key()),
             res_h=res_h,
             fps=int(self.fps_var.get()),
             crf=QUALITY[self.q_var.get()],

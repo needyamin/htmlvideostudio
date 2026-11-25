@@ -14,8 +14,8 @@ from .capture import (LAUNCH_ARGS, Cancelled, create_engine)
 from .config import ANIM_CAP_FPS, RES_LABELS, RES_SIZE, Settings
 from .detector import SlideDetector
 from .encoder import encode_steps, join_segments
-from .tts import (LEAD, TAIL, build_track, mp3_to_wav, parse_script,
-                  read_script, synth, voice_for, wav_duration)
+from .tts import (LEAD, TAIL, build_track, parse_script, read_script,
+                  synth_wav, voice_for, wav_duration)
 
 
 class RenderError(Exception):
@@ -149,24 +149,28 @@ def render(settings: Settings, progress, cancel_event) -> Path:
                 narrated = sum(1 for i in range(n_slides)
                                if blocks.get(i + 1))
                 progress("phase", 5, "Generating voiceover ...")
-                progress("log", 0, f"Text-to-speech: {narrated}/{n_slides} "
-                                  f"slides have narration.")
+                progress("log", 0,
+                         f"Text-to-speech ({settings.tts_engine}): "
+                         f"{narrated}/{n_slides} slides have narration.")
                 tts_dir = work / "tts"
                 tts_dir.mkdir()
                 entries: list[tuple[Path, float]] = []
                 durations = []
                 cursor = 0.0
                 for i in range(n_slides):
+                    if cancel_event.is_set():
+                        raise Cancelled()
                     text = blocks.get(i + 1)
                     if not text:
                         durations.append(settings.seconds_per_slide)
                         cursor += settings.seconds_per_slide
                         continue
-                    mp3 = tts_dir / f"vo{i:03d}.mp3"
-                    voice = voice_for(text, settings.tts_voice)
-                    synth(text, voice, mp3)
+                    voice = voice_for(text, settings.tts_voice,
+                                      engine=settings.tts_engine)
                     wav = tts_dir / f"vo{i:03d}.wav"
-                    mp3_to_wav(mp3, wav, ffmpeg)
+                    synth_wav(text, voice, wav, ffmpeg,
+                              engine=settings.tts_engine,
+                              api_key=settings.gemini_api_key)
                     d = wav_duration(wav)
                     entries.append((wav, cursor + LEAD))
                     slide_d = LEAD + d + TAIL

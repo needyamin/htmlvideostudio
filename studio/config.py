@@ -35,8 +35,13 @@ RES_SIZE = {720: (1280, 720), 1080: (1920, 1080),
 QUALITY = {"Normal": 22, "High": 18, "Best": 14}
 FPS_CHOICES = (24, 30, 60)
 
-# Text-to-speech voices (edge-tts). The Auto choice matches each slide's
-# language: Bangla text -> bn-BD voice, everything else -> en-US voice.
+# Text-to-speech engines & voices.
+TTS_ENGINE_WINDOWS = "Windows TTS (Microsoft)"
+TTS_ENGINE_GOOGLE = "Google TTS (Gemini)"
+TTS_ENGINES = [TTS_ENGINE_WINDOWS, TTS_ENGINE_GOOGLE]
+
+# Microsoft edge-tts voices. The Auto choice matches each slide's language:
+# Bangla text -> bn-BD voice, everything else -> en-US voice.
 VOICE_AUTO = "Auto — match each slide's language"
 VOICES = [
     VOICE_AUTO,
@@ -53,6 +58,64 @@ VOICE_MAP = {
 }
 VOICE_EN = "en-US-AriaNeural"      # auto-detect choice for non-Bengali text
 VOICE_BN = "bn-BD-NabanitaNeural"  # auto-detect choice for Bengali text
+
+# Google Gemini TTS settings & voices.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+ENV_FILE = PROJECT_ROOT / ".env"
+GEMINI_TTS_MODEL = "gemini-2.5-flash-preview-tts"
+
+
+def load_env_var(name: str, default: str = "") -> str:
+    """Read a credential from process env or the project root .env file."""
+    val = os.environ.get(name, "").strip()
+    if val:
+        return val
+    if ENV_FILE.is_file():
+        try:
+            for raw in ENV_FILE.read_text(encoding="utf-8-sig").splitlines():
+                line = raw.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if line.startswith("export "):
+                    line = line[7:].strip()
+                if "=" not in line:
+                    continue
+                k, v = line.split("=", 1)
+                if k.strip() != name:
+                    continue
+                v = v.strip()
+                if len(v) >= 2 and v[0] == v[-1] and v[0] in ("'", '"'):
+                    v = v[1:-1]
+                return v.strip()
+        except OSError:
+            pass
+    return default
+
+
+def load_gemini_api_key() -> str:
+    """Return the configured Gemini API key from env / .env, or empty str."""
+    return load_env_var("GEMINI_API_KEY")
+GOOGLE_VOICES = [
+    "Enceladus — Breathy, soft (default)",
+    "Kore — Firm",
+    "Puck — Upbeat",
+    "Charon — Informative",
+    "Fenrir — Excitable",
+    "Leda — Youthful",
+    "Zephyr — Bright",
+    "Aoede — Breezy",
+]
+GOOGLE_VOICE_MAP = {
+    "Enceladus — Breathy, soft (default)": "Enceladus",
+    "Kore — Firm": "Kore",
+    "Puck — Upbeat": "Puck",
+    "Charon — Informative": "Charon",
+    "Fenrir — Excitable": "Fenrir",
+    "Leda — Youthful": "Leda",
+    "Zephyr — Bright": "Zephyr",
+    "Aoede — Breezy": "Aoede",
+}
+GOOGLE_VOICE_DEFAULT = GOOGLE_VOICES[0]
 
 # Max frames captured per second of animation (screenshots are the most
 # expensive step; identical/interpolated frames are duplicated smoothly
@@ -75,7 +138,9 @@ class Settings:
     html_path: Path = Path("presentation.html")
     audio_path: Path | None = None
     script_path: Path | None = None   # narration script (.txt) for TTS
-    tts_voice: str = VOICE_AUTO       # edge-tts voice choice
+    tts_engine: str = TTS_ENGINE_WINDOWS
+    tts_voice: str = VOICE_AUTO       # voice choice for selected TTS engine
+    gemini_api_key: str = field(default_factory=load_gemini_api_key)
     res_h: int = 2160                 # 720 / 1080 / 1440 / 2160
     fps: int = 30
     crf: int = 18                     # x264 quality (lower = better)

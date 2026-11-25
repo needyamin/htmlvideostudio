@@ -26,6 +26,11 @@ $RECYCLE.BIN/
 *.tmp
 ~$*
 
+# ── Secrets / credentials (never commit) ────────────────
+.env
+.env.*
+!.env.example
+
 # ── Local tooling / AI workspace data ───────────────────
 .workbuddy-ai/
 # Mimosa security-scan output (scan reports, hook state, ledgers)

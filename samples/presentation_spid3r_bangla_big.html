@@ -1006,6 +1006,45 @@
         transform: none
       }
     }
+
+    /* ── ORIGFIX: slide 15 dense collections grid ──────────────────────
+       Root cause: .grow{justify-content:center} with a total child height
+       larger than the flex container centred the overflow — lifting the
+       6-column, 18-card grid over the h2 heading and pushing the code block
+       past the lower safe area. Compress this slide's spacing only and
+       anchor its stack below the heading. No text/markup is altered.      */
+    .slide[data-slide="15"] .slide-head {
+      margin-bottom: var(--sp-2)
+    }
+
+    .slide[data-slide="15"] .grow.gap-m {
+      justify-content: flex-start;
+      gap: var(--sp-1)
+    }
+
+    .slide[data-slide="15"] .four .card--tight {
+      padding: 6px 10px
+    }
+
+    .slide[data-slide="15"] .four .card--tight h4 {
+      margin-bottom: 0;
+      line-height: 1.2
+    }
+
+    .slide[data-slide="15"] .four .card--tight p {
+      line-height: 1.16
+    }
+
+    .slide[data-slide="15"] .code--tight {
+      font-size: 24px;
+      line-height: 1.28;
+      padding: 8px 12px
+    }
+
+    .slide[data-slide="15"] .caveat--tight {
+      padding: 6px 12px;
+      line-height: 1.3
+    }
   </style>
 </head>
 
