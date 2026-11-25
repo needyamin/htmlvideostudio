@@ -1,9 +1,10 @@
 """HTML Video Studio — desktop GUI (Tkinter). No coding needed.
 
-Design: light modern flat UI — flat indigo header, white cards, a to-scale
-graphical resolution picker, right-hand quality/duration column, accent
-Export button with explicit states, dark console-style log. All text is
-English. Voiceover works via text-to-speech narration scripts.
+Design: modern two-column studio layout — dark-indigo header with live
+status pill, clean white Source/Voiceover and Export Settings cards,
+interactive segmented resolution/quality/FPS selectors, mutually
+exclusive Windows & Google TTS cards, and an integrated progress + log
+footer.
 """
 
 import ctypes
@@ -31,19 +32,46 @@ BROWSER_HINT = ("Could not start the browser engine. Possible fixes:\n"
                 "2) Re-run this program.")
 
 C = dict(
-    bg="#f3f4f8", card="#ffffff", border="#e3e7f0",
-    panel="#f7f8fc",
-    ink="#1f2430", sub="#6b7280",
-    accent="#4f46e5", accent_hi="#4338ca",
-    box="#dde4f4", box_hover="#ccd7f2", box_line="#c3cdea",
-    ok="#15803d", err="#dc2626", warn="#b45309",
-    log_bg="#111827", log_fg="#d1d9e8", log_ok="#7ee2a8", log_err="#ff9a9a",
+    bg="#f1f5f9",
+    card="#ffffff",
+    panel="#f8fafc",
+    border="#e2e8f0",
+    border_hi="#cbd5e1",
+    ink="#0f172a",
+    sub="#64748b",
+    muted="#94a3b8",
+    accent="#4f46e5",
+    accent_hi="#4338ca",
+    accent_soft="#eef2ff",
+    accent_hover="#f1f5f9",
+    ok="#15803d",
+    ok_bg="#dcfce7",
+    err="#dc2626",
+    err_bg="#fee2e2",
+    warn="#b45309",
+    warn_bg="#fef3c7",
+    log_bg="#0f172a",
+    log_fg="#cbd5e1",
+    log_ok="#6ee7b7",
+    log_err="#fca5a5",
 )
 
-QUALITY_DESC = {
-    "Normal": "Smaller file — fastest export",
-    "High": "Recommended — sharp text, balanced size",
-    "Best": "Largest file — maximum detail",
+RES_SHORT = {
+    "HD 720p": ("720p", "HD"),
+    "Full HD 1080p": ("1080p", "Recommended"),
+    "QHD 1440p": ("1440p", "QHD"),
+    "4K UHD 2160p": ("4K", "Ultra HD"),
+}
+
+QUALITY_META = {
+    "Normal": ("Normal", "Fastest"),
+    "High": ("High", "Recommended"),
+    "Best": ("Best", "Max detail"),
+}
+QUALITY_HINT = {
+    "Normal": "Smaller file size — fastest export speed",
+    "High": "Recommended — razor-sharp slides with balanced file size",
+    "Best": "Largest file size — near-lossless detail for 4K/presentations",
 }
 
 SAMPLE_EN = ("This is a sample of the selected voice. Your slides will be "
@@ -51,9 +79,6 @@ SAMPLE_EN = ("This is a sample of the selected voice. Your slides will be "
 SAMPLE_BN = ("স্টুডিওর ভয়েস নমুনা। এভাবেই আপনার প্রতিটি স্লাইডের বর্ণনা "
              "শোনাবে।")
 
-# Project logo for the title bar, taskbar and Alt-Tab (the default Tk
-# icon must never appear). Resolved relative to this file, so it works
-# no matter which folder the app is launched from.
 LOGO = Path(__file__).resolve().parent / "logo" / "presentation.ico"
 
 
@@ -67,7 +92,7 @@ class App:
         self.cancel_event = threading.Event()
         self.scan_cache: dict | None = None
         self._playing_sample = False
-        self.script_lang_bn: bool | None = None   # language of loaded script
+        self.script_lang_bn: bool | None = None
 
         root.title("HTML Video Studio")
         self._apply_icon()
@@ -81,38 +106,26 @@ class App:
 
     # ─────────────────────────── look ──────────────────────────────
     def _fit_window(self):
-        """Size the window to its content so every control is visible.
-
-        Hardcoded heights break when sections grow or Windows display
-        scaling enlarges the widgets — measuring the real requirement
-        keeps the action row, progress bar and log on screen. The log
-        (packed last, expandable) is what flexes when the screen is too
-        small for the full requirement.
-        """
+        """Measure required size and center the window inside the work area."""
         self.root.update_idletasks()
         req_w = self.root.winfo_reqwidth()
         req_h = self.root.winfo_reqheight()
-        usable = max(480, self.root.winfo_screenheight() - 80)  # taskbar
-        w = max(920, req_w + 16)
-        h = max(680, min(req_h + 16, usable))
-        self.root.minsize(840, 620)
-        self.root.geometry(f"{w}x{h}")
-        x = max(0, (self.root.winfo_screenwidth() - w) // 2)
-        y = max(0, (self.root.winfo_screenheight() - 80 - h) // 2)
+        scr_w = self.root.winfo_screenwidth()
+        scr_h = self.root.winfo_screenheight()
+        w = min(max(980, req_w + 16), max(860, scr_w - 40))
+        h = min(max(660, req_h + 12), max(540, scr_h - 80))
+        self.root.minsize(900, 600)
+        x = max(0, (scr_w - w) // 2)
+        y = max(0, (scr_h - 80 - h) // 2)
         self.root.geometry(f"{w}x{h}+{x}+{y}")
 
     def _apply_icon(self):
-        """Show the project logo on the window, taskbar and Alt-Tab.
-
-        Called before the window is mapped, so the default Tk icon never
-        becomes visible. `default` also covers every dialog toplevel.
-        """
         try:
             if LOGO.exists():
                 self.root.iconbitmap(default=str(LOGO))
                 self.root.iconbitmap(str(LOGO))
         except Exception:
-            pass  # a missing/broken logo must never block startup
+            pass
 
     def _style(self):
         st = ttk.Style(self.root)
@@ -123,443 +136,521 @@ class App:
         st.configure(".", background=C["bg"], foreground=C["ink"],
                      font=("Segoe UI", 10))
         st.configure("TFrame", background=C["bg"])
-        st.configure("CardTitle.TLabel", background=C["card"],
-                     foreground=C["ink"], font=("Segoe UI", 11, "bold"))
         st.configure("TLabel", background=C["card"], foreground=C["ink"])
         st.configure("Sub.TLabel", background=C["card"],
                      foreground=C["sub"], font=("Segoe UI", 9))
-        st.configure("TEntry", fieldbackground="white", bordercolor=C["border"],
-                     lightcolor=C["border"], darkcolor=C["border"],
-                     padding=4)
+        st.configure("TEntry", fieldbackground="white",
+                     bordercolor=C["border_hi"], lightcolor=C["border"],
+                     darkcolor=C["border"], padding=(6, 5))
         st.configure("TCombobox", fieldbackground="white",
-                     bordercolor=C["border"], arrowsize=13, padding=3)
+                     bordercolor=C["border_hi"], arrowsize=13,
+                     padding=(6, 4))
+        st.map("TCombobox",
+               fieldbackground=[("disabled", "#f1f5f9")],
+               foreground=[("disabled", C["muted"])])
         st.configure("TSpinbox", fieldbackground="white",
-                     bordercolor=C["border"], arrowsize=12, padding=3)
-        st.configure("TCheckbutton", background=C["card"])
-        st.map("TCheckbutton", background=[("active", C["card"])])
-        st.configure("TRadiobutton", background=C["panel"],
-                     foreground=C["ink"])
-        st.map("TRadiobutton", background=[("active", C["panel"])])
-        st.configure("Card.TRadiobutton", background=C["card"],
-                     foreground=C["ink"])
-        st.map("Card.TRadiobutton", background=[("active", C["card"])])
+                     bordercolor=C["border_hi"], arrowsize=12,
+                     padding=(6, 4))
         st.configure("Accent.TButton", foreground="white",
-                     background=C["accent"], font=("Segoe UI", 11, "bold"),
-                     padding=(30, 12), borderwidth=0)
+                     background=C["accent"], font=("Segoe UI", 10, "bold"),
+                     padding=(24, 10), borderwidth=0)
         st.map("Accent.TButton",
                background=[("active", C["accent_hi"]),
-                           ("disabled", "#b9b6ea")],
-               foreground=[("disabled", "#f2f2fd")])
+                           ("disabled", "#a5b4fc")],
+               foreground=[("disabled", "#eef2ff")])
         st.configure("Ghost.TButton", foreground=C["ink"], background="white",
-                     bordercolor=C["border"], padding=(14, 8))
-        st.map("Ghost.TButton", background=[("active", "#f1f4fb")])
+                     bordercolor=C["border_hi"], font=("Segoe UI", 9),
+                     padding=(12, 6))
+        st.map("Ghost.TButton",
+               background=[("active", "#f1f5f9"), ("disabled", "#f8fafc")],
+               foreground=[("disabled", C["muted"])])
         st.configure("Danger.TButton", foreground="white", background="#e11d48",
-                     font=("Segoe UI", 10, "bold"), padding=(16, 8),
+                     font=("Segoe UI", 10, "bold"), padding=(16, 10),
                      borderwidth=0)
         st.map("Danger.TButton", background=[("active", "#be123c")])
         st.configure("Horizontal.TProgressbar", background=C["accent"],
-                     troughcolor="#dfe4f2", borderwidth=0, thickness=10)
+                     troughcolor="#e2e8f0", borderwidth=0, thickness=8)
 
     def _header(self):
-        cv = tk.Canvas(self.root, height=88, highlightthickness=0,
+        cv = tk.Canvas(self.root, height=58, highlightthickness=0,
                        bg=C["accent"])
         cv.pack(fill="x")
+        self.header_cv = cv
+        self._badge_text = "Preparing engine…"
+        self._badge_fg = C["warn"]
+        self._badge_bg = C["warn_bg"]
 
         def repaint(event=None):
             cv.delete("all")
             width = max(2, cv.winfo_width())
-            # subtle horizontal gradient, drawn in 48 bands (cheap repaint)
-            c1, c2 = (0x4f, 0x46, 0xe5), (0x6d, 0x28, 0xd9)
+            c1, c2 = (0x1e, 0x1b, 0x4b), (0x4f, 0x46, 0xe5)
             bands = 48
             bw = width / bands
             for i in range(bands):
                 t = i / (bands - 1)
                 col = "#%02x%02x%02x" % tuple(
                     int(a + (b - a) * t) for a, b in zip(c1, c2))
-                cv.create_rectangle(i * bw, 0, (i + 1) * bw + 1, 88,
+                cv.create_rectangle(i * bw, 0, (i + 1) * bw + 1, 58,
                                     fill=col, outline=col)
-            cv.create_text(28, 30, anchor="w", text="HTML Video Studio",
-                           fill="white", font=("Segoe UI", 19, "bold"))
+            cv.create_text(22, 21, anchor="w", text="HTML Video Studio",
+                           fill="white", font=("Segoe UI", 15, "bold"))
             cv.create_text(
-                30, 60, anchor="w", fill="#ddd6fe", font=("Segoe UI", 10),
-                text="Turn any animated HTML presentation into an HD / 4K "
-                     "video — no coding needed")
+                22, 42, anchor="w", fill="#c7d2fe", font=("Segoe UI", 9),
+                text="Turn any animated HTML presentation into HD / 4K MP4")
+
+            # Live engine status pill on the right
+            bx1 = width - 20
+            bx0 = max(320, bx1 - max(140, len(self._badge_text) * 8 + 24))
+            cv.create_rectangle(bx0, 16, bx1, 42, fill=self._badge_bg,
+                                outline="", width=0)
+            cv.create_text((bx0 + bx1) / 2, 29, text=self._badge_text,
+                           fill=self._badge_fg, font=("Segoe UI", 9, "bold"))
 
         cv.bind("<Configure>", repaint)
+        self._repaint_header = repaint
         return cv
 
-    def _card(self, parent, title):
-        """White card with title. Returns the content frame (use ONE
-        geometry manager inside it — pack or grid — consistently)."""
-        outer = tk.Frame(parent, bg=C["bg"])
-        outer.pack(fill="x", pady=(0, 12))
-        body = tk.Frame(outer, bg=C["card"], highlightbackground=C["border"],
+    def _set_badge(self, text: str, fg: str, bg: str):
+        self._badge_text = text
+        self._badge_fg = fg
+        self._badge_bg = bg
+        if hasattr(self, "_repaint_header"):
+            self._repaint_header()
+
+    def _card(self, parent, step: str, title: str, subtitle: str = ""):
+        """White rounded-feel card with numbered badge header."""
+        body = tk.Frame(parent, bg=C["card"], highlightbackground=C["border"],
                         highlightthickness=1)
-        body.pack(fill="x")
         inner = tk.Frame(body, bg=C["card"])
-        inner.pack(fill="x", padx=16, pady=12)
-        ttk.Label(inner, text=title, style="CardTitle.TLabel").pack(
-            anchor="w", pady=(0, 8))
+        inner.pack(fill="both", expand=True, padx=14, pady=11)
+
+        hdr = tk.Frame(inner, bg=C["card"])
+        hdr.pack(fill="x", pady=(0, 8))
+        badge = tk.Label(hdr, text=step, bg=C["accent_soft"], fg=C["accent"],
+                         font=("Segoe UI", 9, "bold"), padx=7, pady=1)
+        badge.pack(side="left")
+        tk.Label(hdr, text=title, bg=C["card"], fg=C["ink"],
+                 font=("Segoe UI", 11, "bold")).pack(side="left", padx=(8, 0))
+        if subtitle:
+            tk.Label(hdr, text=subtitle, bg=C["card"], fg=C["sub"],
+                     font=("Segoe UI", 9)).pack(side="right")
+
         content = tk.Frame(inner, bg=C["card"])
-        content.pack(fill="x")
-        return content
+        content.pack(fill="both", expand=True)
+        return body, content
+
+    def _section_label(self, parent, text: str, right_var=None):
+        row = tk.Frame(parent, bg=C["card"])
+        row.pack(fill="x", pady=(4, 5))
+        tk.Label(row, text=text, bg=C["card"], fg=C["sub"],
+                 font=("Segoe UI", 8, "bold")).pack(side="left")
+        if right_var is not None:
+            tk.Label(row, textvariable=right_var, bg=C["card"],
+                     fg=C["accent"],
+                     font=("Segoe UI", 9, "bold")).pack(side="right")
+        return row
+
+    def _make_segmented(self, parent, options, var, on_change=None):
+        """Render a clean horizontal row of clickable option cards.
+
+        options: list of (value, title, sub_or_none)
+        """
+        grid = tk.Frame(parent, bg=C["card"])
+        grid.pack(fill="x")
+        cards = []
+        for idx, (val, title, sub) in enumerate(options):
+            grid.columnconfigure(idx, weight=1, uniform="seg")
+            box = tk.Frame(grid, bg=C["panel"], highlightbackground=C["border"],
+                           highlightthickness=1, cursor="hand2")
+            box.grid(row=0, column=idx, sticky="nsew",
+                     padx=(0 if idx == 0 else 6, 0))
+            pad = tk.Frame(box, bg=C["panel"], cursor="hand2")
+            pad.pack(fill="both", expand=True, padx=8, pady=7)
+            t_lbl = tk.Label(pad, text=title, bg=C["panel"], fg=C["ink"],
+                             font=("Segoe UI", 10, "bold"), cursor="hand2")
+            t_lbl.pack()
+            s_lbl = None
+            if sub:
+                s_lbl = tk.Label(pad, text=sub, bg=C["panel"], fg=C["sub"],
+                                 font=("Segoe UI", 8), cursor="hand2")
+                s_lbl.pack(pady=(1, 0))
+
+            widgets = [w for w in (box, pad, t_lbl, s_lbl) if w is not None]
+            for w in widgets:
+                w.bind("<Button-1>", lambda e, v=val: var.set(v))
+                w.bind("<Enter>", lambda e, v=val, ws=widgets:
+                       self._seg_hover(ws, var.get() == v, True))
+                w.bind("<Leave>", lambda e, v=val, ws=widgets:
+                       self._seg_hover(ws, var.get() == v, False))
+            cards.append((val, box, pad, t_lbl, s_lbl))
+
+        def refresh(*_):
+            cur = var.get()
+            for val, box, pad, t_lbl, s_lbl in cards:
+                sel = (val == cur)
+                bg = C["accent_soft"] if sel else C["panel"]
+                fg = C["accent"] if sel else C["ink"]
+                sfg = C["accent_hi"] if sel else C["sub"]
+                box.configure(
+                    bg=bg,
+                    highlightbackground=C["accent"] if sel else C["border"],
+                    highlightthickness=2 if sel else 1)
+                pad.configure(bg=bg)
+                t_lbl.configure(bg=bg, fg=fg)
+                if s_lbl is not None:
+                    s_lbl.configure(bg=bg, fg=sfg)
+            if on_change:
+                on_change()
+
+        var.trace_add("write", refresh)
+        refresh()
+        return grid
+
+    @staticmethod
+    def _seg_hover(widgets, is_selected: bool, entering: bool):
+        if is_selected:
+            return
+        bg = C["accent_hover"] if entering else C["panel"]
+        for w in widgets:
+            w.configure(bg=bg)
 
     # ──────────────────────────── UI ───────────────────────────────
     def _build_ui(self):
         self._header()
 
         main = tk.Frame(self.root, bg=C["bg"])
-        main.pack(fill="both", expand=True, padx=18, pady=14)
+        main.pack(fill="both", expand=True, padx=16, pady=12)
 
-        # ── card 1: files + voice ────────────────────────────────
-        f1 = self._card(main, "1 ·  Choose your files")
+        # Two-column workspace: left = Source & Voiceover, right = Export Settings
+        cols = tk.Frame(main, bg=C["bg"])
+        cols.pack(fill="x")
+        cols.columnconfigure(0, weight=11, uniform="col")
+        cols.columnconfigure(1, weight=10, uniform="col")
+
+        # ── Left Card: Source & Voiceover ────────────────────────
+        left_card, f1 = self._card(cols, "1", "Source & Voiceover")
+        left_card.grid(row=0, column=0, sticky="nsew", padx=(0, 8))
+
         self.html_var = tk.StringVar()
         self.script_var = tk.StringVar()
-        self._file_row(f1, "HTML file", self.html_var, self._pick_html,
-                       [("HTML files", "*.html *.htm"), ("All files", "*.*")])
-        self._file_row(f1, "Voiceover script", self.script_var,
-                       self._pick_script,
-                       [("Text files", "*.txt"), ("All files", "*.*")],
-                       clear=self._clear_script)
 
-        self.engine_var = tk.StringVar(value=TTS_ENGINE_WINDOWS)
-
-        winrow = tk.Frame(f1, bg=C["card"])
-        winrow.pack(fill="x", pady=(4, 0))
-        ttk.Label(winrow, text="TTS voice", width=19,
-                  anchor="e").pack(side="left", padx=(0, 8))
-        ttk.Radiobutton(
-            winrow, text="Windows TTS", value=TTS_ENGINE_WINDOWS,
-            variable=self.engine_var, style="Card.TRadiobutton", width=14,
-            command=self._on_engine_change).pack(side="left")
-        self.win_voice_var = tk.StringVar(value=VOICE_AUTO)
-        self.win_voice_cb = ttk.Combobox(
-            winrow, textvariable=self.win_voice_var,
-            state="readonly", width=33, values=VOICES)
-        self.win_voice_cb.pack(side="left", padx=(4, 0))
-        self.sample_btn = ttk.Button(winrow, text="Play sample",
-                                     style="Ghost.TButton",
-                                     command=self._play_sample,
-                                     state="disabled")
-        self.sample_btn.pack(side="left", padx=(8, 0))
-
-        googlerow = tk.Frame(f1, bg=C["card"])
-        googlerow.pack(fill="x", pady=(4, 0))
-        ttk.Label(googlerow, text="", width=19,
-                  anchor="e").pack(side="left", padx=(0, 8))
-        ttk.Radiobutton(
-            googlerow, text="Google TTS", value=TTS_ENGINE_GOOGLE,
-            variable=self.engine_var, style="Card.TRadiobutton", width=14,
-            command=self._on_engine_change).pack(side="left")
-        self.google_voice_var = tk.StringVar(value=GOOGLE_VOICE_DEFAULT)
-        self.google_voice_cb = ttk.Combobox(
-            googlerow, textvariable=self.google_voice_var,
-            state="disabled", width=33, values=GOOGLE_VOICES)
-        self.google_voice_cb.pack(side="left", padx=(4, 0))
-        self.tts_hint = ttk.Label(
-            googlerow, text="Windows TTS active · Google TTS disabled",
-            style="Sub.TLabel")
-        self.tts_hint.pack(side="left", padx=(8, 0))
-
+        self._section_label(f1, "HTML PRESENTATION")
+        self._compact_file_row(f1, self.html_var, "Choose HTML file…",
+                               self._pick_html)
         self.scan_label = tk.Label(
-            f1, text="Checking the video engine ...",
-            bg=C["card"], fg=C["warn"], font=("Segoe UI", 9))
-        self.scan_label.pack(anchor="w", pady=(6, 0))
+            f1, text="Choose an HTML file to detect slides automatically",
+            bg=C["card"], fg=C["sub"], font=("Segoe UI", 9), anchor="w")
+        self.scan_label.pack(fill="x", pady=(2, 5))
 
-        # ── card 2: settings ─────────────────────────────────────
-        f2 = self._card(main, "2 ·  Export settings")
+        self._section_label(f1, "VOICEOVER SCRIPT (OPTIONAL)")
+        self.clear_script_btn = self._compact_file_row(
+            f1, self.script_var, "No narration script — silent timing",
+            self._pick_script, clear=self._clear_script)
+        self.script_info_lbl = tk.Label(
+            f1, text="Supports [[SLIDE n]] blocks (samples/english.txt)",
+            bg=C["card"], fg=C["sub"], font=("Segoe UI", 9), anchor="w")
+        self.script_info_lbl.pack(fill="x", pady=(2, 5))
+
+        # Mutually exclusive TTS engine cards
+        self._section_label(f1, "TEXT-TO-SPEECH ENGINE (PICK ONE)")
+        self.engine_var = tk.StringVar(value=TTS_ENGINE_WINDOWS)
+        self.win_voice_var = tk.StringVar(value=VOICE_AUTO)
+        self.google_voice_var = tk.StringVar(value=GOOGLE_VOICE_DEFAULT)
+
+        self.win_card, self.win_dot, self.win_title, self.win_voice_cb = (
+            self._make_engine_card(
+                f1,
+                engine_val=TTS_ENGINE_WINDOWS,
+                title="Windows TTS",
+                badge="Microsoft · Free",
+                voice_var=self.win_voice_var,
+                voices=VOICES,
+            ))
+        self.google_card, self.google_dot, self.google_title, self.google_voice_cb = (
+            self._make_engine_card(
+                f1,
+                engine_val=TTS_ENGINE_GOOGLE,
+                title="Google TTS",
+                badge="Gemini · Enceladus",
+                voice_var=self.google_voice_var,
+                voices=GOOGLE_VOICES,
+                pady=(6, 0),
+            ))
+
+        sample_row = tk.Frame(f1, bg=C["card"])
+        sample_row.pack(fill="x", pady=(8, 0))
+        self.sample_btn = ttk.Button(
+            sample_row, text="▶  Play voice sample", style="Ghost.TButton",
+            command=self._play_sample, state="disabled")
+        self.sample_btn.pack(side="left")
+        self.tts_hint = tk.Label(
+            sample_row, text="Windows TTS active · Google TTS disabled",
+            bg=C["card"], fg=C["sub"], font=("Segoe UI", 9))
+        self.tts_hint.pack(side="left", padx=(10, 0))
+
+        # ── Right Card: Export Settings ──────────────────────────
+        right_card, f2 = self._card(cols, "2", "Export Settings")
+        right_card.grid(row=0, column=1, sticky="nsew", padx=(8, 0))
+
         self.res_var = tk.StringVar(value="Full HD 1080p")
         self.q_var = tk.StringVar(value="High")
+        self.fps_var = tk.IntVar(value=30)
         self.sec_var = tk.DoubleVar(value=8.0)
 
-        # ── resolution: full-width to-scale picker ───────────────
-        head = tk.Frame(f2, bg=C["card"])
-        head.pack(fill="x")
-        tk.Label(head, text="OUTPUT RESOLUTION", bg=C["card"], fg=C["sub"],
-                 font=("Segoe UI", 8, "bold")).pack(side="left")
-        self.res_readout = tk.Label(head, text="", bg=C["card"],
-                                    fg=C["accent"],
-                                    font=("Segoe UI", 9, "bold"))
-        self.res_readout.pack(side="right")
-        self._make_res_picker(f2)
+        self.res_readout_var = tk.StringVar(value="")
+        self._section_label(f2, "OUTPUT RESOLUTION", self.res_readout_var)
+        res_opts = [
+            (label, RES_SHORT[label][0],
+             f"{RES_SIZE[h][0]}×{RES_SIZE[h][1]}"
+             + (" ★" if label == "Full HD 1080p" else ""))
+            for label, h in RESOLUTIONS.items()
+        ]
+        self._make_segmented(f2, res_opts, self.res_var,
+                             on_change=self._update_res)
 
-        # ── quality + duration: two titled sub-panels ────────────
-        duo = tk.Frame(f2, bg=C["card"])
-        duo.pack(fill="x", pady=(8, 0))
-        duo.columnconfigure((0, 1), weight=1, uniform="opt")
+        self._section_label(f2, "VIDEO QUALITY")
+        q_opts = [(k, QUALITY_META[k][0], QUALITY_META[k][1])
+                  for k in QUALITY]
+        self.q_hint_var = tk.StringVar(value=QUALITY_HINT["High"])
+        self._make_segmented(
+            f2, q_opts, self.q_var,
+            on_change=lambda: self.q_hint_var.set(
+                QUALITY_HINT.get(self.q_var.get(), "")))
+        tk.Label(f2, textvariable=self.q_hint_var, bg=C["card"],
+                 fg=C["sub"], font=("Segoe UI", 8), anchor="w").pack(
+            fill="x", pady=(3, 6))
 
-        pq = self._panel(duo, "QUALITY", 0)
-        for q in QUALITY:
-            row = tk.Frame(pq, bg=C["panel"])
-            row.pack(fill="x", pady=2)
-            ttk.Radiobutton(row, text=q, value=q,
-                            variable=self.q_var).pack(side="left")
-            tk.Label(row, text=QUALITY_DESC[q], bg=C["panel"], fg=C["sub"],
-                     font=("Segoe UI", 9)).pack(side="left", padx=(8, 0))
+        # Timing + Frame rate side by side
+        tf = tk.Frame(f2, bg=C["card"])
+        tf.pack(fill="x", pady=(2, 6))
+        tf.columnconfigure(0, weight=1)
+        tf.columnconfigure(1, weight=2)
 
-        pd = self._panel(duo, "SECONDS / SLIDE", 1)
-        secrow = tk.Frame(pd, bg=C["panel"])
-        secrow.pack(anchor="w")
-        ttk.Spinbox(secrow, from_=1, to=120, increment=0.5, width=7,
+        dur_box = tk.Frame(tf, bg=C["card"])
+        dur_box.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+        tk.Label(dur_box, text="SLIDE DURATION", bg=C["card"], fg=C["sub"],
+                 font=("Segoe UI", 8, "bold")).pack(anchor="w", pady=(0, 4))
+        spin_row = tk.Frame(dur_box, bg=C["card"])
+        spin_row.pack(anchor="w")
+        ttk.Spinbox(spin_row, from_=1, to=120, increment=0.5, width=6,
                     textvariable=self.sec_var,
-                    font=("Segoe UI", 11)).pack(side="left")
-        tk.Label(secrow, text="seconds", bg=C["panel"], fg=C["sub"],
-                 font=("Segoe UI", 9)).pack(side="left", padx=(8, 0))
-        tk.Label(pd, text="Used for slides without narration — narrated "
-                          "slides follow the voiceover instead",
-                 bg=C["panel"], fg=C["sub"], font=("Segoe UI", 9),
-                 wraplength=260, justify="left").pack(anchor="w", pady=(8, 0))
+                    font=("Segoe UI", 10)).pack(side="left")
+        tk.Label(spin_row, text="sec / slide", bg=C["card"], fg=C["sub"],
+                 font=("Segoe UI", 9)).pack(side="left", padx=(6, 0))
+        tk.Label(dur_box, text="Silent slides only", bg=C["card"],
+                 fg=C["muted"], font=("Segoe UI", 8)).pack(anchor="w",
+                                                            pady=(2, 0))
 
-        ttk.Separator(f2, orient="horizontal").pack(fill="x", pady=(10, 6))
+        fps_box = tk.Frame(tf, bg=C["card"])
+        fps_box.grid(row=0, column=1, sticky="nsew")
+        tk.Label(fps_box, text="FRAME RATE", bg=C["card"], fg=C["sub"],
+                 font=("Segoe UI", 8, "bold")).pack(anchor="w", pady=(0, 4))
+        fps_opts = [(f, f"{f} fps",
+                     {24: "Cinema", 30: "Standard", 60: "Smooth"}[f])
+                    for f in FPS_CHOICES]
+        self._make_segmented(fps_box, fps_opts, self.fps_var)
 
-        # output name preview
-        self.out_var = tk.StringVar(value="")
-        tk.Label(f2, textvariable=self.out_var, bg=C["card"], fg=C["sub"],
-                 font=("Segoe UI", 9)).pack(anchor="w")
+        # Output file preview bar
+        out_box = tk.Frame(f2, bg=C["panel"], highlightbackground=C["border"],
+                           highlightthickness=1)
+        out_box.pack(fill="x", pady=(4, 0))
+        self.out_var = tk.StringVar(
+            value="Output: choose an HTML file to preview filename")
+        tk.Label(out_box, textvariable=self.out_var, bg=C["panel"],
+                 fg=C["ink"], font=("Segoe UI", 9), anchor="w",
+                 padx=10, pady=7).pack(fill="x")
 
-        # ── advanced disclosure ──────────────────────────────────
+        # Collapsible Advanced drawer
         self.adv_open = False
         self.adv_btn = tk.Label(
-            f2, text="▸  Advanced options — FPS, slide selector, capture "
-                     "detail",
+            f2, text="▸  Advanced options (slide selector, capture detail, "
+                     "API key)",
             bg=C["card"], fg=C["sub"], font=("Segoe UI", 9, "bold"),
             cursor="hand2")
         self.adv_btn.pack(anchor="w", pady=(8, 0))
         self.adv_btn.bind("<Button-1>", lambda e: self._toggle_advanced())
+
         adv = tk.Frame(f2, bg=C["panel"], highlightbackground=C["border"],
                        highlightthickness=1)
         self.adv_frame = adv
         adv_body = tk.Frame(adv, bg=C["panel"])
         adv_body.pack(fill="x", padx=12, pady=10)
-        tk.Label(adv_body, text="FPS", bg=C["panel"], fg=C["ink"],
+        adv_body.columnconfigure(1, weight=1)
+
+        tk.Label(adv_body, text="Slide selector", bg=C["panel"], fg=C["ink"],
                  font=("Segoe UI", 9), width=13,
                  anchor="e").grid(row=0, column=0, sticky="e", padx=(0, 8),
                                   pady=3)
-        self.fps_var = tk.IntVar(value=30)
-        ttk.Combobox(adv_body, textvariable=self.fps_var, state="readonly",
-                     width=6, values=list(FPS_CHOICES)).grid(
-            row=0, column=1, sticky="w", pady=3)
-        tk.Label(adv_body, text="24 cinematic · 30 standard · 60 smoothest",
-                 bg=C["panel"], fg=C["sub"],
-                 font=("Segoe UI", 9)).grid(row=0, column=2, sticky="w",
-                                            padx=(12, 0), pady=3)
-        tk.Label(adv_body, text="Slide selector", bg=C["panel"], fg=C["ink"],
+        self.sel_var = tk.StringVar(value="")
+        ttk.Entry(adv_body, textvariable=self.sel_var).grid(
+            row=0, column=1, sticky="ew", pady=3)
+
+        tk.Label(adv_body, text="Capture detail", bg=C["panel"], fg=C["ink"],
                  font=("Segoe UI", 9), width=13,
                  anchor="e").grid(row=1, column=0, sticky="e", padx=(0, 8),
                                   pady=3)
-        self.sel_var = tk.StringVar(value="")
-        ttk.Entry(adv_body, width=26, textvariable=self.sel_var).grid(
-            row=1, column=1, sticky="w", pady=3)
-        tk.Label(adv_body, text="CSS selector for slides — empty = "
-                                "auto-detect", bg=C["panel"], fg=C["sub"],
-                 font=("Segoe UI", 9)).grid(row=1, column=2, sticky="w",
-                                            padx=(12, 0), pady=3)
-        tk.Label(adv_body, text="Capture detail", bg=C["panel"], fg=C["ink"],
+        self.detail_var = tk.StringVar(value="Faster (recommended)")
+        ttk.Combobox(adv_body, textvariable=self.detail_var, state="readonly",
+                     values=list(CAPTURE_DETAIL.keys())).grid(
+            row=1, column=1, sticky="ew", pady=3)
+
+        tk.Label(adv_body, text="Gemini API key", bg=C["panel"], fg=C["ink"],
                  font=("Segoe UI", 9), width=13,
                  anchor="e").grid(row=2, column=0, sticky="e", padx=(0, 8),
                                   pady=3)
-        self.detail_var = tk.StringVar(value="Faster (recommended)")
-        ttk.Combobox(adv_body, textvariable=self.detail_var, state="readonly",
-                     width=28, values=list(CAPTURE_DETAIL.keys())).grid(
-            row=2, column=1, sticky="w", pady=3)
-        tk.Label(adv_body, text="“Maximum smoothness” captures every frame "
-                                "— very slow", bg=C["panel"], fg=C["sub"],
-                 font=("Segoe UI", 9)).grid(row=2, column=2, sticky="w",
-                                            padx=(12, 0), pady=3)
-        tk.Label(adv_body, text="Gemini API key", bg=C["panel"], fg=C["ink"],
-                 font=("Segoe UI", 9), width=13,
-                 anchor="e").grid(row=3, column=0, sticky="e", padx=(0, 8),
-                                  pady=3)
         self.gemini_key_var = tk.StringVar(value=load_gemini_api_key())
         self.gemini_key_entry = ttk.Entry(
-            adv_body, width=28, textvariable=self.gemini_key_var, show="•")
-        self.gemini_key_entry.grid(row=3, column=1, sticky="w", pady=3)
-        tk.Label(adv_body, text="Loaded from root .env (or override here)",
-                 bg=C["panel"], fg=C["sub"],
-                 font=("Segoe UI", 9)).grid(row=3, column=2, sticky="w",
-                                            padx=(12, 0), pady=3)
-        adv_body.columnconfigure(2, weight=1)
+            adv_body, textvariable=self.gemini_key_var, show="•")
+        self.gemini_key_entry.grid(row=2, column=1, sticky="ew", pady=3)
+        tk.Label(adv_body, text="Loaded from root .env (Google TTS only)",
+                 bg=C["panel"], fg=C["muted"], font=("Segoe UI", 8),
+                 anchor="w").grid(row=3, column=1, sticky="w", pady=(0, 2))
 
-        # ── actions ──────────────────────────────────────────────
-        act = tk.Frame(main, bg=C["bg"])
-        act.pack(fill="x", pady=(2, 10))
+        # ── Action & Progress Card ───────────────────────────────
+        act_card = tk.Frame(main, bg=C["card"], highlightbackground=C["border"],
+                            highlightthickness=1)
+        act_card.pack(fill="x", pady=(8, 8))
+        act_in = tk.Frame(act_card, bg=C["card"])
+        act_in.pack(fill="x", padx=14, pady=10)
+
+        act = tk.Frame(act_in, bg=C["card"])
+        act.pack(fill="x")
         self.export_btn = ttk.Button(
-            act, text="Preparing the video engine ...",
+            act, text="Preparing the video engine …",
             style="Accent.TButton", command=self._export, state="disabled")
         self.export_btn.pack(side="left")
         self.cancel_btn = ttk.Button(act, text="Cancel", style="Danger.TButton",
                                      command=self._cancel, state="disabled")
-        self.cancel_btn.pack(side="left", padx=12)
+        self.cancel_btn.pack(side="left", padx=(10, 0))
         self.open_btn = ttk.Button(act, text="Open output folder",
                                    style="Ghost.TButton",
                                    command=self._open_folder,
                                    state="disabled")
         self.open_btn.pack(side="right")
 
-        # ── progress + status ────────────────────────────────────
-        self.progress = ttk.Progressbar(main, maximum=100, mode="indeterminate")
+        prog_row = tk.Frame(act_in, bg=C["card"])
+        prog_row.pack(fill="x", pady=(8, 0))
+        self.progress = ttk.Progressbar(prog_row, maximum=100,
+                                        mode="indeterminate")
         self.progress.pack(fill="x")
-        self.progress.start(14)   # pulsing while setup runs
+        self.progress.start(14)
         self.status = tk.Label(
-            main, text="Checking the video engine ...", bg=C["bg"],
-            fg=C["ink"], font=("Segoe UI", 10), anchor="w")
-        self.status.pack(fill="x", pady=(6, 10))
+            act_in, text="Checking the video engine …", bg=C["card"],
+            fg=C["ink"], font=("Segoe UI", 9), anchor="w")
+        self.status.pack(fill="x", pady=(4, 0))
 
-        # ── log ──────────────────────────────────────────────────
+        # ── Activity Log ─────────────────────────────────────────
         logcard = tk.Frame(main, bg=C["log_bg"],
                            highlightbackground=C["border"],
                            highlightthickness=1)
         logcard.pack(fill="both", expand=True)
-        self.log = tk.Text(logcard, height=7, state="disabled", wrap="word",
+        log_hdr = tk.Frame(logcard, bg="#1e293b")
+        log_hdr.pack(fill="x")
+        tk.Label(log_hdr, text="ACTIVITY LOG", bg="#1e293b", fg="#94a3b8",
+                 font=("Segoe UI", 8, "bold"), padx=10, pady=3).pack(
+            side="left")
+        self.log = tk.Text(logcard, height=4, state="disabled", wrap="word",
                            font=("Consolas", 9), bg=C["log_bg"],
-                           fg=C["log_fg"], relief="flat", padx=10, pady=8,
+                           fg=C["log_fg"], relief="flat", padx=10, pady=6,
                            insertbackground=C["log_fg"])
         self.log.tag_configure("ok", foreground=C["log_ok"])
         self.log.tag_configure("err", foreground=C["log_err"])
-        self.log.tag_configure("dim", foreground="#8a94ab")
+        self.log.tag_configure("dim", foreground="#94a3b8")
         sb = ttk.Scrollbar(logcard, command=self.log.yview)
         self.log.configure(yscrollcommand=sb.set)
         sb.pack(side="right", fill="y")
         self.log.pack(side="left", fill="both", expand=True)
         self._log("HTML Video Studio starting. Pick an HTML file and press "
-                  "Export.\nFirst run: required components are being "
-                  "installed automatically — please wait.\n", "dim")
+                  "Export.\nFirst run: required components are checked "
+                  "automatically — please wait.", "dim")
 
         self.html_var.trace_add("write", lambda *_: self._update_outname())
         self.res_var.trace_add("write", lambda *_: self._update_outname())
+        self.engine_var.trace_add("write", lambda *_: self._on_engine_change())
         self._update_res()
         self._on_engine_change()
 
-    # ───────────── graphical resolution picker ──────────────────────
-    def _make_res_picker(self, parent):
-        cv = tk.Canvas(parent, height=140, highlightthickness=0,
-                       bg=C["card"], cursor="hand2")
-        cv.pack(fill="x")
-        self.res_canvas = cv
-        self._res_rects: list[tuple[int, int, int, int, str]] = []
-        cv.bind("<Button-1>", self._on_res_click)
-        cv.bind("<Configure>", lambda e: self._draw_res())
-        self.res_var.trace_add("write", lambda *_: self._update_res())
+    def _compact_file_row(self, parent, var, placeholder: str, cmd,
+                          clear=None):
+        rowf = tk.Frame(parent, bg=C["card"])
+        rowf.pack(fill="x")
+        ent = ttk.Entry(rowf, textvariable=var)
+        ent.pack(side="left", fill="x", expand=True)
+        ttk.Button(rowf, text="Browse…", style="Ghost.TButton",
+                   command=cmd).pack(side="left", padx=(6, 0))
+        clr_btn = None
+        if clear:
+            clr_btn = ttk.Button(rowf, text="Clear", style="Ghost.TButton",
+                                 command=clear, state="disabled")
+            clr_btn.pack(side="left", padx=(4, 0))
+        return clr_btn
+
+    def _make_engine_card(self, parent, engine_val: str, title: str,
+                          badge: str, voice_var: tk.StringVar,
+                          voices: list[str], pady=(0, 0)):
+        card = tk.Frame(parent, bg=C["panel"], highlightbackground=C["border"],
+                        highlightthickness=1, cursor="hand2")
+        card.pack(fill="x", pady=pady)
+        inner = tk.Frame(card, bg=C["panel"], cursor="hand2")
+        inner.pack(fill="x", padx=10, pady=6)
+
+        top = tk.Frame(inner, bg=C["panel"], cursor="hand2")
+        top.pack(fill="x")
+        dot = tk.Label(top, text="●", bg=C["panel"], fg=C["accent"],
+                       font=("Segoe UI", 11), cursor="hand2")
+        dot.pack(side="left")
+        t_lbl = tk.Label(top, text=title, bg=C["panel"], fg=C["ink"],
+                         font=("Segoe UI", 10, "bold"), cursor="hand2")
+        t_lbl.pack(side="left", padx=(6, 0))
+        b_lbl = tk.Label(top, text=badge, bg=C["panel"], fg=C["sub"],
+                         font=("Segoe UI", 8), cursor="hand2")
+        b_lbl.pack(side="right")
+
+        cb = ttk.Combobox(inner, textvariable=voice_var, state="readonly",
+                          values=voices)
+        cb.pack(fill="x", pady=(6, 0))
+
+        for w in (card, inner, top, dot, t_lbl, b_lbl):
+            w.bind("<Button-1>",
+                   lambda e, v=engine_val: self.engine_var.set(v))
+        return card, dot, t_lbl, cb
 
     def _update_res(self):
-        """Refresh the live readout and the picker artwork."""
         h = RESOLUTIONS[self.res_var.get()]
         w_px, h_px = RES_SIZE[h]
-        self.res_readout.configure(
-            text=f"{self.res_var.get()}  ·  {w_px}×{h_px}")
-        self._draw_res()
-
-    def _draw_res(self):
-        cv = self.res_canvas
-        cv.delete("all")
-        self._res_rects = []
-        width = cv.winfo_width()
-        if width < 80:
-            return  # not laid out yet — Configure fires again shortly
-        labels = list(RESOLUTIONS.keys())
-        n = len(labels)
-        slot = (width - 24) / n
-        unit = min(88 / 2160, (slot - 30) / 3840)
-        baseline = 96
-        sel_h = RESOLUTIONS[self.res_var.get()]
-        cv.create_line(12, baseline, width - 12, baseline,
-                       fill=C["box_line"])
-        for i, label in enumerate(labels):
-            w_px, h_px = RES_SIZE[RESOLUTIONS[label]]
-            bw, bh = w_px * unit, h_px * unit
-            cx = 12 + slot * (i + 0.5)
-            x0, y0, x1, y1 = cx - bw / 2, baseline - bh, cx + bw / 2, baseline
-            is_sel = RESOLUTIONS[label] == sel_h
-            tag = f"res{i}"
-            cv.create_rectangle(x0, y0, x1, y1,
-                                fill=C["accent"] if is_sel else C["box"],
-                                outline=C["accent_hi"] if is_sel
-                                else C["box_line"],
-                                width=2 if is_sel else 1, tags=tag)
-            short = RES_LABELS[RESOLUTIONS[label]]
-            cv.create_text(cx, baseline + 14, text=short,
-                           fill=C["accent"] if is_sel else C["ink"],
-                           font=("Segoe UI", 10,
-                                 "bold" if is_sel else "normal"), tags=tag)
-            cv.create_text(cx, baseline + 28, text=f"{w_px}×{h_px}",
-                           fill=C["sub"], font=("Segoe UI", 8), tags=tag)
-            if label == "Full HD 1080p":
-                cv.create_text(cx, baseline - 8, text="recommended",
-                               fill="#ffffff" if is_sel else C["ok"],
-                               font=("Segoe UI", 7, "italic"), tags=tag)
-            self._res_rects.append((x0, y0, x1, baseline + 36, label))
-            if not is_sel:
-                cv.tag_bind(tag, "<Enter>",
-                            lambda e, t=tag: cv.itemconfigure(
-                                t, fill=C["box_hover"]))
-                cv.tag_bind(tag, "<Leave>",
-                            lambda e, t=tag: cv.itemconfigure(
-                                t, fill=C["box"]))
-
-    def _on_res_click(self, event):
-        for x0, y0, x1, y1, label in self._res_rects:
-            if x0 <= event.x <= x1 and y0 <= event.y <= y1:
-                self.res_var.set(label)
-                return
-
-    def _panel(self, parent, title: str, col: int):
-        """Light bordered mini-panel with a small caption, placed in grid
-        column `col`. Returns the content frame."""
-        outer = tk.Frame(parent, bg=C["panel"],
-                         highlightbackground=C["border"],
-                         highlightthickness=1)
-        outer.grid(row=0, column=col, sticky="nsew",
-                   padx=((0, 0) if col == 0 else (10, 0)))
-        tk.Label(outer, text=title, bg=C["panel"], fg=C["sub"],
-                 font=("Segoe UI", 8, "bold")).pack(anchor="w", pady=(0, 6))
-        content = tk.Frame(outer, bg=C["panel"])
-        content.pack(fill="x")
-        return content
-
-    # ─────────────────────────── rows ──────────────────────────────
-    def _file_row(self, parent, label, var, cmd, patterns, clear=None):
-        rowf = tk.Frame(parent, bg=C["card"])
-        rowf.pack(fill="x", pady=4)
-        ttk.Label(rowf, text=label, width=19, anchor="e").pack(
-            side="left", padx=(0, 8))
-        ttk.Entry(rowf, textvariable=var).pack(
-            side="left", fill="x", expand=True)
-        ttk.Button(rowf, text="Browse…", style="Ghost.TButton",
-                   command=cmd).pack(side="left", padx=(8, 0))
-        if clear:
-            ttk.Button(rowf, text="Clear", style="Ghost.TButton",
-                       command=clear).pack(side="left", padx=(4, 0))
+        self.res_readout_var.set(f"{w_px} × {h_px}")
 
     def _toggle_advanced(self):
         self.adv_open = not self.adv_open
         if self.adv_open:
             self.adv_btn.configure(
-                text="▾  Advanced options — FPS, slide selector, capture "
-                     "detail")
+                text="▾  Advanced options (slide selector, capture detail, "
+                     "API key)")
             self.adv_frame.pack(fill="x", pady=(6, 0))
             self.root.update_idletasks()
             self._resize_window_by(self.adv_frame.winfo_reqheight() + 6)
         else:
             self.adv_btn.configure(
-                text="▸  Advanced options — FPS, slide selector, capture "
-                     "detail")
+                text="▸  Advanced options (slide selector, capture detail, "
+                     "API key)")
             self._resize_window_by(-(self.adv_frame.winfo_reqheight() + 6))
             self.adv_frame.pack_forget()
 
     def _resize_window_by(self, dy: int):
-        """Grow/shrink the window height so toggled panels always fit."""
         min_h = (self.root.minsize() or (0, 620))[1] or 620
-        h = max(min_h, self.root.winfo_height() + dy)
+        max_h = max(min_h, self.root.winfo_screenheight() - 80)
+        h = min(max_h, max(min_h, self.root.winfo_height() + dy))
         self.root.geometry(f"{self.root.winfo_width()}x{h}")
 
     def _update_outname(self):
         html = self.html_var.get().strip()
         if not html:
-            self.out_var.set("")
+            self.out_var.set("Output: choose an HTML file to preview filename")
             return
         try:
             s = self._settings()
-            self.out_var.set(f"Video will be saved to:  {s.output_path()}")
+            out = s.output_path()
+            self.out_var.set(f"Output: {out.name}   (in {out.parent.name}/)")
         except Exception:
             self.out_var.set("")
 
@@ -575,12 +666,14 @@ class App:
             return
         if self.setup_state == "ready":
             self.export_btn.configure(state="normal", text="Export video")
+            self._set_badge("● Ready", C["ok"], C["ok_bg"])
         elif self.setup_state == "failed":
             self.export_btn.configure(state="normal", text="Retry setup")
+            self._set_badge("● Setup failed", C["err"], C["err_bg"])
         else:
-            # setup still running — button stays disabled until ready
             self.export_btn.configure(state="disabled",
-                                      text="Preparing the video engine ...")
+                                      text="Preparing the video engine …")
+            self._set_badge("● Preparing…", C["warn"], C["warn_bg"])
 
     def _pick_html(self):
         p = filedialog.askopenfilename(title="Choose an HTML file",
@@ -590,7 +683,7 @@ class App:
         if p:
             self.html_var.set(p)
             self.scan_cache = None
-            self.scan_label.configure(text="Checking this page ...",
+            self.scan_label.configure(text="Checking slides in this page …",
                                       fg=C["sub"])
             threading.Thread(target=self._scan,
                              args=(Path(p), self.sel_var.get().strip()),
@@ -603,6 +696,8 @@ class App:
         if not p:
             return
         self.script_var.set(p)
+        if self.clear_script_btn is not None:
+            self.clear_script_btn.configure(state="normal")
         try:
             blocks = parse_script(read_script(Path(p)))
         except Exception:
@@ -610,9 +705,15 @@ class App:
         if blocks:
             first = next(iter(blocks.values()))
             self.script_lang_bn = is_bengali(first)
+            lang = "Bangla" if self.script_lang_bn else "English"
+            self.script_info_lbl.configure(
+                text=f"✓ {len(blocks)} slide narrations loaded ({lang})",
+                fg=C["ok"])
             self._log(f"Script loaded: {len(blocks)} slide narrations "
                       f"(up to slide {max(blocks)}).", "dim")
         else:
+            self.script_info_lbl.configure(
+                text="⚠ No [[SLIDE n]] blocks found in file", fg=C["warn"])
             self._log("Script loaded, but no \"[[SLIDE n]]\" blocks were "
                       "found — see samples/english.txt for the format.",
                       "dim")
@@ -620,10 +721,39 @@ class App:
     def _clear_script(self):
         self.script_var.set("")
         self.script_lang_bn = None
+        if self.clear_script_btn is not None:
+            self.clear_script_btn.configure(state="disabled")
+        self.script_info_lbl.configure(
+            text="Supports [[SLIDE n]] blocks (samples/english.txt)",
+            fg=C["sub"])
+
+    def _style_engine_card(self, card, dot, title, active: bool):
+        bg = C["accent_soft"] if active else C["panel"]
+        border = C["accent"] if active else C["border"]
+        card.configure(bg=bg, highlightbackground=border,
+                       highlightthickness=2 if active else 1)
+        for child in card.winfo_children():
+            self._recolor_frame(child, bg)
+        dot.configure(text="●" if active else "○",
+                      fg=C["accent"] if active else C["muted"])
+        title.configure(fg=C["ink"] if active else C["muted"])
+
+    @staticmethod
+    def _recolor_frame(widget, bg: str):
+        if isinstance(widget, (tk.Frame, tk.Label)):
+            widget.configure(bg=bg)
+        for ch in widget.winfo_children():
+            if isinstance(ch, (tk.Frame, tk.Label)):
+                App._recolor_frame(ch, bg)
 
     def _on_engine_change(self):
         google_on = self.engine_var.get() == TTS_ENGINE_GOOGLE
-        self.win_voice_cb.configure(state="disabled" if google_on else "readonly")
+        self._style_engine_card(self.win_card, self.win_dot, self.win_title,
+                                active=not google_on)
+        self._style_engine_card(self.google_card, self.google_dot,
+                                self.google_title, active=google_on)
+        self.win_voice_cb.configure(
+            state="disabled" if google_on else "readonly")
         self.google_voice_cb.configure(
             state="readonly" if google_on else "disabled")
         self.gemini_key_entry.configure(
@@ -646,7 +776,7 @@ class App:
             return SAMPLE_BN if self.script_lang_bn else SAMPLE_EN
         label = self.win_voice_var.get()
         if label == VOICE_AUTO:
-            bn = bool(self.script_lang_bn)   # match the loaded script
+            bn = bool(self.script_lang_bn)
         else:
             bn = "Bangla" in label
         return SAMPLE_BN if bn else SAMPLE_EN
@@ -654,13 +784,12 @@ class App:
     def _play_sample(self):
         if self._playing_sample or self.ffmpeg is None:
             return
-        # read all Tk state HERE (main thread) — never from the worker
         engine = self.engine_var.get()
         text = self._sample_text()
         voice = voice_for(text, self._active_voice_label(), engine=engine)
         api_key = self.gemini_key_var.get().strip() or load_gemini_api_key()
         self._playing_sample = True
-        self.sample_btn.configure(state="disabled", text="Generating ...")
+        self.sample_btn.configure(state="disabled", text="Generating …")
         threading.Thread(target=self._sample_worker,
                          args=(text, voice, engine, api_key),
                          daemon=True).start()
@@ -672,7 +801,7 @@ class App:
             wav = tmp / "sample.wav"
             synth_wav(text, voice, wav, self.ffmpeg,
                       engine=engine, api_key=api_key)
-            import winsound  # stdlib on Windows
+            import winsound
             winsound.PlaySound(str(wav), winsound.SND_FILENAME)
             self.q.put(("sample_done", None, None))
         except Exception as e:
@@ -728,13 +857,12 @@ class App:
             return
         if self.setup_state == "failed":
             self.setup_state = "running"
-            self.export_btn.configure(state="disabled",
-                                      text="Retrying setup ...")
-            self.status.configure(text="Checking the video engine ...",
+            self._set_export_state()
+            self.status.configure(text="Checking the video engine …",
                                   fg=C["ink"])
             self.progress.configure(mode="indeterminate")
             self.progress.start(14)
-            self._log("Retrying setup ...", "dim")
+            self._log("Retrying setup …", "dim")
             threading.Thread(target=self._setup_env, daemon=True).start()
             return
 
@@ -761,7 +889,8 @@ class App:
         self.rendering = True
         self.cancel_event.clear()
         self.export_btn.configure(state="disabled",
-                                  text="Exporting — see progress below")
+                                  text="Exporting…")
+        self._set_badge("● Exporting…", C["accent"], C["accent_soft"])
         self.cancel_btn.configure(state="normal")
         self.open_btn.configure(state="disabled")
         self.progress.stop()
@@ -772,8 +901,6 @@ class App:
         t0 = time.time()
 
         def progress(kind, pct, msg):
-            # message-carrying kinds put the message as payload; the queue
-            # handler reads payload for everything
             if kind in ("log", "phase", "error"):
                 self.q.put((kind, msg, None))
             else:
@@ -792,13 +919,13 @@ class App:
     def _cancel(self):
         self.cancel_event.set()
         self.cancel_btn.configure(state="disabled")
-        self.status.configure(text="Cancelling after the current frame ...")
+        self.status.configure(text="Cancelling after the current frame …")
 
     def _open_folder(self):
         html = self.html_var.get().strip()
         target = Path(html).parent if html else Path.cwd()
         try:
-            os.startfile(target)  # Windows — no console window involved
+            os.startfile(target)
         except Exception:
             pass
 
@@ -810,7 +937,6 @@ class App:
                 try:
                     self._handle(kind, payload, extra)
                 except Exception:
-                    # never let one bad message kill the UI pump
                     self._log("Internal UI warning: could not process a "
                               "status update.", "err")
         except queue.Empty:
@@ -836,9 +962,6 @@ class App:
             self.setup_state = "ready"
             self.progress.stop()
             self.progress.configure(mode="determinate", value=0)
-            self.scan_label.configure(
-                text="Engine ready — choose an HTML file above.",
-                fg=C["ok"])
             self.status.configure(
                 text="Ready — choose an HTML file and press Export video.",
                 fg=C["ok"])
@@ -846,7 +969,7 @@ class App:
             self.sample_btn.configure(state="normal")
             self._log("Setup complete — ready to export!  ✓", "ok")
             if self.html_var.get():
-                self.scan_label.configure(text="Checking this page ...",
+                self.scan_label.configure(text="Checking slides in this page …",
                                           fg=C["sub"])
                 threading.Thread(target=self._scan,
                                  args=(Path(self.html_var.get()),
@@ -857,9 +980,6 @@ class App:
             self.progress.stop()
             self.progress.configure(mode="determinate", value=0)
             self._set_export_state()
-            self.scan_label.configure(
-                text="Setup failed — press the button above to retry.",
-                fg=C["err"])
             self.status.configure(
                 text="Setup failed — press \"Retry setup\" above.",
                 fg=C["err"])
@@ -871,31 +991,30 @@ class App:
             if info["count"] == 0:
                 self.scan_label.configure(
                     text="No slides found — one continuous clip will be "
-                         "exported.", fg=C["warn"])
+                         "exported", fg=C["warn"])
             elif info["continuous"]:
                 self.scan_label.configure(
-                    text=f"{info['count']} slides found, but no automatic "
-                         "navigation — a continuous clip will be exported.",
-                    fg=C["warn"])
+                    text=f"{info['count']} slides found, no auto-navigation "
+                         "— continuous clip", fg=C["warn"])
             else:
                 self.scan_label.configure(
-                    text=f"{info['count']} slides detected "
-                         f"(selector '{info['selector']}') — ready to export",
-                    fg=C["ok"])
+                    text=f"✓ {info['count']} slides detected "
+                         f"({info['selector']})", fg=C["ok"])
         elif kind == "scan_skip":
             self.scan_label.configure(
-                text="Slide check will happen during export "
-                     "(setup still running).", fg=C["sub"])
+                text="Slide check will run during export.", fg=C["sub"])
         elif kind == "scan_fail":
             self.scan_label.configure(
-                text="Slide preview unavailable (export will still "
-                     "work).", fg=C["sub"])
+                text="Slide preview unavailable (export will still work).",
+                fg=C["sub"])
         elif kind == "sample_done":
             self._playing_sample = False
-            self.sample_btn.configure(state="normal", text="Play sample")
+            self.sample_btn.configure(state="normal",
+                                      text="▶  Play voice sample")
         elif kind == "sample_fail":
             self._playing_sample = False
-            self.sample_btn.configure(state="normal", text="Play sample")
+            self.sample_btn.configure(state="normal",
+                                      text="▶  Play voice sample")
             self._log("Voice sample failed: " + str(payload), "err")
         elif kind == "done":
             out, secs = payload
@@ -903,10 +1022,10 @@ class App:
             self._set_export_state()
             self.cancel_btn.configure(state="disabled")
             self.open_btn.configure(state="normal")
-            self.status.configure(text=f"Video saved:  {out}")
+            self.status.configure(text=f"Video saved:  {out}", fg=C["ok"])
             self._log(f"VIDEO SAVED:  {out}", "ok")
-            self._log("   It is in the SAME folder as your HTML file — "
-                      "press \"Open output folder\" to see it.", "ok")
+            self._log("   Saved in the SAME folder as your HTML file — "
+                      "press \"Open output folder\" to view it.", "ok")
             messagebox.showinfo(
                 "Video ready",
                 f"Your video is saved here:\n\n{out}\n\n"
@@ -916,13 +1035,14 @@ class App:
             self.rendering = False
             self._set_export_state()
             self.cancel_btn.configure(state="disabled")
-            self.status.configure(text="Cancelled.")
+            self.status.configure(text="Cancelled.", fg=C["sub"])
             self._log("Export cancelled by user.", "dim")
         elif kind == "error":
             self.rendering = False
             self._set_export_state()
             self.cancel_btn.configure(state="disabled")
-            self.status.configure(text="Export failed — see log below.")
+            self.status.configure(text="Export failed — see log below.",
+                                  fg=C["err"])
             self._log("ERROR:\n" + str(payload), "err")
             msg = str(payload)
             if "browser" in msg.lower() or "chromium" in msg.lower():
@@ -931,7 +1051,7 @@ class App:
 
 
 def main():
-    try:  # crisp text on high-DPI Windows
+    try:
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
     except Exception:
         pass
