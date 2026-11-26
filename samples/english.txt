@@ -2,64 +2,64 @@ Spid3r — slide-by-slide narration script (for text-to-voice)
 SOURCE: presentation_spid3r_english.html · 21 slides · each "[[SLIDE n]]" block matches one slide.
 
 [[SLIDE 1]]
-Meet Spid3r, version 1.1.1 — a fast, safe, all-in-one programming language designed to run anywhere with zero extra downloads. Built by ANSNEW TECH with the assistance of AI, under the Spid3r Language Project.
+Meet Spid3r, version 1.1.1 — a fast, safe, all-in-one programming language designed to run anywhere with zero extra downloads. Powered by Rust Stage 0 and the self-hosted spid3r-self compiler with YamLLVM, built by ANSNEW TECH with the assistance of AI.
 
 [[SLIDE 2]]
-What makes Spid3r special? Everything is built into one package with no extra setup. Your code can run four different ways — including right inside a web browser — and always give the exact same result. It also cleans up unused memory automatically, with six core data types, forty keywords, over twenty data organizers, and twenty-six built-in toolkits.
+What makes Spid3r special? Focused zero-overhead CLIs — yamc, yamcvm, spvm, and spkg — ship alongside spid3r with built-in web, SQL databases, hashing, math, and files in one package. The Spid3r Engine runs across four backends — tree oracle, spvm virtual machine, YamLLVM native code, and WebAssembly — with identical results, while YamGC cleans up unused memory automatically.
 
 [[SLIDE 3]]
-Getting started takes just one download, whether you use Linux, macOS, Windows, or Cargo. You write code in dot matrix or dot mt files, test ideas in the interactive shell, and run untrusted scripts safely using sandbox mode, which blocks access to your files, network, and system commands.
+Getting started takes just one install on Linux, macOS, Windows, or Cargo. You write code in dot matrix or dot mt files, use the sp shortcut or yamc, yamcvm, spvm, and spkg CLIs, and Windows and Unix installers even bundle the offline Spid3r Formatter VS Code extension. Sandbox mode keeps untrusted scripts away from your files, network, and system commands.
 
 [[SLIDE 4]]
-Here is how Spid3r runs your code in six simple steps: it reads your words, builds the structure, checks for mistakes, simplifies the steps, runs the program, and cleans up memory. Whether you use the tree walker, the sixty-instruction virtual machine, the native compiler, or WebAssembly, automated tests ensure identical output every time.
+Here is how Spid3r runs your code in six steps: it reads words, builds the structure, checks for mistakes, simplifies steps, runs through the Spid3r Engine, and cleans memory with YamGC. Whether on the tree oracle, the sixty-opcode spvm virtual machine, YamLLVM native code with spid3r-self fixed-point builds, or WebAssembly, damaged bytecode stops immediately with exit code four.
 
 [[SLIDE 5]]
-Every update to Spid3r goes through six automated test jobs and continuous crash testing. Best of all, you write your code once and ship it five ways: run it directly, compile a standalone desktop app, export for web browsers, launch a desktop window app, or embed it inside a Rust program.
+Every update passes a six-job CI pipeline, over fourteen hundred thirty-six automated tests, a one hundred thirty-six program frozen self-host corpus, and continuous crash fuzzing across parsers, HTTP, WebSocket, and packages. Best of all, you write your code once and ship it five ways: spvm scripts, YamLLVM native apps, browser WebAssembly, desktop GUI windows, or embedded in Rust via spid3r_lang.
 
 [[SLIDE 6]]
-When your program imports other code, Spid3r checks six places in order, starting with the current file's folder and ending with the built-in library. Tricky paths that try to escape folders are blocked, and shared packages are locked with digital fingerprints and signatures so nobody can secretly alter them.
+When your program imports other code, Spid3r checks six places in order, starting with the current file's folder and ending with the built-in library. Tricky paths trying to escape folders are blocked, and shared spider.toml packages use SHA-256 fingerprints and Ed25519 signatures verified by spkg verify.
 
 [[SLIDE 7]]
-Spid3r clearly labels where code comes from using four trust levels: T0 is the locked built-in library, T1 is your own project code, T2 is verified third-party packages, and T5 is trusted native C plugins. Best of all, installing packages never runs hidden setup scripts — it only copies verified files.
+Spid3r separates code into four trust levels: T0 is the locked built-in standard library, T1 is your own project code, T2 is vendor packages verified by spkg verify, and T5 is trusted native C plugins. Best of all, installing packages never runs hidden install scripts — it only copies verified files.
 
 [[SLIDE 8]]
-Want to share your program with someone who doesn't have Spid3r installed? One build command compiles your script with LLVM 23 into a standalone app — complete with your own icon, no black terminal window, version details, and zero extra setup needed on their computer.
+Want to share your program with anyone? Run yamc or spid3r build to compile your script with YamLLVM and the SHA-256-pinned spid3r_lang runtime into a standalone app — complete with your own icon, clean window mode, version details, and zero extra setup needed on their computer.
 
 [[SLIDE 9]]
-You can even pack your compiled program, interface files, and runtime into a single self-contained executable. Just remember one honest rule: hiding source code stops casual reading, not determined hackers — so never store passwords or secret keys inside a client app.
+You can compile SHA-256 verified dot matrixc bytecode with yamcvm and pack your bytecode, UI files, and pinned runtime into a single executable with yamc. Just remember: hiding source stops casual reading, not determined hackers — never store passwords or secret keys inside a client app.
 
 [[SLIDE 10]]
 Spid3r keeps the basics simple with six core data types: whole numbers, decimals, true or false, text, empty null values, and raw binary bytes. Converting between types is clear and readable, and the entire language uses only forty reserved keywords.
 
 [[SLIDE 11]]
-Missing data is one of the biggest causes of app crashes, so Spid3r makes safety easy. You can provide instant fallback values, check nested data without crashing, and insert variables straight into text with clean decimal formatting.
+Missing data is a major source of app crashes, so Spid3r makes safety easy. You can supply instant fallback values, safely navigate nested data without crashing, rely on automatic nullability narrowing, and insert variables straight into text with clean decimal formatting.
 
 [[SLIDE 12]]
-Controlling how your program flows is clean and predictable. Decisions with if can return values directly, loops handle counts, lists, and key-value maps cleanly, and functions can remember state or chain filter, map, and reduce steps in one readable flow.
+Controlling how your program flows is clean and predictable. Decisions with if can return values directly, loops handle counts, lists, and key-value maps cleanly, and closures and chained filter, map, and reduce operations keep data pipelines readable.
 
 [[SLIDE 13]]
-Pattern matching with match checks every possible case before your code even runs, so nothing gets forgotten. And when something goes wrong at runtime, try, catch, and finally recover cleanly — guaranteeing your cleanup steps always execute.
+Pattern matching with match checks every possible case before your code even runs, so nothing gets forgotten. And when something fails at runtime, try, catch, and finally recover cleanly — guaranteeing your cleanup steps always execute.
 
 [[SLIDE 14]]
-For larger projects, Spid3r lets you organize code like real-world blueprints using classes, single inheritance, and shared interfaces. Details stay private by default so internal data isn't accidentally changed from outside.
+For larger projects, Spid3r lets you organize code cleanly using classes, single inheritance, and shared interfaces. Fields stay private by default so internal state isn't accidentally changed from outside.
 
 [[SLIDE 15]]
-Write flexible functions once that work across different types, and pick from over twenty built-in data organizers — including lists, maps, queues, tries, and graphs. Even custom sorting works safely without ever freezing your app.
+Write generic functions once with constraints like Numeric or Comparable: YamLLVM specializes functions and unboxes integer and float lists for native speed, while tree and spvm match identically across over twenty built-in data structures and safe lock-free sorting.
 
 [[SLIDE 16]]
-Need heavy number crunching? Spid3r includes a built-in vector and matrix math engine supporting over sixteen million numbers with zero extra installs. It handles matrix multiplication, equation solving, and even reads and writes standard Python NumPy files.
+Need heavy number crunching? Spid3r includes a built-in vector and matrix math engine supporting over sixteen million numbers with zero extra installs. It handles matrix multiplication, linear equation solving, and even reads and writes standard Python NumPy files.
 
 [[SLIDE 17]]
-Unlike languages with a global lock, Spid3r runs background tasks in parallel across real CPU cores using a smart task scheduler. Tasks pass messages safely through channels, with built-in locks, atomic counters, and automatic deadlock protection.
+Unlike languages with a global lock, Spid3r runs background tasks in parallel across real CPU cores using an M-to-N scheduler. Up to two hundred fifty-six workers pass messages safely through channels, with mutexes, atomic integers, and built-in deadlock protection.
 
 [[SLIDE 18]]
-Spid3r comes with twenty-six built-in modules compiled right inside — covering web servers, email, five hundred ninety-eight world time zones, text processing, JSON, CSV, file compression, big numbers, exact money math, and testing tools.
+Spid3r ships twenty-six embedded standard library modules alongside two hundred fifty-four built-in native functions — covering SQLite, PostgreSQL, and MySQL 8 databases, web servers, WebSockets, TLS, five hundred ninety-eight time zones, JSON, MessagePack, CBOR, gzip, big numbers, and testing tools.
 
 [[SLIDE 19]]
-We believe in being honest about security. Spid3r's built-in hashing and password tools pass standard security tests, but they have not yet completed an independent outside audit. For critical production systems, place secret keys and HTTPS behind a trusted security gateway or hardware key vault.
+We believe in honesty about security. Spid3r's built-in hashing, password tools, and Ed25519 signatures pass standard tests, while HTTPS uses your operating system's native TLS — though an independent outside security audit is still pending. For critical production apps, keep secrets behind an audited gateway or hardware vault.
 
 [[SLIDE 20]]
-Managing Spid3r stays simple and completely local. One plain settings file controls forty-five options, and you can inspect status, safety switches, and logs anytime through the terminal command or the Windows desktop control panel — nothing leaves your machine.
+Managing Spid3r stays simple and local. One spid3r.ini file controls forty-five options across twelve sections, and you can inspect status, safety switches, and logs anytime through spid3r control or the Windows desktop control panel — nothing leaves your machine.
 
 [[SLIDE 21]]
-One language, everything built in: a self-hosted compiler, four execution backends, desktop and browser targets, forty keywords, twenty-six modules, and zero external dependencies. Thank you for watching — from ANSNEW TECH and the Spid3r Language Project, created with the assistance of AI.
+One language, everything built in: spid3r-self compiler, YamLLVM and YamGC, yamc, yamcvm, spvm, and spkg CLIs, two hundred fifty-four native builtins, twenty-six modules, and zero external dependencies. Thank you for watching — from ANSNEW TECH and the Spid3r Language Project.

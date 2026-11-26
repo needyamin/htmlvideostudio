@@ -178,8 +178,8 @@
       background: rgba(11, 15, 23, .94);
       z-index: var(--z-chrome);
     }
-    .chrome--top { top: 0; height: var(--chrome-top-h); border-bottom: var(--border-w) solid var(--border); justify-content: space-between; }
-    .chrome--bottom { bottom: 0; height: var(--chrome-bottom-h); border-top: var(--border-w) solid var(--border); justify-content: space-between; gap: var(--sp-4); }
+    .chrome--top { top: 0; height: var(--chrome-top-h); justify-content: space-between; display: none;}
+    .chrome--bottom { bottom: 0; height: var(--chrome-bottom-h); justify-content: space-between; gap: var(--sp-4); }
 
     .brand { display: flex; align-items: center; gap: var(--sp-3); font-size: var(--fs-kicker); font-weight: 700 }
     .brand .logo {
@@ -206,6 +206,7 @@
     #counter b { color: var(--fg1); font-weight: 800 }
 
     .navbtn {
+	  display: none;
       background: var(--card); color: var(--fg1);
       border: var(--border-w) solid var(--border); border-radius: var(--r-sm);
       padding: 10px 26px; font-family: var(--font-bn); font-size: var(--fs-meta);
@@ -424,7 +425,7 @@
       <div class="brand">
         <span class="logo"><img src="spid3r.png" alt="Spid3r"></span>
         <span><span class="en">Spid3r</span></span>
-        <span class="badge">v1.1.1</span>
+
       </div>
       <div class="chrome-hint"></div>
       <div id="counter"><b>১</b> / ১৯</div>
@@ -437,14 +438,14 @@
         <div class="title-glyph float rv" style="--i:0"><img src="spid3r.png" alt="Spid3r"></div>
         <h1 class="h1 rv" style="--i:1"><span class="grad-t">Spid3r</span></h1>
         <p class="lead rv" style="--i:2">একটি সহজ, দ্রুতগতির ও নিরাপদ অল-ইন-ওয়ান প্রোগ্রামিং ভাষা</p>
-        <p class="sub rv" style="--i:3">Rust ও Self-hosted কম্পাইলারে তৈরি · <b style="color:var(--green)">বাড়তি কোনো ডাউনলোড লাগে না</b></p>
+        <p class="sub rv" style="--i:3">Rust ও Self-hosted (<code>spid3r-self</code>) কম্পাইলারে তৈরি · <b style="color:var(--green)">বাড়তি কোনো ডাউনলোড লাগে না</b></p>
         <div class="badge-row">
           <span class="badge rv" style="--i:4">v1.1.1 (Language 1.1.1)</span>
           <span class="badge badge--cyan rv" style="--i:5">ব্রাউজারে চলে (WASM)</span>
-          <span class="badge badge--purple rv pulse" style="--i:6">নেটিভ অ্যাপ (LLVM 23)</span>
+          <span class="badge badge--purple rv pulse" style="--i:6">YamLLVM নেটিভ (LLVM 23)</span>
           <span class="badge badge--amber rv" style="--i:7">✨ AI-এর সহায়তায় নির্মিত</span>
         </div>
-        <p class="note rv" style="--i:8;margin-top:var(--sp-6)">ANSNEW TECH · AI-এর সহায়তায় তৈরি · © ২০২৬ Spid3r Language Project · needyamin.github.io/spid3r</p>
+     
       </section>
 
       <!-- ══ 2. এক নজরে ══ -->
@@ -458,17 +459,17 @@
             <div class="card rv" style="--i:1">
               <div class="ico">🧩</div>
               <h4>সবকিছু একসাথে</h4>
-              <p>কম্পাইলার, রানার ও প্রয়োজনীয় টুল (ওয়েব, গণিত, ফাইল) — সব এক প্রোগ্রামে, বাড়তি ইনস্টল নেই</p>
+              <p>কম্পাইলার (<code>yamc</code>, <code>yamcvm</code>, <code>spvm</code>, <code>spkg</code>), ওয়েব, SQL ডেটাবেস, গণিত ও ফাইল — বাড়তি ইনস্টল নেই</p>
             </div>
             <div class="card rv" style="--i:2">
               <div class="ico">⚙️</div>
-              <h4>৪ উপায়ে চলে, ১ ফল</h4>
-              <p>Tree, VM, LLVM নেটিভ ও ব্রাউজার WASM — সবখানে <b style="color:var(--fg1)">১০০% একই ফলাফল</b></p>
+              <h4>Spid3r Engine: ৪ ব্যাকএন্ড</h4>
+              <p>Tree (<code>spvm_rt</code>), <code>spvm</code> VM, <b>YamLLVM</b> ও WASM — সবখানে <b style="color:var(--fg1)">১০০% একই ফলাফল</b></p>
             </div>
             <div class="card rv" style="--i:3">
               <div class="ico">♻️</div>
-              <h4>অটো মেমরি ক্লিনআপ</h4>
-              <p>অপ্রয়োজনীয় ডেটা সাথে সাথে ও চক্রাকার লিংক ১,০২৪টি অবজেক্টের পর নিজেই মুছে ফেলে — মেমরি লিক রোধ করে</p>
+              <h4>YamGC মেমরি ক্লিনআপ</h4>
+              <p>অপ্রয়োজনীয় ডেটা সাথে সাথে ও চক্রাকার লিংক ১,০২৪টি অবজেক্টের পর নিজেই মুছে মেমরি লিক রোধ করে</p>
             </div>
             <div class="card rv" style="--i:4">
               <div class="ico">🌐</div>
@@ -497,7 +498,7 @@
             <div class="card card--tight rv" style="--i:2"><div class="ico">🪟</div><h4>Windows</h4><p>সহজ সেটআপ <code>.exe</code></p></div>
             <div class="card card--tight rv" style="--i:3"><div class="ico">🦀</div><h4>Cargo</h4><p class="mono">cargo install</p></div>
           </div>
-          <div class="caveat caveat--good rv" style="--i:4"><b>একটাই প্রোগ্রাম!</b> বাড়তি কোনো রানটাইম লাগে না · কোড ফাইলের নাম <code>.matrix</code> বা <code>.mt</code> · ছোট কমান্ড <code>sp</code></div>
+          <div class="caveat caveat--good rv" style="--i:4"><b>একটাই ইনস্টল!</b> ফাইল <code>.matrix</code>/<code>.mt</code> · <code>sp</code> ও <code>yamc · yamcvm · spvm · spkg</code> + অফলাইন <code>spid3r-formatter.vsix</code></div>
           <div class="code code--tight">
             <span class="line rv" style="--i:5"><span class="c">// আমার প্রথম Spid3r প্রোগ্রাম</span></span>
             <span class="line rv" style="--i:6"><span class="k">fn</span> <span class="f">main</span>() {</span>
@@ -516,25 +517,25 @@
       <section class="slide" data-slide="4">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">সহজ টুলবক্স</div>
-          <h2 class="h">একটি কমান্ড <code>spid3r</code> (বা <code>sp</code>) — সব কাজ এক জায়গায়</h2>
+          <h2 class="h"><code>spid3r</code> / <code>sp</code> ও ৪টি আলাদা কম্পোনেন্ট CLI</h2>
         </div>
         <div class="grow gap-l">
-          <div class="lead rv" style="--i:1">কোড চালানো, ভুল ধরা, অ্যাপ বানানো ও প্রজেক্ট ম্যানেজ — সব এক কমান্ডেই</div>
+          <div class="lead rv" style="--i:1">মূল <code>spid3r</code> ছাড়াও প্রতিটি কাজের জন্য আলাদা জিরো-ওভারহেড কমান্ড রয়েছে</div>
           <div class="three">
             <div class="card rv" style="--i:2">
               <div class="ico">▶️</div>
-              <h4 style="font-size:var(--fs-h3)">চালানো ও পরীক্ষা</h4>
-              <p style="white-space:normal;font-size:var(--fs-meta)"><span class="mono">run · check · repl · debug · lsp · test</span> (<span style="font-family:var(--font-bn)">সব ইঞ্জিন মিলিয়ে পরীক্ষা</span>) <span class="mono">· bench</span></p>
+              <h4 style="font-size:var(--fs-h3)">VM ও পরীক্ষা (<code>spvm</code>)</h4>
+              <p style="white-space:normal;font-size:var(--fs-meta)"><span class="mono">spvm · run · exec · check · repl · debug · lsp · test · bench</span></p>
             </div>
             <div class="card rv" style="--i:3">
               <div class="ico">📦</div>
-              <h4 style="font-size:var(--fs-h3)">বিল্ড ও ডেলিভারি</h4>
-              <p class="mono" style="white-space:normal;font-size:var(--fs-meta)">compile (বাইটকোড) · build (নেটিভ exe) · gui · bundle (wasm/desktop) · fmt · doc</p>
+              <h4 style="font-size:var(--fs-h3)">কম্পাইল (<code>yamc · yamcvm</code>)</h4>
+              <p class="mono" style="white-space:normal;font-size:var(--fs-meta)">yamc (YamLLVM exe) · yamcvm (.matrixc) · gui · bundle · fmt · doc</p>
             </div>
             <div class="card rv" style="--i:4">
               <div class="ico">🗂️</div>
-              <h4 style="font-size:var(--fs-h3)">প্রজেক্ট ও সেটিংস</h4>
-              <p class="mono" style="white-space:normal;font-size:var(--fs-meta)">init · install · add · verify · publish · info · config · control</p>
+              <h4 style="font-size:var(--fs-h3)">প্যাকেজ ও কন্ট্রোল (<code>spkg</code>)</h4>
+              <p class="mono" style="white-space:normal;font-size:var(--fs-meta)">spkg (init · add · install · verify · publish) · config · control</p>
             </div>
           </div>
           <div class="caveat caveat--good rv" style="--i:5"><b>🛡️ নিরাপদ <code>--sandbox</code> মোড:</b> ফাইল, ইন্টারনেট ও সিস্টেম কমান্ড বন্ধ রেখে অচেনা বা অবিশ্বস্ত কোডও নিরাপদে পরীক্ষা করা যায়।</div>
@@ -557,17 +558,17 @@
             <div class="pipe-link" style="--i:3"></div>
             <div class="pipe-step rv" style="--i:4"><div class="pn">৪</div><div class="pt">লোয়ারিং</div><div class="ps">কোড সহজ করে</div></div>
             <div class="pipe-link" style="--i:4"></div>
-            <div class="pipe-step rv" style="--i:5"><div class="pn">৫</div><div class="pt">ব্যাকএন্ড</div><div class="ps">কোড চালায়</div></div>
+            <div class="pipe-step rv" style="--i:5"><div class="pn">৫</div><div class="pt">Spid3r Engine</div><div class="ps">৪ ব্যাকএন্ডে চলে</div></div>
             <div class="pipe-link" style="--i:5"></div>
-            <div class="pipe-step pipe-step--hot rv" style="--i:6"><div class="pn">৬</div><div class="pt">GC</div><div class="ps">মেমরি পরিষ্কার</div></div>
+            <div class="pipe-step pipe-step--hot rv" style="--i:6"><div class="pn">৬</div><div class="pt">YamGC</div><div class="ps">মেমরি পরিষ্কার</div></div>
           </div>
           <div class="four">
-            <div class="card card--tight rv" style="--i:7;background:var(--tint-cyan)"><div class="ico">🌳</div><h4 style="color:var(--cyan)">Tree ইঞ্জিন</h4><p>ধাপে ধাপে রেফারেন্স চেকার</p></div>
-            <div class="card card--tight rv" style="--i:8"><div class="ico">⚙️</div><h4 style="color:var(--green)">বাইটকোড VM</h4><p>৬০টি দ্রুত নির্দেশনা</p></div>
-            <div class="card card--tight rv" style="--i:9"><div class="ico">🚀</div><h4 style="color:var(--purple)">LLVM নেটিভ</h4><p>LLVM 23 + self-hosted <code>spid3r-self</code></p></div>
-            <div class="card card--tight rv" style="--i:10"><div class="ico">🌐</div><h4 style="color:var(--amber)">WebAssembly</h4><p>ব্রাউজারের নিজস্ব VM</p></div>
+            <div class="card card--tight rv" style="--i:7;background:var(--tint-cyan)"><div class="ico">🌳</div><h4 style="color:var(--cyan)">Tree (<code>spvm_rt</code>)</h4><p>রেফারেন্স প্যারিটি চেকার</p></div>
+            <div class="card card--tight rv" style="--i:8"><div class="ico">⚙️</div><h4 style="color:var(--green)"><code>spvm</code> &amp; <code>yamcvm</code></h4><p>৬০টি নির্দেশনা · <code>.matrixc</code></p></div>
+            <div class="card card--tight rv" style="--i:9"><div class="ico">🚀</div><h4 style="color:var(--purple)">YamLLVM (<code>yamc</code>)</h4><p>LLVM 23 + <code>spid3r-self</code> Stage ১→৩</p></div>
+            <div class="card card--tight rv" style="--i:10"><div class="ico">🌐</div><h4 style="color:var(--amber)">WebAssembly</h4><p>ব্রাউজারে <code>spvm</code> ইঞ্জিন</p></div>
           </div>
-          <div class="caveat rv" style="--i:11;text-align:center">প্রতিটি ইঞ্জিনের ফলাফল ও এরর বার্তা অক্ষরে-অক্ষরে হুবহু এক — এবং নষ্ট বাইটকোড চালানোর আগেই ধরা পড়ে</div>
+          <div class="caveat rv" style="--i:11;text-align:center">১৩৬টি টেস্ট প্রোগ্রামে চার ইঞ্জিনের ফলাফল অক্ষরে-অক্ষরে এক — নষ্ট <code>.matrixc</code> ফাইল এক্সিট কোড ৪-এ থেমে যায়</div>
         </div>
       </section>
 
@@ -605,7 +606,7 @@
           <div class="ladder" style="max-width:1400px;margin:0 auto;width:100%">
             <div class="ladder-step ladder-step--first" style="--i:1"><span class="num">T0</span><span><b>বিল্ট-ইন লাইব্রেরি (stdlib)</b> — প্রোগ্রামের ভেতরে লক করা, বদলানো যায় না</span></div>
             <div class="ladder-step" style="--i:2"><span class="num">T1</span><span><b>নিজের প্রজেক্ট ফাইল</b> (<code>.matrix</code> / <code>.mt</code>) — আপনার নিজের লেখা কোড</span></div>
-            <div class="ladder-step ladder-step--last" style="--i:3"><span class="num">T2</span><span><b>ডাউনলোড করা প্যাকেজ</b> (<code>vendor/</code>) — SHA-256 হ্যাশ দিয়ে যাচাইকৃত</span></div>
+            <div class="ladder-step ladder-step--last" style="--i:3"><span class="num">T2</span><span><b>ডাউনলোড করা প্যাকেজ</b> (<code>vendor/</code>) — <code>spkg verify</code> ও SHA-256 দিয়ে যাচাইকৃত</span></div>
             <div class="ladder-step ladder-step--tight" style="--i:4;border-color:var(--caveat-rose-bd);background:var(--caveat-rose-bg)"><span class="num" style="color:var(--rose)">T5</span><span style="color:var(--rose)"><b>নেটিভ C প্লাগইন</b> (<code>extern fn</code>) — পুরো সিস্টেম ক্ষমতা, শুধু নেটিভ বিল্ডে</span></div>
           </div>
           <div class="two" style="max-width:1600px;width:100%;margin:0 auto">
@@ -625,7 +626,7 @@
           <div class="gap-s">
             <h3 class="h3 rv" style="--i:1">প্যাকেজ শেয়ার ও যাচাইয়ের সহজ ধাপ</h3>
             <div class="pipe">
-              <div class="pipe-step rv" style="--i:2"><div class="pt">📥 add</div><div class="ps">প্যাকেজ যোগ</div></div>
+              <div class="pipe-step rv" style="--i:2"><div class="pt">📥 spkg add</div><div class="ps">প্যাকেজ যোগ</div></div>
               <div class="pipe-link" style="--i:2"></div>
               <div class="pipe-step rv" style="--i:3"><div class="pt">🔍 tree / verify</div><div class="ps">হ্যাশ পরীক্ষা</div></div>
               <div class="pipe-link" style="--i:3"></div>
@@ -634,10 +635,10 @@
               <div class="pipe-step pipe-step--hot rv" style="--i:5"><div class="pt">🔐 install</div><div class="ps">স্বাক্ষর যাচাই</div></div>
             </div>
             <p class="sub rv" style="--i:6">🧷 SHA-256 ডিজিটাল ফিঙ্গারপ্রিন্ট + Ed25519 স্বাক্ষর — <b style="color:var(--green)">একবার প্রকাশিত ভার্সন আর বদলানো যায় না</b></p>
-            <p class="note rv" style="--i:7">সহজ ভার্সন নিয়ম: <code>^1.2 · &gt;=1.2.3 · =1.2.3</code> · জটিল ডিপেন্ডেন্সি নিজেই মিলিয়ে নেয়</p>
+            <p class="note rv" style="--i:7">মেনিফেস্ট: <code>spider.toml</code> · ভার্সন: <code>^1.2 · &gt;=1.2.3 · =1.2.3</code> · <code>spkg</code> বা <code>spid3r</code>-এ সমানভাবে চলে</p>
           </div>
           <div class="two" style="max-width:1500px;width:100%;margin:0 auto">
-            <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>✅ <code>spid3r verify</code>:</b> প্যাকেজের একটি ফাইলও বদলে গেলে বিল্ড সাথে সাথেই আটকে যায়</div>
+            <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>✅ <code>spkg verify</code> (<code>spid3r verify</code>):</b> প্যাকেজের একটি ফাইলও বদলে গেলে বিল্ড আটকে যায়</div>
             <div class="caveat caveat--tight rv" style="--i:9"><b>📦 নিরাপদ ইনস্টল:</b> ইনস্টলের সময় কোনো কোড চলে না — প্যাকেজ শুধু নিরাপদ ফাইল</div>
           </div>
         </div>
@@ -647,14 +648,15 @@
       <section class="slide" data-slide="9">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">নেটিভ অ্যাপ</div>
-          <h2 class="h">কোড থেকে সরাসরি একক <code>.exe</code> অ্যাপ (LLVM 23)</h2>
+          <h2 class="h">কোড থেকে সরাসরি একক <code>.exe</code> অ্যাপ (YamLLVM)</h2>
         </div>
         <div class="grow two">
           <div class="code rv" style="--i:1">
-            <span class="line">spid3r build app.matrix -o App.exe --release \</span>
+            <span class="line"><span class="c bn"># yamcvm → বাইটকোড, yamc → নেটিভ অ্যাপ</span></span>
+            <span class="line">yamcvm app.matrix -o app.matrixc</span>
+            <span class="line">yamc app.matrix -o App.exe --release \</span>
             <span class="line">  --icon app.ico --subsystem windows \</span>
-            <span class="line">  --bytecode app.matrixc --embed ui \</span>
-            <span class="line">  --bundle-runtime</span>
+            <span class="line">  --bytecode app.matrixc --embed ui --bundle-runtime</span>
           </div>
           <div class="gap-m">
             <div class="two" style="gap:var(--sp-3)">
@@ -890,7 +892,7 @@
             <div class="card card--tight"><h4 class="mono">priority_queue</h4><p>অগ্রাধিকার কিউ</p></div>
             <div class="card card--tight"><h4 class="mono">vec</h4><p>ডায়নামিক তালিকা</p></div>
           </div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:2"><b>⚖️ নিরাপদ সর্টিং:</b> <code>sort_by · sorted_by · argsort</code> — তুলনার নিয়ম ভুল করলেও প্রোগ্রাম আটকে বা ক্র্যাশ করে না</div>
+          <div class="caveat caveat--good caveat--tight rv" style="--i:2"><b>🧩 জেনেরিক্স ও নিরাপদ সর্ট:</b> <code>&lt;T: Numeric&gt;</code>, <code>list&lt;int&gt;</code> আনবক্সিং (YamLLVM) ও লক-মুক্ত <code>sort_by / sorted_by</code></div>
           <div class="two" style="gap:var(--sp-5)">
             <div class="code code--tight rv" style="--i:3">
               <span class="line"><span class="k">let</span> v1 = <span class="f">vector</span>([<span class="n">1.0</span>, <span class="n">2.0</span>, <span class="n">3.0</span>]);</span>
@@ -938,18 +940,18 @@
       <section class="slide" data-slide="17">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">সবকিছু বিল্ট-ইন</div>
-          <h2 class="h">২৬টি স্ট্যান্ডার্ড লাইব্রেরি মডিউল রেডি</h2>
+          <h2 class="h">২৬টি স্ট্যান্ডার্ড মডিউল ও ২৫৪টি নেটিভ ফাংশন</h2>
         </div>
         <div class="grow gap-s">
           <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
-            <div class="card card--tight rv" style="--i:1"><h4 style="color:var(--cyan)">কনসোল ও তথ্য</h4><p>println · spid3rinfo</p></div>
-            <div class="card card--tight rv" style="--i:2"><h4 style="color:var(--green)">ফাইলসিস্টেম</h4><p>নিরাপদ স্ট্রিম · fsync</p></div>
-            <div class="card card--tight rv" style="--i:3"><h4 style="color:var(--purple)">ওয়েব ও নেট</h4><p>http_fetch · TLS</p></div>
-            <div class="card card--tight rv" style="--i:4"><h4 style="color:var(--amber)">র‍্যান্ডম</h4><p>নিরাপদ random_bytes (CSPRNG)</p></div>
-            <div class="card card--tight rv" style="--i:5"><h4 style="color:var(--rose)">ক্রিপ্টো</h4><p>sha256 · ed25519 · argon2</p></div>
-            <div class="card card--tight rv" style="--i:6"><h4 style="color:var(--indigo-light)">ফরম্যাট</h4><p>JSON · CSV · gzip · regex</p></div>
+            <div class="card card--tight rv" style="--i:1"><h4 style="color:var(--cyan)">SQL ডেটাবেস</h4><p>SQLite · Postgres · MySQL 8</p></div>
+            <div class="card card--tight rv" style="--i:2"><h4 style="color:var(--green)">ফাইল ও তথ্য</h4><p>spid3rinfo · ১,০২৪ স্ট্রিম</p></div>
+            <div class="card card--tight rv" style="--i:3"><h4 style="color:var(--purple)">ওয়েব ও নেট</h4><p>http_fetch · WS · TLS</p></div>
+            <div class="card card--tight rv" style="--i:4"><h4 style="color:var(--amber)">র‍্যান্ডম</h4><p>random_bytes (OS CSPRNG)</p></div>
+            <div class="card card--tight rv" style="--i:5"><h4 style="color:var(--rose)">হ্যাশ ও স্বাক্ষর</h4><p>sha256 · ed25519 · argon2</p></div>
+            <div class="card card--tight rv" style="--i:6"><h4 style="color:var(--indigo-light)">ফরম্যাট</h4><p>JSON · MsgPack · CBOR · gzip</p></div>
           </div>
-          <h3 class="h3 rv" style="--i:7;font-size:var(--fs-kicker);line-height:var(--lh-kicker)">সব ২৬টি মডিউল বাইনারির ভেতরেই যুক্ত</h3>
+          <h3 class="h3 rv" style="--i:7;font-size:var(--fs-kicker);line-height:var(--lh-kicker)">২৬টি <code>stdlib</code> মডিউল ও ২৫৪টি বিল্ট-ইন ফাংশন (১১৭টি AOT ট্রাম্পোলিন)</h3>
           <div class="four rv" style="--i:8;grid-template-columns:repeat(9,1fr);gap:var(--sp-2)">
             <div class="card card--tight"><h4 class="mono">web</h4><p>ওয়েব সার্ভার</p></div>
             <div class="card card--tight"><h4 class="mono">http</h4><p>রাউটার</p></div>
@@ -1010,7 +1012,7 @@
       <section class="slide slide--center" data-slide="19">
         <div class="title-glyph float rv" style="--i:0"><img src="spid3r.png" alt="Spid3r"></div>
         <h1 class="h1 h1--sm rv" style="--i:1">একটি ভাষা। <span class="grad-t">সবকিছু বিল্ট-ইন।</span></h1>
-        <p class="lead rv" style="--i:2">Self-hosted কম্পাইলার · ৪টি ব্যাকএন্ড · নেটিভ অ্যাপ · ব্রাউজার রানটাইম · স্বাক্ষরিত প্যাকেজ</p>
+        <p class="lead rv" style="--i:2">Self-hosted (<code>spid3r-self</code>) · YamLLVM ও YamGC · <code>yamc / yamcvm / spvm / spkg</code> · ২৫৪ নেটিভ ফাংশন</p>
         <div class="stat-grid" style="margin-top:var(--sp-7)">
           <div class="stat rv" style="--i:3"><div class="bignum bignum--sm cnt" data-v="40">০</div><div class="lbl">কীওয়ার্ড</div></div>
           <div class="stat rv" style="--i:4"><div class="bignum bignum--sm cnt" data-v="6">০</div><div class="lbl">মূল ডেটা টাইপ</div></div>
@@ -1027,7 +1029,7 @@
 
     <footer class="chrome chrome--bottom">
       <button class="navbtn" id="prevBtn">‹ আগের</button>
-      <div class="attribution">Developed by ANSNEW TECH · AI-এর সহায়তায় তৈরি</div>
+      <div class="attribution"></div>
       <button class="navbtn" id="nextBtn">পরের ›</button>
     </footer>
 
