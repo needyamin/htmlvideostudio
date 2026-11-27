@@ -3,387 +3,164 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spid3r — Easy-to-Understand Keynote</title>
-<!--
-  DESIGN SYSTEM: Linear (structure + motion) × Spid3r Tech Utility (palette + voice)
-  Verified against Spid3r v1.1.1 (Language 1.1.1, Self-hosted + Rust Stage 0).
-  Written for both technical and non-technical audiences.
--->
+<title>Spid3r v1.5.0 — Visual Keynote</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --stage-w:1920px; --stage-h:1080px; --content-max:1600px;
-  --safe-x:116px; --safe-top:112px; --safe-bottom:120px;
-  --chrome-top-h:76px; --chrome-bottom-h:96px; --chrome-bg:rgba(11,15,23,.94);
+  --stage-w:1920px; --stage-h:1080px; --content-max:1640px;
+  --safe-x:112px; --safe-top:102px; --safe-bottom:108px;
+  --chrome-top-h:72px; --chrome-bottom-h:84px; --chrome-bg:rgba(11,15,23,.94);
   --bg:#0b0f17; --surface:#111722; --card:#161e2e; --card-alt:#1a2335; --code:#080c13;
-  --border:#1e293b; --border-sub:rgba(255,255,255,.08); --border-strong:rgba(255,255,255,.16);
-  --border-w:2px;
-  --fg1:#f1f5f9; --fg2:#a9b8cb; --fg3:#64748b; --fg3-read:#7a899f; --text-muted:#a9b8cb; --code-fg:#d7e2ef;
+  --border:#1e293b; --border-sub:rgba(255,255,255,.08); --border-w:2px;
+  --fg1:#f1f5f9; --fg2:#a9b8cb; --fg3:#64748b; --fg3-read:#7a899f; --code-fg:#d7e2ef;
   --green:#04AA6D; --cyan:#38bdf8; --indigo:#818cf8; --purple:#c084fc;
   --amber:#fbbf24; --rose:#fb7185; --emerald:#34d399;
-  --cyan-light:#7dd3fc; --indigo-light:#a5b4fc; --purple-light:#d8b4fe; --fn:#a78bfa;
+  --cyan-light:#7dd3fc; --indigo-light:#a5b4fc; --fn:#a78bfa;
   --grad:linear-gradient(135deg,#04AA6D 0%,#38bdf8 100%);
   --tint-green:rgba(4,170,109,.12); --tint-cyan:rgba(56,189,248,.12);
-  --tint-indigo:rgba(129,140,248,.14); --tint-purple:rgba(192,132,252,.14);
-  --tint-amber:rgba(251,191,36,.08); --tint-rose:rgba(251,113,133,.09);
+  --tint-purple:rgba(192,132,252,.14); --tint-amber:rgba(251,191,36,.08); --tint-rose:rgba(251,113,133,.09);
   --caveat-amber-bg:var(--tint-amber); --caveat-amber-bd:rgba(251,191,36,.42);
-  --caveat-rose-bg:var(--tint-rose);   --caveat-rose-bd:rgba(251,113,133,.42);
+  --caveat-rose-bg:var(--tint-rose); --caveat-rose-bd:rgba(251,113,133,.42);
   --caveat-good-bg:rgba(4,170,109,.09); --caveat-good-bd:rgba(4,170,109,.40);
   --font-head:'Outfit','Inter','Segoe UI',sans-serif;
   --font-body:'Inter','Segoe UI',system-ui,sans-serif;
   --font-mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
-  --font-num:var(--font-head);
-  --fs-h1:112px; --lh-h1:1.12; --fw-h1:800;  --fs-h1-sm:96px;
-  --fs-h2:64px;  --lh-h2:1.20; --fw-h2:700;
-  --fs-h3:40px;  --lh-h3:1.30; --fw-h3:700;
-  --fs-lead:34px; --lh-lead:1.50; --fs-body:32px; --lh-body:1.55; --fw-body:500;
-  --fs-caveat:28px; --lh-caveat:1.50;
-  --fs-code:28px; --lh-code:1.60; --fs-code-tight:26px;
-  --fs-chip:26px; --lh-chip:1.40; --fs-kicker:26px; --lh-kicker:1.40;
-  --fs-meta:24px; --lh-meta:1.40;                 /* ABSOLUTE FLOOR */
-  --fs-stat-lbl:26px; --lh-stat-lbl:1.40;
-  --fs-bignum:168px; --lh-bignum:1.20; --fw-bignum:800; --fs-bignum-sm:110px;
-  --fs-glyph:120px;
-  --sp-1:8px; --sp-2:12px; --sp-3:16px; --sp-4:24px; --sp-5:32px;
-  --sp-6:40px; --sp-7:48px; --sp-8:64px; --sp-9:80px; --sp-10:96px;
-  --r-sm:10px; --r-md:16px; --r-lg:24px; --r-xl:32px; --r-pill:999px;
-  --shadow-1:0 2px 8px rgba(0,0,0,.24); --shadow-2:0 12px 40px rgba(0,0,0,.36);
-  --glow-green:0 0 0 1px rgba(4,170,109,.28),0 8px 40px rgba(4,170,109,.10);
-  --dur-fast:320ms; --dur-reveal:520ms; --dur-draw:1000ms; --dur-count:1400ms;
-  --dur-slide:600ms; --dur-ambient:4200ms;
-  --ease-out:cubic-bezier(.16,1,.3,1); --ease-soft:cubic-bezier(.22,1,.36,1);
-  --ease-inout:cubic-bezier(.65,0,.35,1);
-  --stagger:220ms; --stagger-tight:150ms; --reveal-y:28px;
-  --z-slide:1; --z-chrome:50; --z-progress:100;
+  --fs-h1:114px; --fs-h1-sm:92px; --fs-h2:60px; --fs-h3:36px;
+  --fs-lead:32px; --fs-body:29px; --fs-caveat:26px; --fs-code:28px; --fs-code-tight:26px;
+  --fs-chip:25px; --fs-kicker:24px; --fs-meta:24px; --fs-stat-lbl:26px;
+  --fs-bignum:156px; --fs-bignum-sm:108px; --fs-glyph:128px;
+  --sp-1:8px; --sp-2:14px; --sp-3:20px; --sp-4:28px; --sp-5:36px; --sp-6:44px;
+  --r-sm:10px; --r-md:16px; --r-pill:999px;
+  --dur-fast:280ms; --dur-reveal:480ms; --dur-slide:520ms; --dur-ambient:4200ms;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-inout:cubic-bezier(.65,0,.35,1);
+  --stagger:140ms; --reveal-y:22px; --z-slide:1; --z-chrome:50; --z-progress:100;
 }
 
-/* ── Reset / stage ─────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;width:100%}
-body{
-  background:var(--bg);color:var(--fg1);font-family:var(--font-body);
-  line-height:var(--lh-body);overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-}
-#stage{
-  position:relative;flex:0 0 auto;
-  width:var(--stage-w);height:var(--stage-h);
-  transform-origin:center center;transform:scale(1);
-  background:var(--bg);overflow:hidden;
-}
-#progress{
-  position:absolute;top:0;left:0;height:5px;width:0;
-  background:var(--grad);z-index:var(--z-progress);
-  transition:width var(--dur-slide) var(--ease-out);
-}
+body{background:var(--bg);color:var(--fg1);font-family:var(--font-body);line-height:1.45;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;flex:0 0 auto;width:var(--stage-w);height:var(--stage-h);transform-origin:center center;transform:scale(1);background:var(--bg);overflow:hidden}
+#progress{position:absolute;top:0;left:0;height:5px;width:0;background:var(--grad);z-index:var(--z-progress);transition:width var(--dur-slide) var(--ease-out)}
 
-/* ── Chrome ────────────────────────────────────────────────────── */
-.chrome{
-  position:absolute;left:0;right:0;display:flex;align-items:center;
-  padding:0 var(--safe-x);background:var(--chrome-bg);z-index:var(--z-chrome);
-}
-.chrome--top{
-  top:0;height:var(--chrome-top-h);border-bottom:var(--border-w) solid var(--border);
-  justify-content:space-between;
-}
-.chrome--bottom{
-  bottom:0;height:var(--chrome-bottom-h);border-top:var(--border-w) solid var(--border);
-  justify-content:space-between;gap:var(--sp-4);
-}
-.brand{display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-kicker);font-weight:700}
-.brand .logo{
-  width:46px;height:46px;border-radius:var(--r-sm);background:var(--tint-green);
-  border:var(--border-w) solid rgba(4,170,109,.42);
-  display:flex;align-items:center;justify-content:center;font-size:26px;
-}
-.brand .logo img{width:30px;height:30px;object-fit:contain;display:block}
+/* Chrome */
+.chrome{position:absolute;left:0;right:0;display:flex;align-items:center;padding:0 var(--safe-x);background:var(--chrome-bg);z-index:var(--z-chrome)}
+.chrome--top{top:0;height:var(--chrome-top-h);border-bottom:var(--border-w) solid var(--border);justify-content:space-between}
+.chrome--bottom{bottom:0;height:var(--chrome-bottom-h);border-top:var(--border-w) solid var(--border);justify-content:space-between;gap:var(--sp-4)}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-kicker);font-weight:700;font-family:var(--font-head)}
+.brand .logo{width:44px;height:44px;border-radius:var(--r-sm);background:var(--tint-green);border:var(--border-w) solid rgba(4,170,109,.42);display:flex;align-items:center;justify-content:center}
+.brand .logo img{width:28px;height:28px;object-fit:contain;display:block}
 .brand .en{color:var(--green)}
-.badge{
-  display:inline-flex;align-items:center;gap:var(--sp-2);
-  font-size:var(--fs-chip);font-weight:700;line-height:var(--lh-chip);
-  padding:8px 20px;border-radius:var(--r-pill);
-  border:var(--border-w) solid rgba(4,170,109,.42);
-  color:var(--green);background:var(--tint-green);
-}
+.badge{display:inline-flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-chip);font-weight:700;padding:6px 18px;border-radius:var(--r-pill);border:var(--border-w) solid rgba(4,170,109,.42);color:var(--green);background:var(--tint-green)}
 .badge--cyan{border-color:rgba(56,189,248,.42);color:var(--cyan);background:var(--tint-cyan)}
 .badge--purple{border-color:rgba(192,132,252,.42);color:var(--purple);background:var(--tint-purple)}
 .badge--amber{border-color:rgba(251,191,36,.42);color:var(--amber);background:var(--tint-amber)}
-.chrome-hint{font-size:var(--fs-meta);color:var(--fg3-read);line-height:var(--lh-meta)}
-#counter{font-family:var(--font-num);font-size:var(--fs-meta);color:var(--fg2);white-space:nowrap}
+#counter{font-family:var(--font-head);font-size:var(--fs-meta);color:var(--fg2);white-space:nowrap}
 #counter b{color:var(--fg1);font-weight:800}
-.navbtn{
-  background:var(--card);color:var(--fg1);border:var(--border-w) solid var(--border);
-  border-radius:var(--r-sm);padding:10px 26px;
-  font-family:var(--font-body);font-size:var(--fs-meta);font-weight:600;cursor:pointer;
-  transition:border-color var(--dur-fast),color var(--dur-fast);
-}
+.navbtn{background:var(--card);color:var(--fg1);border:var(--border-w) solid var(--border);border-radius:var(--r-sm);padding:8px 24px;font-family:var(--font-body);font-size:var(--fs-meta);font-weight:600;cursor:pointer;transition:border-color var(--dur-fast),color var(--dur-fast)}
 .navbtn:hover{border-color:var(--green);color:var(--green)}
-.attribution{font-size:var(--fs-meta);color:var(--fg3-read);text-align:center;line-height:var(--lh-meta)}
+.attribution{font-size:var(--fs-meta);color:var(--fg3-read);text-align:center}
 
-/* Explicit display faces */
-h1.h1,h1.h1--sm,h2.h,h3.h3,.card h4,.kicker,.brand,.chip.grp{font-family:var(--font-head)}
-#counter,.bignum,.pipe-step .pn,.ladder-step .num{font-family:var(--font-num)}
-
-/* ── Slides ────────────────────────────────────────────────────── */
+/* Typography & Layout */
+h1.h1,h1.h1--sm,h2.h,h3.h3,.card h4,.kicker,.chip.grp,.bignum,.ladder-step .num{font-family:var(--font-head)}
 #deck{position:absolute;inset:0;z-index:var(--z-slide)}
-.slide{
-  position:absolute;inset:0;display:none;flex-direction:column;
-  padding:var(--safe-top) var(--safe-x) var(--safe-bottom);
-  overflow:hidden;
-}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:var(--safe-top) var(--safe-x) var(--safe-bottom);overflow:hidden}
 .slide.active{display:flex}
 .slide--center{justify-content:center;align-items:center;text-align:center}
-.slide-head{margin-bottom:var(--sp-6);flex:0 0 auto}
-.kicker{
-  font-size:var(--fs-kicker);line-height:var(--lh-kicker);font-weight:700;
-  letter-spacing:.05em;color:var(--green);margin-bottom:var(--sp-2);
-}
-h2.h{
-  font-size:var(--fs-h2);line-height:var(--lh-h2);font-weight:var(--fw-h2);
-  letter-spacing:-.01em;color:var(--fg1);
-}
-h3.h3{font-size:var(--fs-h3);line-height:var(--lh-h3);font-weight:var(--fw-h3)}
-.lead{font-size:var(--fs-lead);line-height:var(--lh-lead);color:var(--fg2)}
-.sub{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--fg2)}
-.note{font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--fg3-read)}
-.foot-note{display:none;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--fg3-read);margin-top:auto;padding-top:var(--sp-3)}
-.grow{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.slide-head{margin-bottom:var(--sp-4);flex:0 0 auto}
+.kicker{font-size:var(--fs-kicker);font-weight:700;letter-spacing:.05em;color:var(--green);margin-bottom:4px}
+h2.h{font-size:var(--fs-h2);line-height:1.15;font-weight:700;letter-spacing:-.01em;color:var(--fg1)}
+h3.h3{font-size:var(--fs-h3);line-height:1.25;font-weight:700}
+.lead{font-size:var(--fs-lead);line-height:1.4;color:var(--fg2)}
+.sub{font-size:var(--fs-body);line-height:1.4;color:var(--fg2)}
+.note{font-size:var(--fs-meta);line-height:1.35;color:var(--fg3-read)}
+.grow{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:var(--sp-4)}
 .grow>*{flex-shrink:0}
-.gap-s{display:flex;flex-direction:column;gap:var(--sp-3)}
-.gap-m{display:flex;flex-direction:column;gap:var(--sp-4)}
-.gap-l{display:flex;flex-direction:column;gap:var(--sp-5)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-6);align-items:center}
+.gap-s{display:flex;flex-direction:column;gap:var(--sp-2)}
+.gap-m{display:flex;flex-direction:column;gap:var(--sp-3)}
+.gap-l{display:flex;flex-direction:column;gap:var(--sp-4)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5);align-items:center}
 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)}
 .four{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4)}
-.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:var(--sp-6);align-items:start}
+.two,.three,.four{min-width:0}
+.two>*,.three>*,.four>*{min-width:0}
 
-/* ── Cards / chips / caveats ───────────────────────────────────── */
-.card{
-  background:var(--card);border:var(--border-w) solid var(--border);
-  border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);
-}
-.card .ico{font-size:44px;line-height:1;margin-bottom:var(--sp-2)}
-.card h4{font-size:var(--fs-h3);line-height:var(--lh-h3);font-weight:700;margin-bottom:var(--sp-2)}
-.card p{font-size:var(--fs-body);line-height:1.5;color:var(--fg2)}
-.card--tight{padding:var(--sp-3) var(--sp-4)}
-.card--tight h4{font-size:var(--fs-chip);line-height:var(--lh-chip);margin-bottom:var(--sp-1)}
-.card--tight p{font-size:var(--fs-meta);line-height:1.4}
-.card--tight .ico{font-size:32px;margin-bottom:var(--sp-1)}
-.card--glyph h4{color:var(--cyan-light)}
+/* Cards, Chips, Caveats */
+.card{background:var(--card);border:var(--border-w) solid var(--border);border-radius:var(--r-md);padding:var(--sp-4)}
+.card .ico{font-size:44px;line-height:1;margin-bottom:8px}
+.card h4{font-size:var(--fs-h3);line-height:1.22;font-weight:700;margin-bottom:6px}
+.card p{font-size:var(--fs-body);line-height:1.35;color:var(--fg2)}
+.card--tight{padding:var(--sp-3)}
+.card--tight h4{font-size:var(--fs-chip);line-height:1.25;margin-bottom:4px}
+.card--tight p{font-size:var(--fs-meta);line-height:1.32}
+.card--tight .ico{font-size:34px;margin-bottom:4px}
 .mono{font-family:var(--font-mono);direction:ltr;unicode-bidi:isolate;color:var(--cyan-light)}
-code{
-  font-family:var(--font-mono);font-size:var(--fs-meta);direction:ltr;unicode-bidi:isolate;
-  background:var(--card-alt);border:1px solid var(--border-sub);
-  padding:2px 10px;border-radius:var(--r-sm);color:var(--cyan-light);white-space:normal;overflow-wrap:anywhere;
-}
+code{font-family:var(--font-mono);font-size:var(--fs-meta);direction:ltr;unicode-bidi:isolate;background:var(--card-alt);border:1px solid var(--border-sub);padding:2px 9px;border-radius:var(--r-sm);color:var(--cyan-light);white-space:normal;overflow-wrap:anywhere}
 .grad-t{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .chips{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center}
-.chip{
-  font-family:var(--font-mono);font-size:var(--fs-chip);line-height:var(--lh-chip);
-  padding:6px 16px;border-radius:var(--r-sm);
-  background:var(--card-alt);border:var(--border-w) solid var(--border);
-  color:var(--cyan-light);white-space:nowrap;
-}
-.chip.grp{
-  font-family:var(--font-head);font-weight:700;color:var(--green);
-  background:var(--tint-green);border-color:rgba(4,170,109,.42);
-}
-.caveat{
-  background:var(--caveat-amber-bg);border:var(--border-w) solid var(--caveat-amber-bd);
-  border-radius:var(--r-md);padding:var(--sp-3) var(--sp-5);
-  font-size:var(--fs-caveat);line-height:var(--lh-caveat);color:var(--fg1);
-}
+.chip{font-family:var(--font-mono);font-size:var(--fs-chip);padding:6px 14px;border-radius:var(--r-sm);background:var(--card-alt);border:var(--border-w) solid var(--border);color:var(--cyan-light);white-space:nowrap}
+.chip.grp{font-family:var(--font-head);font-weight:700;color:var(--green);background:var(--tint-green);border-color:rgba(4,170,109,.42)}
+.caveat{background:var(--caveat-amber-bg);border:var(--border-w) solid var(--caveat-amber-bd);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);font-size:var(--fs-caveat);line-height:1.38;color:var(--fg1)}
 .caveat b{color:var(--amber)}
 .caveat--rose{background:var(--caveat-rose-bg);border-color:var(--caveat-rose-bd)}
 .caveat--rose b{color:var(--rose)}
 .caveat--good{background:var(--caveat-good-bg);border-color:var(--caveat-good-bd)}
 .caveat--good b{color:var(--emerald)}
-.caveat--tight{font-size:var(--fs-meta);line-height:var(--lh-meta)}
+.caveat--tight{font-size:var(--fs-meta);line-height:1.35;padding:var(--sp-2) var(--sp-3)}
 
-/* ── Code ──────────────────────────────────────────────────────── */
-.code{
-  background:var(--code);border:var(--border-w) solid var(--border);
-  border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);
-  font-family:var(--font-mono);font-size:var(--fs-code);line-height:var(--lh-code);
-  color:var(--code-fg);
-  direction:ltr;unicode-bidi:isolate;text-align:left;white-space:normal;overflow:hidden;
-}
-.code--tight{font-size:var(--fs-code-tight);line-height:1.5;padding:var(--sp-3) var(--sp-4)}
+/* Code */
+.code{background:var(--code);border:var(--border-w) solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);font-family:var(--font-mono);font-size:var(--fs-code);line-height:1.48;color:var(--code-fg);direction:ltr;unicode-bidi:isolate;text-align:left;overflow:hidden}
+.code--tight{font-size:var(--fs-code-tight);line-height:1.42;padding:var(--sp-3)}
 .code .line{display:block;white-space:pre-wrap}
-.code .k{color:var(--fn)}
-.code .s{color:var(--emerald)}
-.code .n{color:var(--amber)}
-.code .c{color:var(--fg3)}
-.code .f{color:var(--fn)}
-.code .t{color:var(--cyan-light)}
-.code .o{color:var(--amber)}
+.code .k{color:var(--fn)} .code .s{color:var(--emerald)} .code .n{color:var(--amber)}
+.code .c{color:var(--fg3)} .code .f{color:var(--fn)} .code .t{color:var(--cyan-light)} .code .o{color:var(--amber)}
 
-/* ── Pipeline ──────────────────────────────────────────────────── */
-.pipe{display:flex;align-items:center;width:100%}
-.pipe-step{
-  flex:1 1 0;min-width:0;text-align:center;
-  background:var(--card);border:var(--border-w) solid var(--border);
-  border-radius:var(--r-md);padding:var(--sp-4) var(--sp-2);
-}
-.pipe-step .pn{font-family:var(--font-num);font-size:var(--fs-h3);font-weight:800;color:var(--green);line-height:1}
-.pipe-step .pt{font-size:var(--fs-h3);font-weight:700;line-height:var(--lh-h3);margin-top:var(--sp-1)}
-.pipe-step .ps{font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--fg2);margin-top:var(--sp-1)}
-.pipe-step--hot{background:var(--tint-green);border-color:rgba(4,170,109,.42)}
-.pipe-step--hot .pt{color:var(--emerald)}
-.pipe-link{position:relative;flex:0 0 46px;height:var(--border-w);background:var(--border)}
-.pipe-link::after{
-  content:'';position:absolute;inset:0;background:var(--green);
-  transform:scaleX(0);transform-origin:left center;
-}
-.slide.active .pipe-link::after{
-  animation:linkGrow var(--dur-draw) var(--ease-out) both;
-  animation-delay:calc(var(--i,0)*var(--stagger) + 200ms);
-}
-@keyframes linkGrow{to{transform:scaleX(1)}}
+/* SVG Visual Containers */
+.svg-box{background:var(--surface);border:var(--border-w) solid var(--border);border-radius:var(--r-md);padding:var(--sp-3);display:flex;align-items:center;justify-content:center}
+.svg-box svg{width:100%;height:auto;display:block}
+.hero-bg{position:absolute;inset:0;pointer-events:none;opacity:.32;z-index:0}
 
-/* ── Ladder ────────────────────────────────────────────────────── */
-.ladder{display:flex;flex-direction:column;gap:var(--sp-3)}
-.ladder-step{
-  background:var(--card);border:var(--border-w) solid var(--border);
-  border-radius:var(--r-sm);padding:var(--sp-3) var(--sp-5);
-  font-size:var(--fs-body);line-height:var(--lh-body);color:var(--fg1);
-  display:flex;align-items:center;gap:var(--sp-4);opacity:0;
-}
-.ladder-step .num{
-  font-family:var(--font-num);font-size:var(--fs-h3);font-weight:800;
-  color:var(--green);min-width:52px;text-align:center;
-}
+/* Ladder */
+.ladder{display:flex;flex-direction:column;gap:var(--sp-2)}
+.ladder-step{background:var(--card);border:var(--border-w) solid var(--border);border-radius:var(--r-sm);padding:14px var(--sp-4);font-size:var(--fs-body);line-height:1.32;color:var(--fg1);display:flex;align-items:center;gap:var(--sp-3);opacity:0}
+.ladder-step .num{font-size:var(--fs-h3);font-weight:800;color:var(--green);min-width:46px;text-align:center}
 .ladder-step--first{background:var(--tint-green);border-color:rgba(4,170,109,.42)}
 .ladder-step--last{background:var(--tint-cyan);border-color:rgba(56,189,248,.42);color:var(--cyan-light)}
-.ladder-step--tight{font-size:var(--fs-meta);line-height:var(--lh-meta);padding:var(--sp-2) var(--sp-4)}
-.slide.active .ladder-step{
-  animation:rvIn var(--dur-reveal) var(--ease-out) both;
-  animation-delay:calc(var(--i,0)*var(--stagger));
-}
+.slide.active .ladder-step{animation:rvIn var(--dur-reveal) var(--ease-out) both;animation-delay:calc(var(--i,0)*var(--stagger))}
 
-/* ── Stats / counters ──────────────────────────────────────────── */
-.stat{text-align:center}
-.bignum{
-  font-family:var(--font-num);font-size:var(--fs-bignum);line-height:var(--lh-bignum);
-  font-weight:var(--fw-bignum);background:var(--grad);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.stat .lbl{font-size:var(--fs-stat-lbl);line-height:var(--lh-stat-lbl);color:var(--fg2)}
+/* Stats */
+.stat{text-align:center;background:var(--surface);border:var(--border-w) solid var(--border);border-radius:var(--r-md);padding:var(--sp-3)}
+.bignum{font-size:var(--fs-bignum);line-height:1.1;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .lbl{font-size:var(--fs-stat-lbl);color:var(--fg2)}
 .bignum--sm{font-size:var(--fs-bignum-sm)}
 
-/* ── Reveal / ambient ──────────────────────────────────────────── */
+/* Reveal & Ambient */
 .rv{opacity:0}
-.slide.active .rv{
-  animation:rvIn var(--dur-reveal) var(--ease-out) both;
-  animation-delay:calc(var(--i,0)*var(--stagger));
-}
+.slide.active .rv{animation:rvIn var(--dur-reveal) var(--ease-out) both;animation-delay:calc(var(--i,0)*var(--stagger))}
 @keyframes rvIn{from{opacity:0;transform:translateY(var(--reveal-y))}to{opacity:1;transform:none}}
 .float{animation:floaty var(--dur-ambient) var(--ease-inout) infinite}
-@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 .pulse{animation:pulseK var(--dur-ambient) var(--ease-inout) infinite}
-@keyframes pulseK{0%,100%{opacity:1}50%{opacity:.48}}
+@keyframes pulseK{0%,100%{opacity:1}50%{opacity:.55}}
 
-/* ── Title / final ─────────────────────────────────────────────── */
-.title-glyph{font-size:var(--fs-glyph);line-height:1;margin-bottom:var(--sp-5)}
+/* Title / Summary */
+.title-glyph{font-size:var(--fs-glyph);line-height:1;margin-bottom:var(--sp-3);position:relative;z-index:1}
 .title-glyph img{width:var(--fs-glyph);height:var(--fs-glyph);object-fit:contain;display:block;margin:0 auto}
-h1.h1{
-  font-size:var(--fs-h1);line-height:var(--lh-h1);font-weight:var(--fw-h1);
-  letter-spacing:-.012em;
-}
+h1.h1{font-size:var(--fs-h1);line-height:1.1;font-weight:800;letter-spacing:-.012em;position:relative;z-index:1}
 h1.h1--sm{font-size:var(--fs-h1-sm)}
-.badge-row{display:flex;flex-wrap:wrap;gap:var(--sp-4);justify-content:center;margin-top:var(--sp-6)}
-.stat-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--sp-5) var(--sp-8);width:100%;max-width:var(--content-max)}
-.stat-grid .stat{flex:0 0 21%}
+.badge-row{display:flex;flex-wrap:wrap;gap:var(--sp-3);justify-content:center;margin-top:var(--sp-4);position:relative;z-index:1}
+.stat-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--sp-3) var(--sp-4);width:100%;max-width:var(--content-max);position:relative;z-index:1}
+.stat-grid .stat{flex:0 0 22%}
 
-/* ── Module micro-grid / source→five outputs ───────────────────── */
+/* Micro-grids */
 .modgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--sp-2)}
-.modgrid .card--tight{min-height:72px}
-.modgrid .card--tight h4{font-family:var(--font-mono);font-size:24px;line-height:1.2;margin-bottom:2px}
-.modgrid .card--tight p{font-size:24px;line-height:1.25}
-.flow-stack{display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);width:100%}
-.flow-src{max-width:620px;text-align:center}
-.flow-stem{position:relative;width:var(--border-w);height:26px;background:var(--border)}
-.flow-stem::before{
-  content:'';position:absolute;inset:0;background:var(--grad);
-  transform:scaleY(0);transform-origin:top center;
-}
-.flow-stem::after{
-  content:'';position:absolute;left:-5px;bottom:0;
-  border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--green);
-}
-.slide.active .flow-stem::before{
-  animation:stemGrow var(--dur-draw) var(--ease-out) both;
-  animation-delay:calc(var(--i,0)*var(--stagger));
-}
-@keyframes stemGrow{to{transform:scaleY(1)}}
-.flow-out{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--sp-3);width:100%}
-.flow-out .card--tight{text-align:center}
-
-/* ── Density tuning (keeps every type ≥24px) ──────────────────── */
-.slide-head{margin-bottom:var(--sp-4)}
-.kicker{margin-bottom:var(--sp-1)}
-.card{padding:var(--sp-3) var(--sp-4)}
-.card .ico{margin-bottom:var(--sp-1)}
-.card h4{margin-bottom:var(--sp-1)}
-.card p{line-height:1.35}
-.card--tight{padding:var(--sp-2) var(--sp-3)}
-.card--tight .ico{font-size:30px;margin-bottom:2px}
-.card--tight p{line-height:1.3}
-.code{padding:var(--sp-3) var(--sp-4);line-height:1.4}
-.code--tight{font-size:var(--fs-code-tight);line-height:1.35;padding:var(--sp-2) var(--sp-3)}
-.caveat{padding:var(--sp-2) var(--sp-4);line-height:1.4}
-.caveat--tight{padding:var(--sp-2) var(--sp-3)}
-.chip{padding:4px 12px}
-.pipe-step{padding:var(--sp-2) var(--sp-3)}
-.ladder-step{padding:var(--sp-2) var(--sp-4)}
-.grow.gap-l{gap:var(--sp-4)}
-.grow.gap-m{gap:var(--sp-3)}
-
-.two,.three,.four,.split{min-width:0}
-.two>*,.three>*,.four>*,.split>*{min-width:0}
-
-/* Density tuning for the tallest slides (1..21 exact match) */
-.slide[data-slide="2"] .grow.gap-l{gap:var(--sp-1)}
-.slide[data-slide="2"] .bignum{font-size:150px}
-.slide[data-slide="3"] .grow.gap-m{gap:var(--sp-2)}
-.slide[data-slide="4"] .grow.gap-m{gap:var(--sp-2)}
-.slide[data-slide="7"] .grow.gap-m{gap:var(--sp-2)}
-.slide[data-slide="7"] .lead{font-size:var(--fs-body);line-height:1.3}
-.slide[data-slide="7"] .ladder{gap:4px}
-.slide[data-slide="7"] .ladder-step{padding:4px var(--sp-4)}
-.slide[data-slide="7"] .caveat{padding:4px var(--sp-4)}
-
-.slide[data-slide="10"] .grow.gap-m{gap:var(--sp-2)}
-.slide[data-slide="10"] .gap-s{gap:6px}
-.slide[data-slide="10"] .chip{padding:2px 10px}
-
-.slide[data-slide="13"] .grow.gap-m{gap:var(--sp-2)}
-.slide[data-slide="14"] .slide-head{margin-bottom:var(--sp-2)}
-.slide[data-slide="14"] .grow{gap:var(--sp-2)}
-.slide[data-slide="14"] .gap-m{gap:var(--sp-2)}
-.slide[data-slide="14"] .code--tight{font-size:24px;line-height:1.26;padding:8px 12px}
-.slide[data-slide="14"] .caveat--tight{padding:6px 12px;line-height:1.26}
-.slide[data-slide="15"] .grow.gap-m{gap:var(--sp-3)}
-.slide[data-slide="15"] .four .card--tight{padding:6px 10px}
-.slide[data-slide="15"] .four .card--tight h4{margin-bottom:0;line-height:1.2}
-.slide[data-slide="15"] .four .card--tight p{line-height:1.18}
-
-.slide[data-slide="18"] .grow.gap-s{gap:var(--sp-1)}
-.slide[data-slide="18"] .modgrid .card--tight{min-height:60px;padding:5px 8px}
-.slide[data-slide="18"] .modgrid .card--tight h4{margin-bottom:0}
-.slide[data-slide="18"] .modgrid .card--tight p{line-height:1.16}
-.slide[data-slide="18"] .caveat--tight{padding:6px 12px;line-height:1.32}
-.slide[data-slide="18"] .h3{margin:0}
-
-.slide[data-slide="20"] .grow.gap-m{gap:var(--sp-3)}
+.modgrid .card--tight{min-height:60px;padding:8px 10px}
+.modgrid .card--tight h4{font-family:var(--font-mono);font-size:24px;line-height:1.18;margin-bottom:0}
+.modgrid .card--tight p{font-size:23px;line-height:1.14}
 
 @media (prefers-reduced-motion:reduce){
-  :root{
-    --dur-fast:1ms;--dur-reveal:1ms;--dur-draw:1ms;--dur-count:1ms;
-    --dur-slide:1ms;--dur-ambient:1ms;--stagger:0ms;--stagger-tight:0ms;--reveal-y:0px;
-  }
+  :root{--dur-fast:1ms;--dur-reveal:1ms;--dur-slide:1ms;--dur-ambient:1ms;--stagger:0ms;--reveal-y:0px}
   .float,.pulse{animation:none!important}
   .slide.active .rv{opacity:1;transform:none}
 }
@@ -391,34 +168,40 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
 </head>
 <body>
 <div id="stage">
-
   <div id="progress"></div>
 
   <header class="chrome chrome--top">
     <div class="brand">
       <span class="logo"><img src="spid3r.png" alt="Spid3r"></span>
       <span>Spid<span class="en">3</span>r</span>
-      <span class="badge">v1.1.1</span>
+      <span class="badge">v1.5.0</span>
     </div>
-    <div class="chrome-hint"></div>
-    <div id="counter"><b>1</b> / 21</div>
+    <div id="counter"><b>1</b> / 22</div>
   </header>
 
   <main id="deck">
 
     <!-- ══ 1. Meet Spid3r ══ -->
     <section class="slide slide--center active" data-slide="1">
+      <svg class="hero-bg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="hg1" cx="50%" cy="48%" r="45%"><stop offset="0%" stop-color="#04AA6D" stop-opacity=".45"/><stop offset="100%" stop-color="#0b0f17" stop-opacity="0"/></radialGradient></defs>
+        <circle cx="960" cy="520" r="460" fill="url(#hg1)"/>
+        <circle cx="960" cy="520" r="240" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="8 8"/>
+        <circle cx="960" cy="520" r="380" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+        <circle cx="960" cy="520" r="520" fill="none" stroke="#1e293b" stroke-width="1"/>
+        <path d="M960 0 L960 1080 M0 520 L1920 520 M360 120 L1560 920 M1560 120 L360 920" stroke="#1e293b" stroke-width="1"/>
+      </svg>
       <div class="title-glyph float rv" style="--i:0"><img src="spid3r.png" alt="Spid3r"></div>
       <h1 class="h1 rv" style="--i:1">Meet <span class="grad-t">Spid3r</span></h1>
-      <p class="lead rv" style="--i:2">A fast, safe, all-in-one programming language designed to run anywhere</p>
-      <p class="sub rv" style="--i:3">Rust Stage 0 &amp; self-hosted (<code>spid3r-self</code> · <b>YamLLVM</b>) · <b style="color:var(--green)">zero extra downloads needed</b></p>
+      <p class="lead rv" style="--i:2">One front end. Four backends. Zero runtime dependencies.</p>
+      <p class="sub rv" style="--i:3">Rust Stage 0 &amp; Self-Hosted <code>spid3r-self</code> · <b>LLVM 23.1 AOT</b></p>
       <div class="badge-row">
-        <span class="badge rv" style="--i:4">v1.1.1</span>
-        <span class="badge badge--cyan rv" style="--i:5">Language 1.1.1</span>
-        <span class="badge badge--purple rv pulse" style="--i:6">Web-Ready (WASM)</span>
+        <span class="badge rv" style="--i:4">v1.5.0</span>
+        <span class="badge badge--cyan rv" style="--i:5">4 Parity Backends</span>
+        <span class="badge badge--purple rv pulse" style="--i:6">WebAssembly Ready</span>
         <span class="badge badge--amber rv" style="--i:7">✨ Made with AI Assistance</span>
       </div>
-      <p class="note rv" style="--i:8;margin-top:var(--sp-6)">ANSNEW TECH · Created with the help of AI · © 2026 Spid3r Language Project · needyamin.github.io/spid3r</p>
+      <p class="note rv" style="--i:8;margin-top:var(--sp-5);position:relative;z-index:1">ANSNEW TECH · © 2026 Spid3r Language Project · github.com/needyamin/spid3r</p>
     </section>
 
     <!-- ══ 2. What is Spid3r ══ -->
@@ -427,18 +210,27 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
         <div class="kicker">Big Picture</div>
         <h2 class="h">What is Spid3r?</h2>
       </div>
-      <div class="grow gap-l">
+      <div class="grow">
         <div class="four">
-          <div class="card rv" style="--i:1"><div class="ico">🧩</div><h4>All-in-One Package</h4><p>CLIs (<code>spid3r</code>, <code>yamc</code>, <code>yamcvm</code>, <code>spvm</code>, <code>spkg</code>) plus web, SQL DBs, hashing, math &amp; files in one install.</p></div>
-          <div class="card rv" style="--i:2"><div class="ico">⚙️</div><h4>Spid3r Engine: 4 Backends</h4><p><code>tree</code> oracle (<code>spvm_rt</code>), <code>spvm</code> VM, <b>YamLLVM</b> AOT, or WASM — always identical output.</p></div>
-          <div class="card rv" style="--i:3"><div class="ico">♻️</div><h4>YamGC Memory Cleanup</h4><p>Deterministic RC frees data right away and sweeps reference cycles after 1,024 objects.</p></div>
-          <div class="card rv" style="--i:4"><div class="ico">🌐</div><h4>Runs in Any Browser</h4><p>Built-in WebAssembly engine works directly in web browsers, Node.js, Deno, and Edge Workers.</p></div>
+          <div class="card rv" style="--i:1"><div class="ico">🧩</div><h4>All-in-One CLI</h4><p><code>spid3r</code>, <code>sp</code>, <code>yamc</code>, <code>yamcvm</code>, <code>spvm</code>, <code>spkg</code></p></div>
+          <div class="card rv" style="--i:2"><div class="ico">⚙️</div><h4>4 Parity Backends</h4><p>Tree · <code>spvm</code> · LLVM 23 · WASM</p></div>
+          <div class="card rv" style="--i:3"><div class="ico">♻️</div><h4>YamGC Memory</h4><p>RC + automatic cycle collector</p></div>
+          <div class="card rv" style="--i:4"><div class="ico">🌐</div><h4>Runs Anywhere</h4><p>Native, VM, GUI &amp; browsers</p></div>
         </div>
-        <div class="four rv" style="--i:5">
-          <div class="stat"><div class="bignum cnt" data-v="6">0</div><div class="lbl">core data types</div></div>
-          <div class="stat"><div class="bignum cnt" data-v="40">0</div><div class="lbl">reserved keywords</div></div>
-          <div class="stat"><div class="bignum">20+</div><div class="lbl">data organizers</div></div>
-          <div class="stat"><div class="bignum cnt" data-v="26">0</div><div class="lbl">built-in toolkits</div></div>
+        <div class="svg-box rv" style="--i:5">
+          <svg viewBox="0 0 1360 155" xmlns="http://www.w3.org/2000/svg">
+            <text x="30" y="34" fill="#a9b8cb" font-family="Outfit,sans-serif" font-size="22" font-weight="700">100% Differential Parity Across All 4 Execution Backends</text>
+            <rect x="30" y="54" width="300" height="80" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="180" y="92" text-anchor="middle" fill="#7dd3fc" font-size="22" font-weight="700">Tree Oracle</text><text x="180" y="120" text-anchor="middle" fill="#a9b8cb" font-size="17">Reference Semantics</text>
+            <rect x="360" y="54" width="300" height="80" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="510" y="92" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">spvm VM</text><text x="510" y="120" text-anchor="middle" fill="#a9b8cb" font-size="17">60 Opcodes · .matrixc</text>
+            <rect x="690" y="54" width="300" height="80" rx="10" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="840" y="92" text-anchor="middle" fill="#d8b4fe" font-size="22" font-weight="700">LLVM 23 AOT</text><text x="840" y="120" text-anchor="middle" fill="#a9b8cb" font-size="17">Native Machine Code</text>
+            <rect x="1020" y="54" width="310" height="80" rx="10" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="2"/><text x="1175" y="92" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="700">WebAssembly</text><text x="1175" y="120" text-anchor="middle" fill="#a9b8cb" font-size="17">Browser &amp; Edge</text>
+          </svg>
+        </div>
+        <div class="four rv" style="--i:6">
+          <div class="stat"><div class="bignum cnt" data-v="6">0</div><div class="lbl">core types</div></div>
+          <div class="stat"><div class="bignum cnt" data-v="40">0</div><div class="lbl">keywords</div></div>
+          <div class="stat"><div class="bignum">20+</div><div class="lbl">containers</div></div>
+          <div class="stat"><div class="bignum cnt" data-v="26">0</div><div class="lbl">stdlib modules</div></div>
         </div>
       </div>
     </section>
@@ -447,32 +239,38 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
     <section class="slide" data-slide="3">
       <div class="slide-head rv" style="--i:0">
         <div class="kicker">Getting Started</div>
-        <h2 class="h">One file to install, ready to code</h2>
+        <h2 class="h">One install — ready to code</h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="gap-m">
-          <div class="three" style="gap:var(--sp-2)">
-            <div class="card card--tight rv" style="--i:1"><h4>Linux / macOS</h4><p class="mono" style="font-size:24px">install.sh | sh</p></div>
-            <div class="card card--tight rv" style="--i:2"><h4>Windows</h4><p>Setup <code>.exe</code></p></div>
-            <div class="card card--tight rv" style="--i:3"><h4>Cargo</h4><p class="mono" style="font-size:24px">cargo install</p></div>
+      <div class="grow">
+        <div class="two">
+          <div class="gap-m">
+            <div class="two" style="gap:var(--sp-3)">
+              <div class="card card--tight rv" style="--i:1"><div class="ico">🪟</div><h4>Windows</h4><p>Microsoft Store or <code>Setup.exe</code></p></div>
+              <div class="card card--tight rv" style="--i:2"><div class="ico">🐧</div><h4>Linux / macOS</h4><p class="mono">install.sh | sh</p></div>
+              <div class="card card--tight rv" style="--i:3"><div class="ico">🦀</div><h4>Cargo</h4><p class="mono">cargo install</p></div>
+              <div class="card card--tight rv" style="--i:4"><div class="ico">🧩</div><h4>VS Code</h4><p>Offline <code>.vsix</code> bundled</p></div>
+            </div>
+            <div class="code code--tight rv" style="--i:5"><span class="line"><span class="o">$</span> spid3r --version</span><span class="line">spid3r 1.5.0 (LLVM 23.1 AOT · Rust Stage 0)</span></div>
+            <div class="caveat caveat--rose caveat--tight rv" style="--i:6"><b>🛡️ <code>--sandbox</code>:</b> Blocks files, network &amp; shell for untrusted scripts.</div>
           </div>
-          <div class="code code--tight rv" style="--i:4"><span class="line"><span class="o">$</span> spid3r version</span><span class="line">Version 1.1.1 · Language 1.1.1</span><span class="line">Self-hosted (LLVM 23 AOT) · Rust Stage 0</span></div>
-          <p class="note rv" style="--i:5">CLIs: <code>sp</code> · <code>yamc</code> · <code>yamcvm</code> · <code>spvm</code> · <code>spkg</code> · <code>repl</code> (500 history) · <code>check</code> · <code>debug</code> · <code>lsp</code></p>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>Zero external deps.</b> Files: <code>.matrix</code> / <code>.mt</code> · installers bundle offline <code>spid3r-formatter.vsix</code> (v1.0.1) + OS webview GUI.</div>
-        </div>
-        <div class="gap-m">
-          <h3 class="h3 rv" style="--i:7">First Program — <code>hello.matrix</code></h3>
-          <div class="code code--tight rv" style="--i:8">
+          <div class="gap-m">
+            <div class="code rv" style="--i:7">
+<span class="line"><span class="c">// hello.matrix / hello.mt</span></span>
 <span class="line"><span class="k">fn</span> <span class="f">main</span>() {</span>
-<span class="line">    <span class="f">println</span>(<span class="s">"Hello, World!"</span>);</span>
-<span class="line">    <span class="k">let</span> language = <span class="s">"Spid3r"</span>;</span>
-<span class="line">    <span class="k">let</span> year = <span class="n">2026</span>;</span>
-<span class="line">    <span class="f">println</span>(<span class="s">"Welcome to "</span> + language + <span class="s">" ("</span> + <span class="f">string</span>(year) + <span class="s">")!"</span>);</span>
+<span class="line">    <span class="f">println</span>(<span class="s">"Hello, Spid3r!"</span>);</span>
 <span class="line">    <span class="k">return</span> <span class="n">0</span>;</span>
 <span class="line">}</span>
+            </div>
+            <div class="svg-box rv" style="--i:8">
+              <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg">
+                <rect x="16" y="24" width="175" height="140" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="103" y="82" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="22">hello.mt</text><text x="103" y="122" text-anchor="middle" fill="#a9b8cb" font-size="18">Write once</text>
+                <text x="215" y="102" text-anchor="middle" fill="#04AA6D" font-size="30" font-weight="800">→</text>
+                <rect x="240" y="24" width="165" height="140" rx="12" fill="#161e2e" stroke="#04AA6D" stroke-width="2"/><text x="322" y="82" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="22">sp run</text><text x="322" y="122" text-anchor="middle" fill="#a9b8cb" font-size="18">Zero setup</text>
+                <text x="430" y="102" text-anchor="middle" fill="#04AA6D" font-size="30" font-weight="800">→</text>
+                <rect x="455" y="24" width="170" height="140" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="540" y="82" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="19">Hello, Spid3r!</text><text x="540" y="122" text-anchor="middle" fill="#34d399" font-size="18">Exit 0</text>
+              </svg>
+            </div>
           </div>
-          <div class="caveat caveat--tight rv" style="--i:9"><b>Tip:</b> Browser playground wraps top-level code automatically; on desktop CLI, put code inside <code>fn main()</code>.</div>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:10"><b>Safe testing (<code>--sandbox</code>):</b> Blocks files, internet, and system commands so untrusted scripts can't touch your PC.</div>
         </div>
       </div>
     </section>
@@ -480,648 +278,741 @@ h1.h1--sm{font-size:var(--fs-h1-sm)}
     <!-- ══ 4. How Spid3r Runs Your Code ══ -->
     <section class="slide" data-slide="4">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">How It Works</div>
-        <h2 class="h">From readable text to running app</h2>
+        <div class="kicker">Architecture</div>
+        <h2 class="h">One front end, four parity backends</h2>
       </div>
-      <div class="grow gap-m">
-        <div class="pipe">
-          <div class="pipe-step rv" style="--i:1"><div class="pn">1</div><div class="pt">Lexer</div><div class="ps">reads words</div></div>
-          <div class="pipe-link" style="--i:1"></div>
-          <div class="pipe-step rv" style="--i:2"><div class="pn">2</div><div class="pt">Parser</div><div class="ps">builds structure</div></div>
-          <div class="pipe-link" style="--i:2"></div>
-          <div class="pipe-step rv" style="--i:3"><div class="pn">3</div><div class="pt">Semantic</div><div class="ps">checks mistakes</div></div>
-          <div class="pipe-link" style="--i:3"></div>
-          <div class="pipe-step rv" style="--i:4"><div class="pn">4</div><div class="pt">Lowering</div><div class="ps">simplifies steps</div></div>
-          <div class="pipe-link" style="--i:4"></div>
-          <div class="pipe-step rv" style="--i:5"><div class="pn">5</div><div class="pt">Spid3r Engine</div><div class="ps">4 parity backends</div></div>
-          <div class="pipe-link" style="--i:5"></div>
-          <div class="pipe-step pipe-step--hot rv" style="--i:6"><div class="pn">6</div><div class="pt">YamGC</div><div class="ps">cleans memory</div></div>
+      <div class="grow">
+        <div class="svg-box rv" style="--i:1">
+          <svg viewBox="0 0 1360 420" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="arr4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/></marker></defs>
+            <rect x="520" y="10" width="320" height="54" rx="12" fill="#161e2e" stroke="#04AA6D" stroke-width="2"/><text x="680" y="44" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="22" font-weight="600">app.matrix / .mt</text>
+            <path d="M680 64 L680 98" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr4)"/>
+            <rect x="90" y="102" width="240" height="76" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="210" y="134" text-anchor="middle" fill="#f1f5f9" font-size="22" font-weight="700">1. Lexer</text><text x="210" y="162" text-anchor="middle" fill="#a9b8cb" font-size="17">tokens</text>
+            <path d="M330 140 L386 140" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr4)"/>
+            <rect x="392" y="102" width="240" height="76" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="512" y="134" text-anchor="middle" fill="#f1f5f9" font-size="22" font-weight="700">2. Parser</text><text x="512" y="162" text-anchor="middle" fill="#a9b8cb" font-size="17">syntax tree</text>
+            <path d="M632 140 L688 140" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr4)"/>
+            <rect x="694" y="102" width="240" height="76" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="814" y="134" text-anchor="middle" fill="#f1f5f9" font-size="22" font-weight="700">3. Semantic</text><text x="814" y="162" text-anchor="middle" fill="#a9b8cb" font-size="17">types &amp; scopes</text>
+            <path d="M934 140 L990 140" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr4)"/>
+            <rect x="996" y="102" width="274" height="76" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="1133" y="134" text-anchor="middle" fill="#f1f5f9" font-size="22" font-weight="700">4. Lowering</text><text x="1133" y="162" text-anchor="middle" fill="#a9b8cb" font-size="17">checked AST</text>
+            <path d="M680 178 L680 214 M180 214 L1180 214" stroke="#38bdf8" stroke-width="2.5"/>
+            <path d="M180 214 L180 246" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr4)"/>
+            <path d="M513 214 L513 246" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr4)"/>
+            <path d="M846 214 L846 246" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr4)"/>
+            <path d="M1180 214 L1180 246" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr4)"/>
+            <rect x="40" y="252" width="280" height="90" rx="12" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="180" y="288" text-anchor="middle" fill="#7dd3fc" font-size="22" font-weight="700">Tree Oracle</text><text x="180" y="318" text-anchor="middle" fill="#a9b8cb" font-size="17">semantic reference</text>
+            <rect x="373" y="252" width="280" height="90" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="513" y="288" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">spvm (60 ops)</text><text x="513" y="318" text-anchor="middle" fill="#a9b8cb" font-size="17">yamcvm → .matrixc</text>
+            <rect x="706" y="252" width="280" height="90" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="846" y="288" text-anchor="middle" fill="#d8b4fe" font-size="22" font-weight="700">LLVM 23 AOT</text><text x="846" y="318" text-anchor="middle" fill="#a9b8cb" font-size="17">yamc &amp; spid3r-self</text>
+            <rect x="1040" y="252" width="280" height="90" rx="12" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="2"/><text x="1180" y="288" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="700">WebAssembly</text><text x="1180" y="318" text-anchor="middle" fill="#a9b8cb" font-size="17">wasm32 in browsers</text>
+            <rect x="220" y="362" width="920" height="44" rx="10" fill="#161e2e" stroke="#04AA6D" stroke-width="1.5"/><text x="680" y="390" text-anchor="middle" fill="#34d399" font-size="19" font-weight="600">YamGC Memory Cleanup · Identical stdout, stderr &amp; exit codes (exit 4 on tamper)</text>
+          </svg>
         </div>
-        <div class="four rv" style="--i:7">
-          <div class="card card--tight"><h4 style="font-size:var(--fs-h3);color:var(--amber)">25</h4><p>syntax errors caught per check</p></div>
-          <div class="card card--tight"><h4 style="font-size:var(--fs-h3);color:var(--amber)">64</h4><p>max nesting depth limit</p></div>
-          <div class="card card--tight"><h4 style="font-size:var(--fs-h3);color:var(--green)">60</h4><p>compact <code>spvm</code> opcodes</p></div>
-          <div class="card card--tight"><h4 style="font-size:var(--fs-h3);color:var(--purple)">YamLLVM</h4><p>LLVM 23 native speed</p></div>
+        <div class="four rv" style="--i:2">
+          <div class="card card--tight"><h4 style="color:var(--amber)">25</h4><p>errors per check</p></div>
+          <div class="card card--tight"><h4 style="color:var(--amber)">64</h4><p>max nesting depth</p></div>
+          <div class="card card--tight"><h4 style="color:var(--green)">60</h4><p><code>spvm</code> opcodes</p></div>
+          <div class="card card--tight"><h4 style="color:var(--purple)">Stage 1→3</h4><p><code>spid3r-self</code> parity</p></div>
         </div>
-        <div class="three">
-          <div class="card card--tight rv" style="--i:8;background:var(--tint-cyan)"><h4 style="color:var(--cyan-light)">Tree Oracle (<code>spvm_rt</code>)</h4><p>Reference engine for parity checks</p></div>
-          <div class="card card--tight rv" style="--i:9"><h4 style="color:var(--green)"><code>spvm</code> &amp; <code>yamcvm</code></h4><p>60-opcode VM &amp; SHA-256 <code>.matrixc</code></p></div>
-          <div class="card card--tight rv" style="--i:10"><h4 style="color:var(--purple)"><code>yamc</code> &amp; <code>spid3r-self</code></h4><p>YamLLVM AOT · Stage 1→2→3 fixed point</p></div>
-        </div>
-        <div class="caveat caveat--tight rv" style="--i:11"><b>One checker, four backends:</b> Browser WASM uses <code>spvm</code> too. Damaged <code>.matrixc</code> files exit with code <code>4</code> before running.</div>
-        <div class="caveat caveat--rose caveat--tight rv" style="--i:12"><b>Real bug caught &amp; fixed:</b> Early builds misread <code>not (A or B)</code> in the VM optimizer — caught and locked down by automated parity tests.</div>
       </div>
     </section>
 
-    <!-- ══ 5. Automation & Five Outputs ══ -->
+    <!-- ══ 5. Quality & Five Outputs ══ -->
     <section class="slide" data-slide="5">
       <div class="slide-head rv" style="--i:0">
         <div class="kicker">Quality &amp; Shipping</div>
-        <h2 class="h">Automated checks · one source, five outputs</h2>
+        <h2 class="h">Verified continuously · ship five ways</h2>
       </div>
-      <div class="grow gap-m">
+      <div class="grow">
         <div class="three">
-          <div class="card card--tight rv" style="--i:1"><h4>6-Job CI + 136-File Corpus</h4><p>Core, GUI, WASM, YamLLVM AOT, Phase 0 bench, 1,436+ tests &amp; self-host fixed-point parity.</p></div>
-          <div class="card card--tight rv" style="--i:2"><h4>Ready-to-Use Releases</h4><p>Linux, macOS &amp; Windows bundles ship <code>spid3r-self</code>, component CLIs, <code>spid3r_lang</code> &amp; VS Code extension.</p></div>
-          <div class="card card--tight rv" style="--i:3"><h4>24/7 Protocol &amp; Parser Fuzzing</h4><p>Continuous fuzzing hardens parser, VM, HTTP, WebSocket, and tar/package decoders.</p></div>
+          <div class="card rv" style="--i:1"><div class="ico">✅</div><h4>136-File Corpus</h4><p>Differential parity + Stage 1→3 self-host fixed point</p></div>
+          <div class="card rv" style="--i:2"><div class="ico">📦</div><h4>Multi-OS Releases</h4><p>Windows, Linux &amp; macOS + <code>spid3r_lang</code></p></div>
+          <div class="card rv" style="--i:3"><div class="ico">🛡️</div><h4>24/7 Fuzzing</h4><p>Parser, VM, HTTP, WebSocket &amp; tar decoders</p></div>
         </div>
-        <h3 class="h3 rv" style="--i:4">Write code once — ship it five ways</h3>
-        <div class="flow-stack">
-          <div class="card card--tight flow-src rv" style="--i:5"><h4>Your <code>.matrix</code> / <code>.mt</code> code</h4><p>checked once by one front end</p></div>
-          <div class="flow-stem" style="--i:6"></div>
-          <div class="flow-out">
-            <div class="card card--tight rv" style="--i:7"><h4 style="font-size:24px">spvm / run</h4><p>script &amp; .matrixc VM</p></div>
-            <div class="card card--tight rv" style="--i:8"><h4 style="font-size:24px">yamc / build</h4><p>YamLLVM native app</p></div>
-            <div class="card card--tight rv" style="--i:9"><h4 style="font-size:24px">bundle --target wasm</h4><p>runs inside browsers</p></div>
-            <div class="card card--tight rv" style="--i:10"><h4 style="font-size:24px">spid3r gui</h4><p>desktop window app</p></div>
-            <div class="card card--tight rv" style="--i:11"><h4 style="font-size:24px">spid3r_lang</h4><p>embed in Rust apps</p></div>
-          </div>
+        <div class="svg-box rv" style="--i:4">
+          <svg viewBox="0 0 1360 320" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="arr5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#04AA6D" stroke-width="2" stroke-linecap="round"/></marker></defs>
+            <rect x="460" y="14" width="440" height="72" rx="14" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="680" y="46" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="24" font-weight="700">Your .matrix / .mt Source</text><text x="680" y="72" text-anchor="middle" fill="#a9b8cb" font-size="18">checked once by one front end</text>
+            <path d="M680 86 L680 136 M136 136 L1224 136" stroke="#04AA6D" stroke-width="2.5"/>
+            <path d="M136 136 L136 178" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#arr5)"/>
+            <path d="M408 136 L408 178" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#arr5)"/>
+            <path d="M680 136 L680 178" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#arr5)"/>
+            <path d="M952 136 L952 178" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#arr5)"/>
+            <path d="M1224 136 L1224 178" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#arr5)"/>
+            <rect x="20" y="184" width="232" height="118" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="136" y="232" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="22" font-weight="700">spvm / run</text><text x="136" y="268" text-anchor="middle" fill="#a9b8cb" font-size="18">Bytecode VM</text>
+            <rect x="292" y="184" width="232" height="118" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="408" y="232" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="22" font-weight="700">yamc / build</text><text x="408" y="268" text-anchor="middle" fill="#a9b8cb" font-size="18">Native AOT App</text>
+            <rect x="564" y="184" width="232" height="118" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="680" y="232" text-anchor="middle" fill="#d8b4fe" font-family="JetBrains Mono,monospace" font-size="22" font-weight="700">bundle --wasm</text><text x="680" y="268" text-anchor="middle" fill="#a9b8cb" font-size="18">Browser Engine</text>
+            <rect x="836" y="184" width="232" height="118" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="952" y="232" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono,monospace" font-size="22" font-weight="700">spid3r gui</text><text x="952" y="268" text-anchor="middle" fill="#a9b8cb" font-size="18">Desktop WebView</text>
+            <rect x="1108" y="184" width="232" height="118" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="1224" y="232" text-anchor="middle" fill="#fb7185" font-family="JetBrains Mono,monospace" font-size="22" font-weight="700">spid3r_lang</text><text x="1224" y="268" text-anchor="middle" fill="#a9b8cb" font-size="18">Embed in Rust</text>
+          </svg>
         </div>
       </div>
     </section>
 
-    <!-- ══ 6. Imports & Packages ══ -->
+    <!-- ══ 6. Imports & Module Search ══ -->
     <section class="slide" data-slide="6">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Modules &amp; Packages</div>
-        <h2 class="h">Where code comes from — safely</h2>
+        <div class="kicker">Modules &amp; Safety</div>
+        <h2 class="h">Where imports come from — safely</h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="ladder">
-          <div class="ladder-step ladder-step--first" style="--i:1"><span class="num">1</span><span>The folder of the file you're running</span></div>
-          <div class="ladder-step" style="--i:2"><span class="num">2</span><span>Custom folders in <code>SPID3R_PATH</code></span></div>
-          <div class="ladder-step" style="--i:3"><span class="num">3</span><span>A local <code>./stdlib</code> folder</span></div>
-          <div class="ladder-step" style="--i:4"><span class="num">4</span><span><code>stdlib/</code> beside the Spid3r app</span></div>
-          <div class="ladder-step" style="--i:5"><span class="num">5</span><span><code>vendor/</code> downloaded project packages</span></div>
-          <div class="ladder-step ladder-step--last" style="--i:6"><span class="num">6</span><span>Built-in library inside Spid3r itself</span></div>
-        </div>
-        <div class="gap-m">
-          <div class="caveat caveat--good caveat--tight rv" style="--i:1"><b>Your local files come first:</b> projects can safely replace a built-in module when needed.</div>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:2"><b>No sneaky folder escapes:</b> tricky paths like <code>..</code> or drive letters are blocked on every engine.</div>
-          <div class="caveat caveat--tight rv" style="--i:3"><b>Tamper-proof packages:</b> verified by SHA-256 fingerprint and Ed25519 digital signature — published versions can't be overwritten.</div>
-          <div class="caveat caveat--tight rv" style="--i:4"><b><code>spkg verify</code> (or <code>spid3r verify</code>)</b> re-checks <code>vendor/</code> against <code>spider.lock</code> — any edit stops the build.</div>
-          <p class="note rv" style="--i:5">Manifest: <code>spider.toml</code> · Versions: <code>^1.2</code> · <code>&gt;=1.2.3</code> · <code>=1.2.3</code> · <code>spkg add → tree → verify → publish → install</code></p>
+      <div class="grow">
+        <div class="two">
+          <div class="ladder">
+            <div class="ladder-step ladder-step--first" style="--i:1"><span class="num">1</span><span>Current file's folder</span></div>
+            <div class="ladder-step" style="--i:2"><span class="num">2</span><span><code>SPID3R_PATH</code> folders</span></div>
+            <div class="ladder-step" style="--i:3"><span class="num">3</span><span>Project <code>./stdlib</code></span></div>
+            <div class="ladder-step" style="--i:4"><span class="num">4</span><span><code>stdlib/</code> beside Spid3r</span></div>
+            <div class="ladder-step" style="--i:5"><span class="num">5</span><span><code>vendor/</code> packages</span></div>
+            <div class="ladder-step ladder-step--last" style="--i:6"><span class="num">6</span><span>Embedded 26 stdlib modules</span></div>
+          </div>
+          <div class="svg-box rv" style="--i:2">
+            <svg viewBox="0 0 640 460" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="16" width="600" height="128" rx="12" fill="rgba(56,189,248,.10)" stroke="#38bdf8" stroke-width="2"/>
+              <text x="48" y="56" fill="#7dd3fc" font-size="24" font-weight="700">📂 Local Files Always Win</text>
+              <text x="48" y="94" fill="#f1f5f9" font-size="20">Project modules override stdlib safely</text>
+              <text x="48" y="124" fill="#a9b8cb" font-family="JetBrains Mono,monospace" font-size="18">spider.toml · spider.lock</text>
+              <rect x="20" y="166" width="600" height="130" rx="12" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/>
+              <text x="48" y="208" fill="#fb7185" font-size="24" font-weight="700">⛔ Path Traversal Blocked</text>
+              <text x="48" y="244" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">import "../secret" or "C:/..."</text>
+              <text x="48" y="276" fill="#a9b8cb" font-size="19">Rejected on Tree, VM, AOT &amp; WASM</text>
+              <rect x="20" y="318" width="600" height="126" rx="12" fill="rgba(4,170,109,.10)" stroke="#04AA6D" stroke-width="2"/>
+              <text x="48" y="360" fill="#34d399" font-size="24" font-weight="700">✅ Cryptographic Verification</text>
+              <text x="48" y="396" fill="#f1f5f9" font-size="20">SHA-256 + Ed25519 via spkg verify</text>
+              <text x="48" y="426" fill="#a9b8cb" font-size="19">Any file edit halts the build</text>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 7. Trust Tiers T0, T1, T2, T5 ══ -->
+    <!-- ══ 7. Package Manager (spkg) ══ -->
     <section class="slide" data-slide="7">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Security Boundaries</div>
-        <h2 class="h">Clear trust levels (T0, T1, T2, T5)</h2>
+        <div class="kicker">Package Manager</div>
+        <h2 class="h">Install &amp; verify packages with <code>spkg</code></h2>
       </div>
-      <div class="grow gap-m">
-        <p class="lead rv" style="--i:1">Four ways code enters your app — each with a clear trust label.</p>
-        <div class="ladder" style="max-width:1400px;margin:0 auto;width:100%">
-          <div class="ladder-step ladder-step--first ladder-step--tight" style="--i:2"><span class="num">T0</span><span><b>Built-in toolkit</b> — compiled inside Spid3r, locked and unchangeable</span></div>
-          <div class="ladder-step ladder-step--tight" style="--i:3"><span class="num">T1</span><span><b>Your project files</b> (<code>.matrix</code> / <code>.mt</code>) — code you wrote and control</span></div>
-          <div class="ladder-step ladder-step--last ladder-step--tight" style="--i:4"><span class="num">T2</span><span><b>Downloaded packages</b> (<code>vendor/</code>) — fingerprint-checked via <code>spkg verify</code> / <code>spid3r verify</code></span></div>
-          <div class="ladder-step ladder-step--tight" style="--i:5;border-color:var(--caveat-rose-bd);background:var(--caveat-rose-bg)"><span class="num" style="color:var(--rose)">T5</span><span style="color:var(--rose)"><b>Native C plugins</b> (<code>extern fn</code>) — full system access, native builds only</span></div>
-        </div>
-        <div class="two" style="max-width:1600px;width:100%;margin:0 auto">
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:6"><b>Why T5 needs trust:</b> Native C plugins run outside any sandbox — only link libraries you trust completely.</div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:7"><b>Zero install-time surprises:</b> Installing a package never runs hidden setup scripts — it only copies verified files.</div>
+      <div class="grow">
+        <div class="two">
+          <div class="svg-box rv" style="--i:1">
+            <svg viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg">
+              <defs><marker id="arr7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#38bdf8" stroke-width="2"/></marker></defs>
+              <rect x="20" y="20" width="245" height="380" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/>
+              <text x="142" y="66" text-anchor="middle" fill="#7dd3fc" font-size="24" font-weight="700">4 Sources</text>
+              <rect x="38" y="96" width="209" height="54" rx="8" fill="#1a2335"/><text x="142" y="130" text-anchor="middle" fill="#f1f5f9" font-size="18">spid3r-spkg.github.io</text>
+              <rect x="38" y="166" width="209" height="54" rx="8" fill="#1a2335"/><text x="142" y="200" text-anchor="middle" fill="#a9b8cb" font-size="18">Git (--git)</text>
+              <rect x="38" y="236" width="209" height="54" rx="8" fill="#1a2335"/><text x="142" y="270" text-anchor="middle" fill="#a9b8cb" font-size="18">Local (--path)</text>
+              <rect x="38" y="306" width="209" height="54" rx="8" fill="#1a2335"/><text x="142" y="340" text-anchor="middle" fill="#a9b8cb" font-size="18">Local Registry</text>
+              <path d="M265 210 L335 210" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arr7)"/>
+              <rect x="342" y="20" width="278" height="380" rx="12" fill="rgba(4,170,109,.10)" stroke="#04AA6D" stroke-width="2"/>
+              <text x="481" y="66" text-anchor="middle" fill="#34d399" font-size="24" font-weight="700">Your Project</text>
+              <rect x="364" y="98" width="234" height="62" rx="8" fill="#161e2e"/><text x="481" y="136" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">spider.toml</text>
+              <rect x="364" y="178" width="234" height="62" rx="8" fill="#161e2e"/><text x="481" y="216" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">spider.lock</text>
+              <rect x="364" y="258" width="234" height="62" rx="8" fill="#161e2e"/><text x="481" y="296" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">vendor/</text>
+              <text x="481" y="366" text-anchor="middle" fill="#fbbf24" font-size="19" font-weight="700">0 Hidden Install Scripts</text>
+            </svg>
+          </div>
+          <div class="gap-m">
+            <div class="code rv" style="--i:2">
+<span class="line"><span class="f">spkg</span> init my_app</span>
+<span class="line"><span class="f">spkg</span> install nettools</span>
+<span class="line"><span class="f">spkg</span> verify &amp;&amp; <span class="f">spkg</span> audit</span>
+<span class="line"><span class="f">spkg</span> install --frozen --offline</span>
+<span class="line"><span class="f">spkg</span> tool install nettools</span>
+<span class="line"><span class="f">spkg</span> publish --to-dir ./reg</span>
+            </div>
+            <div class="two" style="gap:var(--sp-3)">
+              <div class="card card--tight rv" style="--i:3"><div class="ico">🗂️</div><h4>Workspaces</h4><p>Multi-package repos</p></div>
+              <div class="card card--tight rv" style="--i:4"><div class="ico">🔐</div><h4>Ed25519 Signed</h4><p>Immutable releases</p></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 8. Script to Standalone App ══ -->
+    <!-- ══ 8. Trust Tiers T0, T1, T2, T5 ══ -->
     <section class="slide" data-slide="8">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Native Desktop Apps</div>
-        <h2 class="h">Turn a script into a standalone <code>.exe</code></h2>
+        <div class="kicker">Security Boundaries</div>
+        <h2 class="h">Four clear trust levels (T0 → T5)</h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="gap-m">
-          <div class="code code--tight rv" style="--i:1">
-<span class="line">yamc examples/hello.matrix -o hello.exe</span>
-<span class="line">./hello.exe   <span style="color:var(--fg3)"># or: spid3r build ...</span></span>
-<span class="line"><span style="color:var(--green)">// Output: hello</span></span>
-<span class="line">yamc app.matrix -o App.exe --release \</span>
-<span class="line">    --icon app.ico --subsystem windows</span>
-          </div>
-          <p class="lead rv" style="--i:2;font-size:var(--fs-body)">Compiled by <b>YamLLVM</b> (LLVM 23) + SHA-256-pinned <code>spid3r_lang</code> (117 trampolines) — no Spid3r install needed.</p>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>Two honest limits:</b> Native <code>.exe</code> builds don't enforce <code>--sandbox</code> or step budgets directly, and need <code>--allow-gui</code> for launcher apps — use VM mode for untrusted scripts.</div>
+      <div class="grow">
+        <div class="svg-box rv" style="--i:1">
+          <svg viewBox="0 0 1320 400" xmlns="http://www.w3.org/2000/svg">
+            <text x="40" y="34" fill="#a9b8cb" font-size="20" font-weight="700">Tier</text>
+            <text x="165" y="34" fill="#a9b8cb" font-size="20" font-weight="700">Code Origin &amp; Verification</text>
+            <text x="1080" y="34" fill="#a9b8cb" font-size="20" font-weight="700">Privilege</text>
+            <rect x="40" y="52" width="1240" height="72" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="90" y="96" fill="#34d399" font-size="28" font-weight="800">T0</text><text x="165" y="96" fill="#f1f5f9" font-size="23" font-weight="600">Embedded Stdlib (26 modules, 254 natives) — compiled in</text><rect x="1060" y="66" width="190" height="44" rx="8" fill="#04AA6D"/><text x="1155" y="95" text-anchor="middle" fill="#0b0f17" font-size="19" font-weight="800">IMMUTABLE</text>
+            <rect x="40" y="138" width="1240" height="72" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="90" y="182" fill="#f1f5f9" font-size="28" font-weight="800">T1</text><text x="165" y="182" fill="#f1f5f9" font-size="23" font-weight="600">Your Project Code (.matrix / .mt) — local workspace</text><rect x="1060" y="152" width="190" height="44" rx="8" fill="#1a2335" stroke="#38bdf8"/><text x="1155" y="181" text-anchor="middle" fill="#7dd3fc" font-size="19" font-weight="700">AUTHORED</text>
+            <rect x="40" y="224" width="1240" height="72" rx="12" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="90" y="268" fill="#7dd3fc" font-size="28" font-weight="800">T2</text><text x="165" y="268" fill="#f1f5f9" font-size="23" font-weight="600">Vendored Packages (vendor/) — SHA-256 + Ed25519 verified</text><rect x="1060" y="238" width="190" height="44" rx="8" fill="rgba(56,189,248,.2)"/><text x="1155" y="267" text-anchor="middle" fill="#7dd3fc" font-size="19" font-weight="700">0 SCRIPTS</text>
+            <rect x="40" y="310" width="1240" height="72" rx="12" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="90" y="354" fill="#fb7185" font-size="28" font-weight="800">T5</text><text x="165" y="354" fill="#fb7185" font-size="23" font-weight="600">Native C FFI (extern fn) — full OS access, AOT builds only</text><rect x="1060" y="324" width="190" height="44" rx="8" fill="rgba(251,113,133,.25)"/><text x="1155" y="353" text-anchor="middle" fill="#fb7185" font-size="19" font-weight="800">TRUSTED</text>
+          </svg>
         </div>
-        <div class="gap-m">
-          <h3 class="h3 rv" style="--i:4">Easy app-packaging flags</h3>
-          <div class="two" style="gap:var(--sp-2)">
-            <div class="card card--tight rv" style="--i:5"><h4 style="font-size:24px">--icon</h4><p>adds your own custom app icon</p></div>
-            <div class="card card--tight rv" style="--i:6"><h4 style="font-size:24px">--subsystem windows</h4><p>opens a clean window with no black terminal</p></div>
-            <div class="card card--tight rv" style="--i:7"><h4 style="font-size:24px">--embed / --bytecode</h4><p>packs UI assets &amp; compiled code inside</p></div>
-            <div class="card card--tight rv" style="--i:8"><h4 style="font-size:24px">--bundle-runtime</h4><p>packs the VM runtime inside GUI payload apps</p></div>
-            <div class="card card--tight rv" style="--i:9"><h4 style="font-size:24px">--product-name/--version</h4><p>sets Windows file details &amp; version info</p></div>
-            <div class="card card--tight rv" style="--i:10"><h4 style="font-size:24px">--allow-gui</h4><p>allows GUI launcher builds cleanly</p></div>
-          </div>
+        <div class="two">
+          <div class="caveat caveat--good caveat--tight rv" style="--i:2"><b>Zero install surprises:</b> <code>spkg</code> only copies verified files.</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>T5 rule:</b> Only link C libraries you trust completely.</div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 9. Single Self-Contained File ══ -->
+    <!-- ══ 9. Script to Standalone App ══ -->
     <section class="slide" data-slide="9">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Easy Distribution</div>
-        <h2 class="h">Ship everything in one single file</h2>
+        <div class="kicker">Native Desktop Apps</div>
+        <h2 class="h">Compile a script into a standalone <code>.exe</code></h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="gap-m">
-          <div class="code code--tight rv" style="--i:1">
-<span class="line">yamcvm app.matrix -o app.matrixc   <span style="color:var(--fg3)"># or compile</span></span>
+      <div class="grow">
+        <div class="two">
+          <div class="gap-m">
+            <div class="code code--tight rv" style="--i:1">
 <span class="line">yamc app.matrix -o App.exe --release \</span>
-<span class="line">    --icon app.ico --subsystem windows \</span>
-<span class="line">    --bytecode app.matrixc --embed ui \</span>
-<span class="line">    --bundle-runtime</span>
+<span class="line">  --icon app.ico --subsystem windows</span>
+            </div>
+            <div class="svg-box rv" style="--i:2">
+              <svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg">
+                <defs><marker id="arr9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#c084fc" stroke-width="2"/></marker></defs>
+                <rect x="16" y="24" width="170" height="180" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/>
+                <text x="101" y="78" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="19">app.matrix</text>
+                <text x="101" y="118" text-anchor="middle" fill="#a9b8cb" font-family="JetBrains Mono,monospace" font-size="18">+ app.ico</text>
+                <text x="101" y="158" text-anchor="middle" fill="#a9b8cb" font-family="JetBrains Mono,monospace" font-size="18">+ spid3r_lang</text>
+                <path d="M186 114 L236 114" stroke="#c084fc" stroke-width="2.5" marker-end="url(#arr9)"/>
+                <rect x="242" y="44" width="160" height="140" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/>
+                <text x="322" y="102" text-anchor="middle" fill="#d8b4fe" font-size="24" font-weight="700">LLVM 23</text>
+                <text x="322" y="138" text-anchor="middle" fill="#a9b8cb" font-size="17">117 trampolines</text>
+                <path d="M402 114 L452 114" stroke="#c084fc" stroke-width="2.5" marker-end="url(#arr9)"/>
+                <rect x="458" y="44" width="166" height="140" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/>
+                <text x="541" y="102" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="24" font-weight="700">App.exe</text>
+                <text x="541" y="138" text-anchor="middle" fill="#a9b8cb" font-size="17">0 setup needed</text>
+              </svg>
+            </div>
+            <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>Note:</b> AOT binaries run with full user authority; use VM <code>--sandbox</code> for untrusted scripts.</div>
           </div>
-          <h3 class="h3 rv" style="--i:2">What's packed inside</h3>
-          <p class="sub rv" style="--i:3;font-size:var(--fs-meta)">SHA-256-verified <code>.matrixc</code> bytecode (exit 4 on tamper), UI files served from memory, and pinned <code>spid3r_lang</code> runtime unpacked on first launch.</p>
-        </div>
-        <div class="gap-m">
-          <div class="caveat caveat--tight rv" style="--i:4"><b>What <code>--bytecode</code> does:</b> Removes plain source code and text literals. <b>Honest limit:</b> Skilled reverse-engineers can still inspect bytecode, because the VM is open source.</div>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b>Never hide passwords in client apps:</b> Obfuscation is not encryption. Only OS WebView2 (already on Windows 11) is needed externally.</div>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:6"><b>Shortcut tip:</b> Desktop shortcuts may start in the wrong folder — check your app's own folder first with <code>exe_path()</code>.</div>
+          <div class="two" style="gap:var(--sp-3)">
+            <div class="card card--tight rv" style="--i:4"><div class="ico">🖼️</div><h4>--icon</h4><p>Custom app icon</p></div>
+            <div class="card card--tight rv" style="--i:5"><div class="ico">🪟</div><h4>--subsystem windows</h4><p>No console window</p></div>
+            <div class="card card--tight rv" style="--i:6"><div class="ico">📦</div><h4>--embed / --bytecode</h4><p>Pack UI &amp; bytecode</p></div>
+            <div class="card card--tight rv" style="--i:7"><div class="ico">⚙️</div><h4>--bundle-runtime</h4><p>Self-contained VM</p></div>
+            <div class="card card--tight rv" style="--i:8"><div class="ico">🏷️</div><h4>--product-name</h4><p>Windows file info</p></div>
+            <div class="card card--tight rv" style="--i:9"><div class="ico">🚀</div><h4>--allow-gui</h4><p>GUI launcher flag</p></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 10. 6 Core Data Types & 40 Keywords ══ -->
+    <!-- ══ 10. Single Self-Contained File ══ -->
     <section class="slide" data-slide="10">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Language Basics</div>
-        <h2 class="h">6 core data types · just 40 keywords</h2>
+        <div class="kicker">Easy Distribution</div>
+        <h2 class="h">Pack everything into one file</h2>
       </div>
-      <div class="grow gap-m">
-        <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
-          <div class="card card--tight rv" style="--i:1"><h4 class="mono" style="color:var(--amber)">int</h4><p>Whole numbers · <code>42</code>, <code>0xFF</code> · add <code>n</code> for huge numbers</p></div>
-          <div class="card card--tight rv" style="--i:2"><h4 class="mono" style="color:var(--cyan)">float</h4><p>Decimals · <code>3.14</code> · supports <code>nan()</code> &amp; <code>inf()</code></p></div>
-          <div class="card card--tight rv" style="--i:3"><h4 class="mono" style="color:var(--green)">bool</h4><p>True / false · <code>0 "" null false</code> are false; <code>[]</code> is true</p></div>
-          <div class="card card--tight rv" style="--i:4"><h4 class="mono" style="color:var(--purple)">string</h4><p>Text (UTF-8) · raw <code>r"..."</code> · count from end <code>[-1]</code></p></div>
-          <div class="card card--tight rv" style="--i:5"><h4 class="mono" style="color:var(--rose)">null</h4><p>Missing/empty value · safe <code>??</code> &amp; <code>?.</code> checks</p></div>
-          <div class="card card--tight rv" style="--i:6"><h4 class="mono" style="color:var(--indigo-light)">bytes</h4><p>Raw binary data (16 MiB cap) · hex &amp; base64 built in</p></div>
-        </div>
-        <div class="caveat caveat--tight rv" style="--i:7"><b>Simple conversions:</b> Writing <code>x as int</code> converts cleanly like <code>int(x)</code> — works for <code>float</code>, <code>string</code>, and <code>bool</code> too.</div>
-        <div class="gap-s">
-          <div class="chips rv" style="--i:8"><span class="chip grp">Create</span><span class="chip">let</span><span class="chip">const</span><span class="chip">fn</span></div>
-          <div class="chips rv" style="--i:9"><span class="chip grp">Flow</span><span class="chip">if</span><span class="chip">elif</span><span class="chip">else</span><span class="chip">while</span><span class="chip">for</span><span class="chip">in</span><span class="chip">break</span><span class="chip">continue</span><span class="chip">return</span><span class="chip">match</span></div>
-          <div class="chips rv" style="--i:10"><span class="chip grp">Errors</span><span class="chip">try</span><span class="chip">catch</span><span class="chip">finally</span><span class="chip">throw</span></div>
-          <div class="chips rv" style="--i:11"><span class="chip grp">Logic</span><span class="chip">true</span><span class="chip">false</span><span class="chip">null</span><span class="chip">and</span><span class="chip">or</span><span class="chip">not</span></div>
-          <div class="chips rv" style="--i:12"><span class="chip grp">Objects</span><span class="chip">class</span><span class="chip">interface</span><span class="chip">new</span><span class="chip">self</span><span class="chip">super</span><span class="chip">extends</span><span class="chip">implements</span><span class="chip">public</span><span class="chip">private</span><span class="chip">abstract</span></div>
-          <div class="chips rv" style="--i:13"><span class="chip grp">Data &amp; Async</span><span class="chip">yield</span><span class="chip">enum</span><span class="chip">spawn</span><span class="chip">async</span><span class="chip">await</span><span class="chip grp">Modules</span><span class="chip">import</span><span class="chip">as</span></div>
+      <div class="grow">
+        <div class="two">
+          <div class="gap-m">
+            <div class="code code--tight rv" style="--i:1">
+<span class="line">yamcvm app.matrix -o app.matrixc</span>
+<span class="line">yamc app.matrix -o App.exe --release \</span>
+<span class="line">  --bytecode app.matrixc --embed ui \</span>
+<span class="line">  --bundle-runtime --subsystem windows</span>
+            </div>
+            <div class="svg-box rv" style="--i:2">
+              <svg viewBox="0 0 600 135" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="16" width="175" height="100" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="101" y="58" text-anchor="middle" fill="#a9b8cb" font-size="19" font-weight="700">Source Code</text><text x="101" y="90" text-anchor="middle" fill="#fb7185" font-size="17">Plain Text</text>
+                <text x="208" y="74" text-anchor="middle" fill="#38bdf8" font-size="26">→</text>
+                <rect x="228" y="16" width="175" height="100" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="315" y="58" text-anchor="middle" fill="#7dd3fc" font-size="19" font-weight="700">.matrixc</text><text x="315" y="90" text-anchor="middle" fill="#34d399" font-size="17">SHA-256 Pinned</text>
+                <text x="422" y="74" text-anchor="middle" fill="#fb7185" font-size="26">≠</text>
+                <rect x="442" y="16" width="144" height="100" rx="10" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="514" y="58" text-anchor="middle" fill="#fb7185" font-size="19" font-weight="700">Secrets</text><text x="514" y="90" text-anchor="middle" fill="#f1f5f9" font-size="16">Keep on Server</text>
+              </svg>
+            </div>
+            <div class="caveat caveat--tight rv" style="--i:3"><b>Path tip:</b> Resolve relative files from <code>exe_path()</code>, not working directory.</div>
+          </div>
+          <div class="svg-box rv" style="--i:4">
+            <svg viewBox="0 0 600 410" xmlns="http://www.w3.org/2000/svg">
+              <rect x="24" y="16" width="552" height="378" rx="16" fill="#161e2e" stroke="#04AA6D" stroke-width="2.5"/>
+              <text x="300" y="62" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="28" font-weight="700">Inside App.exe</text>
+              <rect x="56" y="94" width="488" height="80" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/>
+              <text x="300" y="142" text-anchor="middle" fill="#7dd3fc" font-size="22" font-weight="600">SHA-256 Verified .matrixc (exit 4 on tamper)</text>
+              <rect x="56" y="192" width="488" height="80" rx="10" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/>
+              <text x="300" y="240" text-anchor="middle" fill="#d8b4fe" font-size="22" font-weight="600">Embedded ui/ Assets (served from memory)</text>
+              <rect x="56" y="290" width="488" height="80" rx="10" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="2"/>
+              <text x="300" y="338" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="600">Pinned spid3r_lang Runtime</text>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 11. Null Safety & Strings ══ -->
+    <!-- ══ 11. 6 Core Types & 40 Keywords ══ -->
     <section class="slide" data-slide="11">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Everyday Safety &amp; Text</div>
-        <h2 class="h">Handle missing values &amp; format text easily</h2>
+        <div class="kicker">Language Basics</div>
+        <h2 class="h">6 core types · 40 reserved keywords</h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="gap-m">
-          <h3 class="h3 rv" style="--i:1">No sudden missing-data crashes</h3>
-          <div class="chips rv" style="--i:2"><span class="chip">?? fallback</span><span class="chip">?. safe chain</span><span class="chip">auto type-narrowing</span></div>
-          <div class="code code--tight rv" style="--i:3">
-<span class="line"><span class="k">let</span> user_name = <span class="t">null</span>;</span>
-<span class="line"><span class="k">let</span> display = user_name ?? <span class="s">"Guest User"</span>;</span>
-<span class="line"><span class="k">let</span> account = <span class="t">null</span>;</span>
-<span class="line"><span class="k">let</span> balance = account?.wallet?.balance ?? <span class="n">0.0</span>;</span>
-          </div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Smart checker:</b> Once you check <code>if (x != null)</code> (or exit early), Spid3r knows <code>x</code> is safe to use without extra checks.</div>
+      <div class="grow">
+        <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
+          <div class="card card--tight rv" style="--i:1"><h4 class="mono" style="color:var(--amber)">int</h4><p><code>42</code> · <code>0xFF</code> · <code>n</code></p></div>
+          <div class="card card--tight rv" style="--i:2"><h4 class="mono" style="color:var(--cyan)">float</h4><p><code>3.14</code> · <code>nan()</code></p></div>
+          <div class="card card--tight rv" style="--i:3"><h4 class="mono" style="color:var(--green)">bool</h4><p><code>true</code> / <code>false</code></p></div>
+          <div class="card card--tight rv" style="--i:4"><h4 class="mono" style="color:var(--purple)">string</h4><p>UTF-8 · <code>[-1]</code></p></div>
+          <div class="card card--tight rv" style="--i:5"><h4 class="mono" style="color:var(--rose)">null</h4><p><code>??</code> · <code>?.</code></p></div>
+          <div class="card card--tight rv" style="--i:6"><h4 class="mono" style="color:var(--indigo-light)">bytes</h4><p>16 MiB · hex</p></div>
         </div>
-        <div class="gap-m">
-          <h3 class="h3 rv" style="--i:5">Friendly text formatting</h3>
-          <div class="code code--tight rv" style="--i:6">
-<span class="line"><span class="k">let</span> user = <span class="s">"Dev"</span>; <span class="k">let</span> score = <span class="n">98.5</span>;</span>
-<span class="line"><span class="f">println</span>(<span class="s">"Welcome {user}! Score: {score}"</span>);</span>
-<span class="line"><span class="s">"Result: {:.2}"</span>.<span class="f">format</span>(<span class="n">88.6875</span>); <span class="c">// "88.69"</span></span>
-<span class="line"><span class="s">"{:.0}"</span>.<span class="f">format</span>(<span class="n">2.5</span>);             <span class="c">// "2"</span></span>
-<span class="line"><span class="f">println</span>(<span class="s">"[-1]: "</span> + <span class="s">"Spid3r"</span>[-<span class="n">1</span>]);  <span class="c">// "[-1]: r"</span></span>
-          </div>
-          <div class="chips rv" style="--i:7"><span class="chip">.len()</span><span class="chip">.trim()</span><span class="chip">.split()</span><span class="chip">.replace()</span><span class="chip">.contains()</span><span class="chip">.format()</span></div>
-          <div class="caveat caveat--tight rv" style="--i:8"><b>Tip:</b> Use <code>"{name}"</code> with no spaces to insert a variable; <code>"{ name }"</code> stays plain text.</div>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:9"><b>Rounding note:</b> <code>{:.N}</code> (0–15 decimals) rounds halves to even (<code>2.5 → 2</code>), while <code>round(x)</code> rounds halves away from zero.</div>
+        <div class="svg-box rv" style="--i:7">
+          <svg viewBox="0 0 1320 94" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="14" width="620" height="66" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="330" y="54" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">16-Byte ValueV2: int · float · bool · null · SSO string inline</text>
+            <rect x="670" y="14" width="630" height="66" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="985" y="54" text-anchor="middle" fill="#7dd3fc" font-size="22" font-weight="700">Safe Casting: x as int · float · string · bool</text>
+          </svg>
+        </div>
+        <div class="gap-s">
+          <div class="chips rv" style="--i:8"><span class="chip grp">Create</span><span class="chip">let</span><span class="chip">const</span><span class="chip">fn</span><span class="chip grp">Logic</span><span class="chip">true</span><span class="chip">false</span><span class="chip">null</span><span class="chip">and</span><span class="chip">or</span><span class="chip">not</span></div>
+          <div class="chips rv" style="--i:9"><span class="chip grp">Flow</span><span class="chip">if</span><span class="chip">elif</span><span class="chip">else</span><span class="chip">while</span><span class="chip">for</span><span class="chip">in</span><span class="chip">break</span><span class="chip">continue</span><span class="chip">return</span><span class="chip">match</span></div>
+          <div class="chips rv" style="--i:10"><span class="chip grp">Errors &amp; Async</span><span class="chip">try</span><span class="chip">catch</span><span class="chip">finally</span><span class="chip">throw</span><span class="chip">yield</span><span class="chip">enum</span><span class="chip">spawn</span><span class="chip">async</span><span class="chip">await</span><span class="chip">import</span><span class="chip">as</span></div>
+          <div class="chips rv" style="--i:11"><span class="chip grp">Objects</span><span class="chip">class</span><span class="chip">interface</span><span class="chip">new</span><span class="chip">self</span><span class="chip">super</span><span class="chip">extends</span><span class="chip">implements</span><span class="chip">public</span><span class="chip">private</span><span class="chip">abstract</span></div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 12. Decisions, Loops & Shortcuts ══ -->
+    <!-- ══ 12. Null Safety & Strings ══ -->
     <section class="slide" data-slide="12">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Logic &amp; Shortcuts</div>
-        <h2 class="h">Decisions, loops &amp; data chains</h2>
+        <div class="kicker">Everyday Safety &amp; Text</div>
+        <h2 class="h">Null safety &amp; clean text formatting</h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="gap-m">
-          <h3 class="h3 rv" style="--i:1"><code>if</code> returns values · clean loops</h3>
-          <div class="code code--tight rv" style="--i:2">
-<span class="line"><span class="k">if</span> (marks &gt;= <span class="n">90</span>) { grade = <span class="s">"A"</span>; }</span>
-<span class="line"><span class="k">elif</span> (marks &gt;= <span class="n">80</span>) { grade = <span class="s">"B"</span>; }</span>
-<span class="line"><span class="k">else</span> { grade = <span class="s">"F"</span>; }</span>
-<span class="line"><span class="k">let</span> status = <span class="k">if</span> (marks &gt;= <span class="n">60</span>) { <span class="s">"Passed"</span> }</span>
-<span class="line">             <span class="k">else</span> { <span class="s">"Failed"</span> };</span>
+      <div class="grow">
+        <div class="two">
+          <div class="gap-m">
+            <div class="svg-box rv" style="--i:1">
+              <svg viewBox="0 0 640 135" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="24" width="150" height="86" rx="10" fill="rgba(251,113,133,.12)" stroke="#fb7185" stroke-width="2"/><text x="85" y="75" text-anchor="middle" fill="#fb7185" font-family="JetBrains Mono,monospace" font-size="20">user == null</text>
+                <text x="200" y="75" text-anchor="middle" fill="#38bdf8" font-size="28" font-weight="800">?. / ??</text>
+                <rect x="245" y="24" width="175" height="86" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="332" y="75" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="20">"Guest"</text>
+                <text x="452" y="75" text-anchor="middle" fill="#a9b8cb" font-size="28" font-weight="800">→</text>
+                <rect x="480" y="24" width="150" height="86" rx="10" fill="#161e2e" stroke="#04AA6D" stroke-width="2"/><text x="555" y="75" text-anchor="middle" fill="#f1f5f9" font-size="21" font-weight="700">No Crash</text>
+              </svg>
+            </div>
+            <div class="code code--tight rv" style="--i:2">
+<span class="line"><span class="k">let</span> name = user ?? <span class="s">"Guest"</span>;</span>
+<span class="line"><span class="k">let</span> bal = acct?.wallet?.balance ?? <span class="n">0.0</span>;</span>
+<span class="line"><span class="k">if</span> (x != <span class="k">null</span>) { <span class="c">/* auto-narrowed */</span> }</span>
+            </div>
+            <div class="caveat caveat--good caveat--tight rv" style="--i:3"><b>Flow narrowing:</b> Check <code>if (x != null)</code> once and use <code>x</code> safely.</div>
           </div>
-          <div class="chips rv" style="--i:3"><span class="chip">while (cond)</span><span class="chip">for let i = 0; ...</span><span class="chip">for item in list</span><span class="chip">for (k, v) in map</span></div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>No shared-default trap:</b> Default lists <code>[]</code> or maps <code>{}</code> create a fresh copy on every call — unlike Python's famous gotcha.</div>
-        </div>
-        <div class="gap-m">
-          <div class="code code--tight rv" style="--i:5">
-<span class="line"><span class="k">fn</span> <span class="f">make_accumulator</span>(start: <span class="t">int</span>) {</span>
-<span class="line">    <span class="k">let</span> total = start;</span>
-<span class="line">    <span class="k">return fn</span>(val: <span class="t">int</span>) {</span>
-<span class="line">        total += val;</span>
-<span class="line">        <span class="k">return</span> total;</span>
-<span class="line">    };</span>
-<span class="line">}</span>
-<span class="line"><span class="k">let</span> acc = <span class="f">make_accumulator</span>(<span class="n">100</span>);</span>
+          <div class="gap-m">
+            <div class="code code--tight rv" style="--i:4">
+<span class="line"><span class="f">println</span>(<span class="s">"Hi {user}! Score: {score}"</span>);</span>
+<span class="line"><span class="s">"{:.2}"</span>.<span class="f">format</span>(<span class="n">88.6875</span>); <span class="c">// "88.69"</span></span>
+<span class="line"><span class="s">"Spid3r"</span>[-<span class="n">1</span>];           <span class="c">// "r"</span></span>
+            </div>
+            <div class="svg-box rv" style="--i:5">
+              <svg viewBox="0 0 640 135" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="18" width="290" height="98" rx="10" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="159" y="56" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="21">"{:.0}".format(2.5)</text><text x="159" y="94" text-anchor="middle" fill="#34d399" font-size="21" font-weight="700">→ "2" (half-to-even)</text>
+                <rect x="336" y="18" width="290" height="98" rx="10" fill="#161e2e" stroke="#c084fc" stroke-width="2"/><text x="481" y="56" text-anchor="middle" fill="#d8b4fe" font-family="JetBrains Mono,monospace" font-size="21">round(2.5)</text><text x="481" y="94" text-anchor="middle" fill="#fbbf24" font-size="21" font-weight="700">→ 3 (away from zero)</text>
+              </svg>
+            </div>
+            <div class="chips rv" style="--i:6"><span class="chip">.len()</span><span class="chip">.trim()</span><span class="chip">.split()</span><span class="chip">.replace()</span><span class="chip">.contains()</span><span class="chip">.format()</span></div>
           </div>
-          <div class="code code--tight rv" style="--i:6">
-<span class="line"><span class="k">let</span> sq = nums</span>
-<span class="line">    .<span class="f">filter</span>(x =&gt; x % <span class="n">2</span> == <span class="n">0</span>)</span>
-<span class="line">    .<span class="f">map</span>(x =&gt; x * x);</span>
-<span class="line"><span class="k">let</span> sum = nums.<span class="f">reduce</span>(<span class="n">0</span>, (acc, n) =&gt; acc + n);</span>
-          </div>
-          <p class="note rv" style="--i:7">Built-in list helpers: <code>map / filter / reduce / for_each / all / any / sort_by / sorted_by / argsort</code></p>
         </div>
       </div>
     </section>
 
-    <!-- ══ 13. Patterns & Error Recovery ══ -->
+    <!-- ══ 13. Decisions, Loops & Pipelines ══ -->
     <section class="slide" data-slide="13">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Smart Checks &amp; Recovery</div>
-        <h2 class="h">Match every case &amp; clean up safely</h2>
+        <div class="kicker">Logic &amp; Shortcuts</div>
+        <h2 class="h">Decisions, closures &amp; data pipelines</h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="gap-m">
-          <div class="chips rv" style="--i:1"><span class="chip grp">enum</span><span class="chip">Move(x, y)</span><span class="chip">Rotate(degrees)</span><span class="chip">Stop</span></div>
-          <div class="code code--tight rv" style="--i:2">
-<span class="line"><span class="k">return match</span> (cmd) {</span>
-<span class="line">        <span class="f">Move</span>(x, y) <span class="k">if</span> x == <span class="n">0</span> <span class="k">and</span> y == <span class="n">0</span> =&gt; <span class="s">"Hold"</span>,</span>
-<span class="line">        <span class="f">Move</span>(x, y) =&gt; <span class="s">"Move to ({x}, {y})"</span>,</span>
-<span class="line">        <span class="f">Rotate</span>(deg) =&gt; <span class="s">"Rotate {deg} deg"</span>,</span>
-<span class="line">        <span class="f">Stop</span> =&gt; <span class="s">"Emergency Stop!"</span>,</span>
-<span class="line">        _ =&gt; <span class="s">"Unknown"</span></span>
-<span class="line">    };</span>
-          </div>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>Quick rule:</b> Create empty variants with parentheses like <code>Stop()</code> — bare <code>Stop</code> is only for matching patterns.</div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Nothing forgotten:</b> <code>match</code> makes sure you handle every option (or add a fallback <code>_</code>) before the code even runs.</div>
+      <div class="grow">
+        <div class="svg-box rv" style="--i:1">
+          <svg viewBox="0 0 1320 125" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="230" height="84" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="135" y="70" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="23">[1, 2, 3, 4]</text>
+            <text x="285" y="70" text-anchor="middle" fill="#38bdf8" font-size="30" font-weight="800">→</text>
+            <rect x="320" y="20" width="250" height="84" rx="12" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="445" y="70" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="23">.filter(even)</text>
+            <text x="605" y="70" text-anchor="middle" fill="#38bdf8" font-size="30" font-weight="800">→</text>
+            <rect x="640" y="20" width="250" height="84" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="765" y="70" text-anchor="middle" fill="#d8b4fe" font-family="JetBrains Mono,monospace" font-size="23">.map(x * x)</text>
+            <text x="925" y="70" text-anchor="middle" fill="#04AA6D" font-size="30" font-weight="800">→</text>
+            <rect x="960" y="20" width="340" height="84" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="1130" y="70" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="23">.reduce(0, +) ⇒ 20</text>
+          </svg>
         </div>
-        <div class="gap-m">
-          <div class="code code--tight rv" style="--i:5">
-<span class="line"><span class="k">try</span> {</span>
-<span class="line">    <span class="k">let</span> val = <span class="f">int</span>(s);</span>
-<span class="line">} <span class="k">catch</span> (err) {</span>
-<span class="line">    <span class="f">println</span>(<span class="s">"Caught: "</span> + <span class="f">string</span>(err));</span>
-<span class="line">    <span class="k">return</span> -<span class="n">1</span>;</span>
-<span class="line">} <span class="k">finally</span> {</span>
-<span class="line">    <span class="f">println</span>(<span class="s">"Cleanup: completed"</span>);</span>
-<span class="line">}</span>
+        <div class="two">
+          <div class="code code--tight rv" style="--i:2">
+<span class="line"><span class="k">let</span> status = <span class="k">if</span> (marks &gt;= <span class="n">60</span>) { <span class="s">"Pass"</span> } <span class="k">else</span> { <span class="s">"Fail"</span> };</span>
+<span class="line"><span class="k">for</span> (k, v) <span class="k">in</span> scores { <span class="f">println</span>(<span class="s">"{k}: {v}"</span>); }</span>
+<span class="line"><span class="k">while</span> (running) { ... }</span>
           </div>
-          <div class="caveat caveat--tight rv" style="--i:6"><b><code>finally</code> always runs</b> — even if <code>try</code> or <code>catch</code> hits <code>return</code>, <code>break</code>, or another error.</div>
-          <p class="note rv" style="--i:7">Explicit results: <code>some(v) / none</code> · <code>ok(v) / err(e)</code> — file operations return <code>result</code> instead of crashing.</p>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>Clean recovery:</b> When an error is thrown, the program resets safely so your recovery code starts fresh.</div>
+          <div class="code code--tight rv" style="--i:3">
+<span class="line"><span class="k">fn</span> <span class="f">acc</span>(n: <span class="t">int</span>) {</span>
+<span class="line">  <span class="k">return fn</span>(v: <span class="t">int</span>) { n += v; <span class="k">return</span> n; };</span>
+<span class="line">}</span>
+<span class="line"><span class="k">let</span> a = <span class="f">acc</span>(<span class="n">100</span>); a(<span class="n">5</span>); <span class="c">// 105</span></span>
+          </div>
+        </div>
+        <div class="three rv" style="--i:4">
+          <div class="card card--tight"><h4 style="color:var(--green)">Fresh Defaults</h4><p><code>items = []</code> never leaks across calls</p></div>
+          <div class="card card--tight"><h4 style="color:var(--cyan)">Value-Returning <code>if</code></h4><p>Clean ternary alternative</p></div>
+          <div class="card card--tight"><h4 style="color:var(--purple)">Rich Helpers</h4><p><code>all · any · sort_by · argsort</code></p></div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 14. Classes, Inheritance & Interfaces ══ -->
+    <!-- ══ 14. Pattern Matching & Error Recovery ══ -->
     <section class="slide" data-slide="14">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Organizing Code</div>
-        <h2 class="h">Classes, inheritance &amp; shared rules</h2>
+        <div class="kicker">Smart Checks &amp; Recovery</div>
+        <h2 class="h">Exhaustive <code>match</code> &amp; guaranteed cleanup</h2>
       </div>
-      <div class="two" style="align-items:start;gap:var(--sp-3);flex:0 0 auto">
-        <div class="code code--tight rv" style="--i:1">
-<span class="line"><span class="k">class</span> <span class="t">Animal</span> {</span>
-<span class="line">    <span class="k">public let</span> name;</span>
-<span class="line">    <span class="k">private let</span> energy;</span>
-<span class="line"></span>
-<span class="line">    <span class="k">public fn new</span>(name: <span class="t">string</span>) {</span>
-<span class="line">        <span class="k">self</span>.name = name;</span>
-<span class="line">        <span class="k">self</span>.energy = <span class="n">100</span>;</span>
-<span class="line">    }</span>
-<span class="line">    <span class="k">public fn</span> <span class="f">speak</span>(<span class="k">self</span>) -&gt; <span class="t">string</span> {</span>
-<span class="line">        <span class="k">return self</span>.name + <span class="s">" makes a sound"</span>;</span>
-<span class="line">    }</span>
-<span class="line">}</span>
+      <div class="grow">
+        <div class="two">
+          <div class="gap-m">
+            <div class="code code--tight rv" style="--i:1">
+<span class="line"><span class="k">return match</span> (cmd) {</span>
+<span class="line">  <span class="f">Move</span>(<span class="n">0</span>, <span class="n">0</span>)  =&gt; <span class="s">"Hold"</span>,</span>
+<span class="line">  <span class="f">Move</span>(x, y)  =&gt; <span class="s">"Go ({x}, {y})"</span>,</span>
+<span class="line">  <span class="f">Rotate</span>(deg) =&gt; <span class="s">"Turn {deg}"</span>,</span>
+<span class="line">  <span class="f">Stop</span>        =&gt; <span class="s">"Stop!"</span></span>
+<span class="line">};</span>
+            </div>
+            <div class="svg-box rv" style="--i:2">
+              <svg viewBox="0 0 600 125" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="14" width="580" height="96" rx="10" fill="rgba(4,170,109,.10)" stroke="#04AA6D" stroke-width="2"/>
+                <text x="300" y="52" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">✅ Compile-Time Exhaustiveness Check</text>
+                <text x="300" y="88" text-anchor="middle" fill="#f1f5f9" font-size="19">Missing enum case stops build before execution</text>
+              </svg>
+            </div>
+          </div>
+          <div class="gap-m">
+            <div class="svg-box rv" style="--i:3">
+              <svg viewBox="0 0 640 125" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="18" width="175" height="86" rx="10" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="97" y="70" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="22">try { ... }</text>
+                <text x="208" y="70" text-anchor="middle" fill="#a9b8cb" font-size="26">→</text>
+                <rect x="230" y="18" width="180" height="86" rx="10" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="320" y="70" text-anchor="middle" fill="#fb7185" font-family="JetBrains Mono,monospace" font-size="22">catch (e)</text>
+                <text x="433" y="70" text-anchor="middle" fill="#a9b8cb" font-size="26">→</text>
+                <rect x="455" y="18" width="175" height="86" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="542" y="70" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="22">finally</text>
+              </svg>
+            </div>
+            <div class="two" style="gap:var(--sp-3)">
+              <div class="card card--tight rv" style="--i:4"><h4 class="mono" style="color:var(--cyan)">Option</h4><p><code>some(v) / none</code></p></div>
+              <div class="card card--tight rv" style="--i:5"><h4 class="mono" style="color:var(--green)">Result</h4><p><code>ok(v) / err(e)</code></p></div>
+            </div>
+            <div class="caveat caveat--tight rv" style="--i:6"><b><code>finally</code> always runs</b> — even on <code>return</code>, <code>break</code>, or re-throw.</div>
+          </div>
         </div>
-        <div class="code code--tight rv" style="--i:2">
-<span class="line"><span class="k">class</span> <span class="t">Dog</span> <span class="k">extends</span> <span class="t">Animal</span> {</span>
-<span class="line">    <span class="k">public let</span> breed;</span>
-<span class="line">    <span class="k">public fn new</span>(name: <span class="t">string</span>, breed: <span class="t">string</span>) {</span>
-<span class="line">        <span class="k">super</span>(name);   <span class="c">// reuse Animal setup</span></span>
-<span class="line">        <span class="k">self</span>.breed = breed;</span>
-<span class="line">    }</span>
-<span class="line">    <span class="k">public fn</span> <span class="f">speak</span>(<span class="k">self</span>) -&gt; <span class="t">string</span> {</span>
-<span class="line">        <span class="k">return super</span>.<span class="f">speak</span>() + <span class="s">" ("</span> + <span class="k">self</span>.breed + <span class="s">") -&gt; Woof!"</span>;</span>
-<span class="line">    }</span>
-<span class="line">}</span>
-        </div>
-      </div>
-      <div class="grow gap-m" style="justify-content:center">
-        <div class="caveat caveat--tight rv" style="--i:3"><b>Simple OOP rules:</b> Details are <code>private</code> by default · <code>self</code> is written clearly · reuse parent blueprints with <code>extends</code> &amp; <code>super</code> · supports <code>abstract</code> &amp; <code>static</code>.</div>
-        <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Interfaces:</b> <code>interface Drawable</code> defines shared abilities (even with default code), so different shapes work together in one list.</div>
-        <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b>Type note:</b> Private field access is checked up front when you write the class type (<code>let c: Dog = ...</code>); untyped variables check dynamically.</div>
       </div>
     </section>
 
-    <!-- ══ 15. Generics + 20+ Collections ══ -->
+    <!-- ══ 15. Classes, Inheritance & Interfaces ══ -->
     <section class="slide" data-slide="15">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Organizing Data</div>
-        <h2 class="h">Flexible templates &amp; 20+ data structures</h2>
+        <div class="kicker">Organizing Code</div>
+        <h2 class="h">Classes, inheritance &amp; interfaces</h2>
       </div>
-      <div class="grow gap-m">
-        <div class="chips rv" style="--i:1"><span class="chip">&lt;T: Numeric&gt;</span><span class="chip">&lt;T: Comparable&gt;</span><span class="chip">&lt;T: Printable&gt;</span><span class="chip">&lt;T: Drawable&gt;</span><span class="chip">&lt;T: Numeric + Comparable&gt;</span><span class="chip">identity&lt;int&gt;(42)</span></div>
-        <p class="note rv" style="--i:2">YamLLVM monomorphizes functions (<code>spid3r_mono_*</code>) + unboxes <code>list&lt;int&gt;</code>/<code>list&lt;float&gt;</code>; Tree &amp; <code>spvm</code> match identically.</p>
-        <div class="four rv" style="--i:3;grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
-          <div class="card card--tight"><h4 class="mono">List</h4><p>ordered items</p></div>
-          <div class="card card--tight"><h4 class="mono">Map</h4><p>key → value pairs</p></div>
-          <div class="card card--tight"><h4 class="mono">Set</h4><p>unique items</p></div>
-          <div class="card card--tight"><h4 class="mono">Bag</h4><p>counts duplicates</p></div>
-          <div class="card card--tight"><h4 class="mono">Tuple</h4><p>fixed, locked group</p></div>
-          <div class="card card--tight"><h4 class="mono">Stack/Queue/Deque</h4><p>LIFO / FIFO / both</p></div>
-          <div class="card card--tight"><h4 class="mono">Heap</h4><p>fastest min / max</p></div>
-          <div class="card card--tight"><h4 class="mono">Trie</h4><p>word prefix search</p></div>
-          <div class="card card--tight"><h4 class="mono">Graph</h4><p>routes (Dijkstra/BFS)</p></div>
-          <div class="card card--tight"><h4 class="mono">ring_buffer</h4><p>fixed rolling log</p></div>
-          <div class="card card--tight"><h4 class="mono">linked_list</h4><p>node chains</p></div>
-          <div class="card card--tight"><h4 class="mono">hash_table</h4><p>custom-sized lookup</p></div>
-          <div class="card card--tight"><h4 class="mono">bst</h4><p>sorted search tree</p></div>
-          <div class="card card--tight"><h4 class="mono">binary_tree</h4><p>tree container</p></div>
-          <div class="card card--tight"><h4 class="mono">priority_queue</h4><p>priority ordering</p></div>
-          <div class="card card--tight"><h4 class="mono">vec</h4><p>dynamic array</p></div>
-          <div class="card card--tight"><h4 class="mono">bytes</h4><p>16 MiB raw buffer</p></div>
+      <div class="grow">
+        <div class="two">
+          <div class="gap-m">
+            <div class="code code--tight rv" style="--i:1">
+<span class="line"><span class="k">class</span> <span class="t">Animal</span> {</span>
+<span class="line">  <span class="k">private let</span> energy = <span class="n">100</span>;</span>
+<span class="line">  <span class="k">public let</span> name: <span class="t">string</span>;</span>
+<span class="line">  <span class="k">fn new</span>(name: <span class="t">string</span>) { <span class="k">self</span>.name = name; }</span>
+<span class="line">}</span>
+<span class="line"><span class="k">class</span> <span class="t">Dog</span> <span class="k">extends</span> <span class="t">Animal</span> <span class="k">implements</span> <span class="t">Speak</span> {</span>
+<span class="line">  <span class="k">fn new</span>(name: <span class="t">string</span>) { <span class="k">super</span>(name); }</span>
+<span class="line">}</span>
+            </div>
+            <div class="three" style="gap:var(--sp-2)">
+              <div class="card card--tight rv" style="--i:2"><h4>🔒 Private</h4><p>by default</p></div>
+              <div class="card card--tight rv" style="--i:3"><h4>🧬 Extends</h4><p>single parent</p></div>
+              <div class="card card--tight rv" style="--i:4"><h4>⚡ Static</h4><p>&amp; <code>abstract</code></p></div>
+            </div>
+          </div>
+          <div class="gap-m">
+            <div class="svg-box rv" style="--i:5">
+              <svg viewBox="0 0 640 290" xmlns="http://www.w3.org/2000/svg">
+                <defs><marker id="ab15" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#38bdf8" stroke-width="2"/></marker></defs>
+                <rect x="24" y="20" width="260" height="92" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="154" y="58" text-anchor="middle" fill="#7dd3fc" font-size="23" font-weight="700">class Animal</text><text x="154" y="92" text-anchor="middle" fill="#a9b8cb" font-family="JetBrains Mono,monospace" font-size="18">🔒 private energy</text>
+                <rect x="356" y="20" width="260" height="92" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="486" y="58" text-anchor="middle" fill="#d8b4fe" font-size="23" font-weight="700">interface Speak</text><text x="486" y="92" text-anchor="middle" fill="#a9b8cb" font-size="18">shared contract</text>
+                <path d="M154 112 L260 172" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#ab15)"/>
+                <path d="M486 112 L380 172" stroke="#c084fc" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#ab15)"/>
+                <rect x="170" y="178" width="300" height="90" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="320" y="218" text-anchor="middle" fill="#34d399" font-size="23" font-weight="700">class Dog</text><text x="320" y="250" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="18">super() · explicit self</text>
+              </svg>
+            </div>
+            <div class="caveat caveat--good caveat--tight rv" style="--i:6">Interfaces support default method bodies so shapes work in one list.</div>
+          </div>
         </div>
-        <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Safe custom sorting:</b> <code>sort_by / sorted_by / argsort</code> snapshot the list first with no lock held — even if a rule throws an error, nothing freezes.</div>
       </div>
     </section>
 
-    <!-- ══ 16. Built-in Math & Linear Algebra ══ -->
+    <!-- ══ 16. Generics + 20+ Collections ══ -->
     <section class="slide" data-slide="16">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Math &amp; Science</div>
-        <h2 class="h">NumPy-style math built in — no install</h2>
+        <div class="kicker">Generics &amp; Containers</div>
+        <h2 class="h">Monomorphized generics &amp; 20+ containers</h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="gap-m">
-          <div class="card card--tight rv" style="--i:1"><h4 style="font-size:var(--fs-h3);color:var(--green)">16,777,216 numbers</h4><p>fast 64-bit decimal grids · zero external libraries required</p></div>
-          <div class="chips rv" style="--i:2"><span class="chip">A.mul(B)</span><span class="chip">v1.dot(v2)</span><span class="chip">.hadamard()</span><span class="chip">.transpose()</span><span class="chip">.det()</span><span class="chip">.inverse()</span><span class="chip">.solve()</span><span class="chip">.mean/.sum/.trace</span></div>
-          <div class="caveat caveat--tight rv" style="--i:3"><b>Grid access:</b> Use <code>m.get(row, col)</code> and <code>m.set(row, col, val)</code> for 2D grids, or <code>m[i]</code> for flat row-major access.</div>
+      <div class="grow">
+        <div class="svg-box rv" style="--i:1">
+          <svg viewBox="0 0 1320 98" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="12" width="380" height="74" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="210" y="56" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="22">fn sum&lt;T: Numeric&gt;(list&lt;T&gt;)</text>
+            <text x="440" y="58" text-anchor="middle" fill="#38bdf8" font-size="28" font-weight="800">→</text>
+            <rect x="480" y="12" width="410" height="74" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="685" y="56" text-anchor="middle" fill="#d8b4fe" font-family="JetBrains Mono,monospace" font-size="22">LLVM 23: spid3r_mono_sum_int</text>
+            <text x="930" y="58" text-anchor="middle" fill="#04AA6D" font-size="28" font-weight="800">→</text>
+            <rect x="970" y="12" width="330" height="74" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="1135" y="56" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">Unboxed Native Speed</text>
+          </svg>
         </div>
-        <div class="gap-m">
-          <div class="code code--tight rv" style="--i:4">
-<span class="line"><span class="k">let</span> v1 = <span class="f">vector</span>([<span class="n">1.0</span>, <span class="n">2.0</span>, <span class="n">3.0</span>]);</span>
-<span class="line"><span class="k">let</span> v2 = <span class="f">vector</span>([<span class="n">4.0</span>, <span class="n">5.0</span>, <span class="n">6.0</span>]);</span>
-<span class="line">v1.<span class="f">dot</span>(v2);     <span class="c">// 32.0</span></span>
-<span class="line"><span class="k">let</span> A = <span class="f">matrix</span>(<span class="n">2</span>, <span class="n">2</span>, <span class="n">0.0</span>);</span>
-<span class="line">A.<span class="f">set</span>(<span class="n">0</span>, <span class="n">0</span>, <span class="n">4.0</span>);  A.<span class="f">set</span>(<span class="n">0</span>, <span class="n">1</span>, <span class="n">7.0</span>);</span>
-<span class="line">A.<span class="f">set</span>(<span class="n">1</span>, <span class="n">0</span>, <span class="n">2.0</span>);  A.<span class="f">set</span>(<span class="n">1</span>, <span class="n">1</span>, <span class="n">6.0</span>);</span>
-<span class="line">A.<span class="f">det</span>();    <span class="c">// 10.0 · A.trace() == 10.0</span></span>
-<span class="line">A.<span class="f">solve</span>(<span class="f">vector</span>([<span class="n">18.0</span>, <span class="n">10.0</span>])); <span class="c">// vector[3.8, 0.4]</span></span>
-          </div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:5"><b>Python compatible:</b> <code>save_npy</code> / <code>load_npy</code> read &amp; write standard NumPy v1.0 files directly.</div>
+        <div class="four rv" style="--i:2;grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
+          <div class="card card--tight"><h4 class="mono">List</h4><p>ordered</p></div>
+          <div class="card card--tight"><h4 class="mono">Map</h4><p>key → val</p></div>
+          <div class="card card--tight"><h4 class="mono">Set</h4><p>unique</p></div>
+          <div class="card card--tight"><h4 class="mono">Bag</h4><p>multiset</p></div>
+          <div class="card card--tight"><h4 class="mono">Tuple</h4><p>immutable</p></div>
+          <div class="card card--tight"><h4 class="mono">Stack/Queue</h4><p>LIFO / FIFO</p></div>
+          <div class="card card--tight"><h4 class="mono">Deque</h4><p>double-ended</p></div>
+          <div class="card card--tight"><h4 class="mono">Heap</h4><p>min / max</p></div>
+          <div class="card card--tight"><h4 class="mono">Trie</h4><p>prefix tree</p></div>
+          <div class="card card--tight"><h4 class="mono">Graph</h4><p>BFS/Dijkstra</p></div>
+          <div class="card card--tight"><h4 class="mono">ring_buffer</h4><p>rolling</p></div>
+          <div class="card card--tight"><h4 class="mono">linked_list</h4><p>nodes</p></div>
+          <div class="card card--tight"><h4 class="mono">hash_table</h4><p>lookup</p></div>
+          <div class="card card--tight"><h4 class="mono">bst</h4><p>search tree</p></div>
+          <div class="card card--tight"><h4 class="mono">binary_tree</h4><p>tree</p></div>
+          <div class="card card--tight"><h4 class="mono">priority_q</h4><p>ordered</p></div>
+          <div class="card card--tight"><h4 class="mono">vec</h4><p>dynamic</p></div>
+          <div class="card card--tight"><h4 class="mono">bytes</h4><p>16 MiB raw</p></div>
         </div>
+        <div class="caveat caveat--good caveat--tight rv" style="--i:3"><b>Lock-free sorting:</b> <code>sort_by / sorted_by / argsort</code> snapshot safely without deadlocks.</div>
       </div>
     </section>
 
-    <!-- ══ 17. Real Concurrency ══ -->
+    <!-- ══ 17. Built-in Math & Linear Algebra ══ -->
     <section class="slide" data-slide="17">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Multitasking</div>
-        <h2 class="h">True parallel speed — no traffic jam</h2>
+        <div class="kicker">Math &amp; Science</div>
+        <h2 class="h">NumPy-style vectors &amp; matrices built in</h2>
       </div>
-      <div class="grow gap-m">
-        <div class="pipe">
-          <div class="pipe-step rv" style="--i:1"><div class="pt">spawn</div><div class="ps">start background job</div></div>
-          <div class="pipe-link" style="--i:1"></div>
-          <div class="pipe-step rv" style="--i:2"><div class="pt">M:N scheduler</div><div class="ps">shares CPU cores</div></div>
-          <div class="pipe-link" style="--i:2"></div>
-          <div class="pipe-step rv" style="--i:3"><div class="pt">channel()</div><div class="ps">safe message pipe</div></div>
-          <div class="pipe-link" style="--i:3"></div>
-          <div class="pipe-step pipe-step--hot rv" style="--i:4"><div class="pt">recv()</div><div class="ps">waits for answer</div></div>
-        </div>
-        <div class="two" style="align-items:start">
-          <div class="code code--tight rv" style="--i:5">
-<span class="line"><span class="k">let</span> worker = <span class="k">spawn fn</span>() {</span>
-<span class="line">    <span class="k">let</span> acc = <span class="n">0</span>;</span>
-<span class="line">    <span class="k">for let</span> i = <span class="n">1</span>; i &lt;= <span class="n">100</span>; i += <span class="n">1</span> { acc += i; }</span>
-<span class="line">    <span class="k">return</span> acc;</span>
-<span class="line">};</span>
-<span class="line"><span class="k">let</span> result = worker.<span class="f">join</span>(); <span class="c">// 5050</span></span>
+      <div class="grow">
+        <div class="two">
+          <div class="gap-m">
+            <div class="svg-box rv" style="--i:1">
+              <svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="20" width="190" height="148" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/>
+                <text x="115" y="54" text-anchor="middle" fill="#7dd3fc" font-size="20" font-weight="700">Matrix A (2×2)</text>
+                <text x="115" y="102" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="26">[ 4   7 ]</text>
+                <text x="115" y="140" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="26">[ 2   6 ]</text>
+                <text x="245" y="104" text-anchor="middle" fill="#04AA6D" font-size="28" font-weight="800">→</text>
+                <rect x="280" y="20" width="340" height="148" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/>
+                <text x="450" y="62" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="21">det = 10.0 · trace = 10.0</text>
+                <text x="450" y="102" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">solve([18, 10]) → [3.8, 0.4]</text>
+                <text x="450" y="142" text-anchor="middle" fill="#fbbf24" font-size="18">Up to 16,777,216 f64 elements</text>
+                <rect x="20" y="188" width="600" height="48" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="1.5"/>
+                <text x="320" y="218" text-anchor="middle" fill="#a9b8cb" font-size="19">Direct Python NumPy v1.0 (.npy) Read &amp; Write</text>
+              </svg>
+            </div>
+            <div class="chips rv" style="--i:2"><span class="chip">mul()</span><span class="chip">dot()</span><span class="chip">transpose()</span><span class="chip">det()</span><span class="chip">inverse()</span><span class="chip">solve()</span></div>
           </div>
-          <div class="gap-s">
-            <div class="chips rv" style="--i:6"><span class="chip">up to 256 workers</span><span class="chip">async / await</span><span class="chip">task.join()</span><span class="chip">mutex(v)</span><span class="chip">atomic_int(0)</span><span class="chip">ref / weak</span></div>
-            <div class="caveat caveat--rose caveat--tight rv" style="--i:7"><b>No global lock (no GIL):</b> Heavy tasks actually run side-by-side on separate CPU cores (up to 256 workers by default).</div>
-            <div class="caveat caveat--tight rv" style="--i:8"><b>Deadlock protection:</b> Built-in detector stops cleanly if tasks get stuck waiting on each other.</div>
+          <div class="gap-m">
+            <div class="code code--tight rv" style="--i:3">
+<span class="line"><span class="k">let</span> v1 = <span class="f">vector</span>([<span class="n">1.0</span>, <span class="n">2.0</span>, <span class="n">3.0</span>]);</span>
+<span class="line"><span class="k">let</span> v2 = <span class="f">vector</span>([<span class="n">4.0</span>, <span class="n">5.0</span>, <span class="n">6.0</span>]);</span>
+<span class="line">v1.<span class="f">dot</span>(v2);  <span class="c">// 32.0</span></span>
+<span class="line"></span>
+<span class="line"><span class="k">let</span> A = <span class="f">matrix</span>(<span class="n">2</span>, <span class="n">2</span>, <span class="n">0.0</span>);</span>
+<span class="line">A.<span class="f">set</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">4.0</span>); A.<span class="f">set</span>(<span class="n">0</span>,<span class="n">1</span>,<span class="n">7.0</span>);</span>
+<span class="line">A.<span class="f">set</span>(<span class="n">1</span>,<span class="n">0</span>,<span class="n">2.0</span>); A.<span class="f">set</span>(<span class="n">1</span>,<span class="n">1</span>,<span class="n">6.0</span>);</span>
+<span class="line"><span class="f">save_npy</span>(<span class="s">"a.npy"</span>, A);</span>
+            </div>
+            <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>Zero extra installs:</b> High-speed 64-bit float grids built into the runtime.</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 18. Stdlib & the 26 Modules ══ -->
+    <!-- ══ 18. Real Concurrency ══ -->
     <section class="slide" data-slide="18">
       <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Multitasking</div>
+        <h2 class="h">True parallel speed — zero global lock</h2>
+      </div>
+      <div class="grow">
+        <div class="svg-box rv" style="--i:1">
+          <svg viewBox="0 0 1320 140" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="28" width="210" height="82" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="125" y="64" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="22" font-weight="700">spawn fn()</text><text x="125" y="92" text-anchor="middle" fill="#a9b8cb" font-size="16">start task</text>
+            <text x="265" y="76" text-anchor="middle" fill="#38bdf8" font-size="28">→</text>
+            <rect x="300" y="14" width="350" height="110" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="475" y="48" text-anchor="middle" fill="#d8b4fe" font-size="22" font-weight="700">M:N Scheduler (No GIL)</text><text x="475" y="80" text-anchor="middle" fill="#f1f5f9" font-size="18">Up to 256 workers across real cores</text><text x="475" y="106" text-anchor="middle" fill="#fb7185" font-size="16">Built-in deadlock detection</text>
+            <text x="685" y="76" text-anchor="middle" fill="#38bdf8" font-size="28">→</text>
+            <rect x="720" y="28" width="250" height="82" rx="12" fill="#161e2e" stroke="#fbbf24" stroke-width="2"/><text x="845" y="64" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono,monospace" font-size="22" font-weight="700">channel()</text><text x="845" y="92" text-anchor="middle" fill="#a9b8cb" font-size="16">safe message pipe</text>
+            <text x="1005" y="76" text-anchor="middle" fill="#04AA6D" font-size="28">→</text>
+            <rect x="1040" y="28" width="260" height="82" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="1170" y="64" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="22" font-weight="700">recv() / join()</text><text x="1170" y="92" text-anchor="middle" fill="#a9b8cb" font-size="16">collect result</text>
+          </svg>
+        </div>
+        <div class="svg-box rv" style="--i:2">
+          <svg viewBox="0 0 1320 130" xmlns="http://www.w3.org/2000/svg">
+            <text x="24" y="42" fill="#fb7185" font-size="20" font-weight="700">GIL Languages (1 Core Active)</text>
+            <rect x="340" y="20" width="220" height="32" rx="6" fill="#fb7185"/><rect x="570" y="20" width="220" height="32" rx="6" fill="#1e293b"/><rect x="800" y="20" width="220" height="32" rx="6" fill="#1e293b"/><rect x="1030" y="20" width="220" height="32" rx="6" fill="#1e293b"/>
+            <text x="24" y="98" fill="#34d399" font-size="20" font-weight="700">Spid3r M:N (All Cores Active)</text>
+            <rect x="340" y="76" width="220" height="32" rx="6" fill="#04AA6D"/><rect x="570" y="76" width="220" height="32" rx="6" fill="#04AA6D"/><rect x="800" y="76" width="220" height="32" rx="6" fill="#04AA6D"/><rect x="1030" y="76" width="220" height="32" rx="6" fill="#04AA6D"/>
+          </svg>
+        </div>
+        <div class="two">
+          <div class="code code--tight rv" style="--i:3"><span class="line"><span class="k">let</span> w = <span class="k">spawn fn</span>() { <span class="k">return</span> <span class="n">5050</span>; }; <span class="k">let</span> ans = w.<span class="f">join</span>();</span></div>
+          <div class="chips rv" style="--i:4"><span class="chip">async / await</span><span class="chip">mutex(v)</span><span class="chip">atomic_int(0)</span><span class="chip">ref / weak</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 19. Stdlib & the 26 Modules ══ -->
+    <section class="slide" data-slide="19">
+      <div class="slide-head rv" style="--i:0">
         <div class="kicker">Batteries Included</div>
-        <h2 class="h">26 stdlib modules &amp; 254 native builtins ready</h2>
+        <h2 class="h">26 stdlib modules &amp; 254 native builtins</h2>
       </div>
       <div class="grow gap-s">
         <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
-          <div class="card card--tight rv" style="--i:1"><h4 style="font-size:24px;color:var(--cyan)">SQL Databases</h4><p>SQLite · PostgreSQL · MySQL 8</p></div>
-          <div class="card card--tight rv" style="--i:2"><h4 style="font-size:24px;color:var(--green)">Core &amp; Files</h4><p>spid3rinfo · 1,024 streams</p></div>
-          <div class="card card--tight rv" style="--i:3"><h4 style="font-size:24px;color:var(--purple)">Web &amp; Net</h4><p>http_fetch · WS · TLS</p></div>
-          <div class="card card--tight rv" style="--i:4"><h4 style="font-size:24px;color:var(--amber)">Random</h4><p>random_bytes (OS CSPRNG)</p></div>
-          <div class="card card--tight rv" style="--i:5"><h4 style="font-size:24px;color:var(--rose)">Hashing</h4><p>sha256 · hmac · ed25519 · argon2</p></div>
-          <div class="card card--tight rv" style="--i:6"><h4 style="font-size:24px;color:var(--indigo-light)">Formats</h4><p>JSON · MsgPack · CBOR · gzip</p></div>
+          <div class="card card--tight rv" style="--i:1"><h4 style="color:var(--cyan)">SQL DBs</h4><p>SQLite · PG · MySQL</p></div>
+          <div class="card card--tight rv" style="--i:2"><h4 style="color:var(--green)">Files</h4><p>1,024 streams</p></div>
+          <div class="card card--tight rv" style="--i:3"><h4 style="color:var(--purple)">Web</h4><p>HTTP · WS · TLS</p></div>
+          <div class="card card--tight rv" style="--i:4"><h4 style="color:var(--amber)">Random</h4><p>OS CSPRNG</p></div>
+          <div class="card card--tight rv" style="--i:5"><h4 style="color:var(--rose)">Hashing</h4><p>SHA256 · Ed25519</p></div>
+          <div class="card card--tight rv" style="--i:6"><h4 style="color:var(--indigo-light)">Formats</h4><p>JSON · CBOR · gzip</p></div>
         </div>
-        <h3 class="h3 rv" style="--i:7;font-size:var(--fs-kicker);line-height:var(--lh-kicker)">All 26 embedded <code>stdlib</code> modules + 254 native builtins (117 AOT trampolines)</h3>
-        <div class="modgrid rv" style="--i:8">
-          <div class="card card--tight"><h4>web</h4><p>web server</p></div>
-          <div class="card card--tight"><h4>http</h4><p>URL router</p></div>
-          <div class="card card--tight"><h4>fastcgi</h4><p>nginx / Apache</p></div>
-          <div class="card card--tight"><h4>stats</h4><p>statistics</p></div>
-          <div class="card card--tight"><h4>mathx</h4><p>FFT &amp; roots</p></div>
-          <div class="card card--tight"><h4>toml</h4><p>TOML files</p></div>
-          <div class="card card--tight"><h4>yaml</h4><p>YAML files</p></div>
-          <div class="card card--tight"><h4>xml</h4><p>XML files</p></div>
-          <div class="card card--tight"><h4>tz</h4><p>598 time zones</p></div>
-          <div class="card card--tight"><h4>unicode</h4><p>UCD 15.1 text</p></div>
-          <div class="card card--tight"><h4>smtp</h4><p>send email</p></div>
-          <div class="card card--tight"><h4>ftp</h4><p>file transfer</p></div>
-          <div class="card card--tight"><h4>session</h4><p>signed cookies</p></div>
-          <div class="card card--tight"><h4>middleware</h4><p>CORS / limits</p></div>
-          <div class="card card--tight"><h4>multipart</h4><p>file uploads</p></div>
-          <div class="card card--tight"><h4>event</h4><p>fast event loop</p></div>
-          <div class="card card--tight"><h4>gen</h4><p>generators</p></div>
-          <div class="card card--tight"><h4>bigint</h4><p>huge numbers</p></div>
-          <div class="card card--tight"><h4>complex</h4><p>complex math</p></div>
-          <div class="card card--tight"><h4>decimal</h4><p>exact money</p></div>
-          <div class="card card--tight"><h4>rational</h4><p>fractions</p></div>
-          <div class="card card--tight"><h4>semver</h4><p>app versions</p></div>
-          <div class="card card--tight"><h4>uuid</h4><p>unique IDs</p></div>
-          <div class="card card--tight"><h4>testkit</h4><p>test runner</p></div>
-          <div class="card card--tight"><h4>assert</h4><p>test checks</p></div>
-          <div class="card card--tight"><h4>mock</h4><p>test fakes</p></div>
+        <div class="modgrid rv" style="--i:7">
+          <div class="card card--tight"><h4>web</h4><p>server</p></div><div class="card card--tight"><h4>http</h4><p>router</p></div><div class="card card--tight"><h4>fastcgi</h4><p>nginx</p></div><div class="card card--tight"><h4>stats</h4><p>metrics</p></div><div class="card card--tight"><h4>mathx</h4><p>FFT</p></div><div class="card card--tight"><h4>toml</h4><p>TOML</p></div>
+          <div class="card card--tight"><h4>yaml</h4><p>YAML</p></div><div class="card card--tight"><h4>xml</h4><p>XML</p></div><div class="card card--tight"><h4>tz</h4><p>598 zones</p></div><div class="card card--tight"><h4>unicode</h4><p>UCD 15.1</p></div><div class="card card--tight"><h4>smtp</h4><p>email</p></div><div class="card card--tight"><h4>ftp</h4><p>FTP</p></div>
+          <div class="card card--tight"><h4>session</h4><p>cookies</p></div><div class="card card--tight"><h4>middleware</h4><p>CORS</p></div><div class="card card--tight"><h4>multipart</h4><p>uploads</p></div><div class="card card--tight"><h4>event</h4><p>event loop</p></div><div class="card card--tight"><h4>gen</h4><p>generators</p></div><div class="card card--tight"><h4>bigint</h4><p>huge ints</p></div>
+          <div class="card card--tight"><h4>complex</h4><p>complex</p></div><div class="card card--tight"><h4>decimal</h4><p>money</p></div><div class="card card--tight"><h4>rational</h4><p>fractions</p></div><div class="card card--tight"><h4>semver</h4><p>versions</p></div><div class="card card--tight"><h4>uuid</h4><p>UUIDs</p></div><div class="card card--tight"><h4>testkit</h4><p>runner</p></div>
+          <div class="card card--tight"><h4>assert</h4><p>checks</p></div><div class="card card--tight"><h4>mock</h4><p>fakes</p></div>
         </div>
-        <div class="caveat caveat--rose caveat--tight rv" style="--i:9"><b>Clear naming rule:</b> Module tools keep their prefix — use <code>uuid.uuid_v4()</code>, <code>toml.toml_parse(text)</code>, or <code>ev.start()</code>.</div>
+        <p class="note rv" style="--i:8">Use module prefixes cleanly: <code>uuid.uuid_v4()</code>, <code>toml.toml_parse(txt)</code>.</p>
       </div>
     </section>
 
-    <!-- ══ 19. Honest Security Statement ══ -->
-    <section class="slide" data-slide="19">
-      <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Security Honesty</div>
-        <h2 class="h">What built-in hashing &amp; security promise — and don't</h2>
-      </div>
-      <div class="grow gap-m">
-        <div class="caveat caveat--rose rv" style="--i:1"><b>Not independently audited yet:</b> Built-in password &amp; signing tools (<code>sha256/512</code>, <code>hmac</code>, <code>pbkdf2</code>, <code>ed25519</code>, <code>bcrypt</code>, <code>argon2</code>) pass standard security tests with zero outside libraries, while HTTPS uses your OS <code>native-tls</code> — <b>an independent outside review is still pending</b>.</div>
-        <div class="caveat caveat--tight rv" style="--i:2"><b>For critical production apps:</b> Put HTTPS and secret keys behind a trusted security gateway (like nginx) or hardware key vault (HSM).</div>
-        <div class="two">
-          <div class="card card--tight rv" style="--i:3"><h4>Ed25519 Signatures</h4><p>Strictly blocks forged keys, though verification is <b style="color:var(--rose)">not timing-attack hardened</b> yet.</p></div>
-          <div class="card card--tight rv" style="--i:4"><h4>Random Numbers</h4><p>Always use <code>random_bytes(n)</code> for passwords/tokens — <code>random_int/float</code> are fast math generators, not secret-safe.</p></div>
-        </div>
-        <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b><code>jwt_verify</code>:</b> Timing-safe check with 60s clock leeway, but supports <code>HS256</code> tokens only — only accept tokens from servers you control.</div>
-        <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>Timing-safe comparisons:</b> <code>bcrypt_verify</code> and <code>secure_compare</code> are built constant-time by design.</div>
-      </div>
-    </section>
-
-    <!-- ══ 20. Config & Local Control Panel ══ -->
+    <!-- ══ 20. Honest Security Statement ══ -->
     <section class="slide" data-slide="20">
       <div class="slide-head rv" style="--i:0">
-        <div class="kicker">Settings &amp; Control</div>
-        <h2 class="h">One settings file, one local dashboard</h2>
+        <div class="kicker">Security Honesty</div>
+        <h2 class="h">What built-in security covers — and doesn't</h2>
       </div>
-      <div class="grow two" style="align-items:start">
-        <div class="gap-m">
-          <h3 class="h3 rv" style="--i:1">Where Spid3r looks for settings</h3>
-          <p class="sub rv" style="--i:2;font-size:var(--fs-meta)">Environment setting → <code>spid3r.ini</code> beside the app → user config folder → current project folder (first match wins).</p>
-          <p class="note rv" style="--i:3">Bad values are safely skipped with a clear note · refresh anytime with <code>spid3r config reload</code>.</p>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:4"><b>Honest tip:</b> Setting <code>basedir</code> limits file tools, not external commands — combine it with <code>--sandbox</code> or <code>disable_natives</code>.</div>
+      <div class="grow">
+        <div class="svg-box rv" style="--i:1">
+          <svg viewBox="0 0 1320 185" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="16" width="600" height="152" rx="12" fill="rgba(4,170,109,.10)" stroke="#04AA6D" stroke-width="2"/><text x="48" y="56" fill="#34d399" font-size="24" font-weight="700">✅ Built-In &amp; Standard Tested</text><text x="48" y="96" fill="#f1f5f9" font-size="21">sha256 · hmac · pbkdf2 · argon2 · bcrypt · ed25519</text><text x="48" y="132" fill="#a9b8cb" font-size="19">HTTPS via OS native-tls · constant-time bcrypt_verify</text>
+            <rect x="660" y="16" width="640" height="152" rx="12" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="688" y="56" fill="#fb7185" font-size="24" font-weight="700">⚠️ Honest Production Advice</text><text x="688" y="96" fill="#f1f5f9" font-size="21">Independent 3rd-party audit still pending</text><text x="688" y="132" fill="#a9b8cb" font-size="19">Put critical TLS &amp; secrets behind nginx / HSM vault</text>
+          </svg>
         </div>
-        <div class="gap-m">
-          <div class="card card--tight rv" style="--i:5"><h4>Simple INI settings</h4><p>45 clear options across 12 sections (engine, memory, network, safety)</p></div>
-          <div class="card card--tight rv" style="--i:6"><h4><code>spid3r control</code></h4><p>Terminal dashboard — <code>status · safety · ini · config · logs</code></p></div>
-          <div class="card card--tight rv" style="--i:7"><h4>Desktop Control Panel</h4><p><code>spid3r-control.exe</code> — Overview · Language · Safety · Config · Logs</p></div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>100% private &amp; local:</b> Your settings, controls, and logs never leave your own computer.</div>
+        <div class="svg-box rv" style="--i:2">
+          <svg viewBox="0 0 1320 115" xmlns="http://www.w3.org/2000/svg">
+            <rect x="40" y="18" width="280" height="78" rx="10" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="180" y="64" text-anchor="middle" fill="#7dd3fc" font-size="21" font-weight="700">Client Traffic (HTTPS)</text>
+            <text x="380" y="64" text-anchor="middle" fill="#38bdf8" font-size="28">→</text>
+            <rect x="440" y="18" width="380" height="78" rx="10" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="2"/><text x="630" y="64" text-anchor="middle" fill="#fbbf24" font-size="21" font-weight="700">Audited Gateway / HSM Vault</text>
+            <text x="880" y="64" text-anchor="middle" fill="#04AA6D" font-size="28">→</text>
+            <rect x="940" y="18" width="340" height="78" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="1110" y="64" text-anchor="middle" fill="#34d399" font-size="21" font-weight="700">Spid3r App Backend</text>
+          </svg>
+        </div>
+        <div class="two">
+          <div class="card card--tight rv" style="--i:3"><h4>Secrets &amp; Tokens</h4><p>Use <code>random_bytes(n)</code> for secrets (not <code>random_int</code>).</p></div>
+          <div class="card card--tight rv" style="--i:4"><h4><code>jwt_verify</code></h4><p>Timing-safe <code>HS256</code> only — accept trusted issuers only.</p></div>
         </div>
       </div>
     </section>
 
-    <!-- ══ 21. Summary ══ -->
-    <section class="slide slide--center" data-slide="21">
+    <!-- ══ 21. Config & Local Control Panel ══ -->
+    <section class="slide" data-slide="21">
+      <div class="slide-head rv" style="--i:0">
+        <div class="kicker">Settings &amp; Control</div>
+        <h2 class="h">One <code>spid3r.ini</code> · one local dashboard</h2>
+      </div>
+      <div class="grow">
+        <div class="two">
+          <div class="svg-box rv" style="--i:1">
+            <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="16" width="600" height="82" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="320" y="50" text-anchor="middle" fill="#7dd3fc" font-size="21" font-weight="700">Lookup Order (First Match Wins)</text><text x="320" y="80" text-anchor="middle" fill="#f1f5f9" font-size="19">SPID3R_INI → App Dir → User Dir → Project Dir</text>
+              <rect x="20" y="120" width="600" height="114" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="320" y="166" text-anchor="middle" fill="#f1f5f9" font-size="25" font-weight="700">45 Schema Keys · 12 Sections</text><text x="320" y="202" text-anchor="middle" fill="#a9b8cb" font-family="JetBrains Mono,monospace" font-size="19">spid3r config reload (live)</text>
+              <rect x="20" y="256" width="600" height="86" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="320" y="306" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">🔒 100% Local — nothing leaves your PC</text>
+            </svg>
+          </div>
+          <div class="gap-m">
+            <div class="svg-box rv" style="--i:2">
+              <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+                <rect x="16" y="14" width="608" height="192" rx="12" fill="#080c13" stroke="#38bdf8" stroke-width="2"/>
+                <rect x="16" y="14" width="608" height="46" rx="10" fill="#161e2e"/><text x="38" y="44" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="19" font-weight="700">spid3r-control.exe</text>
+                <rect x="34" y="78" width="110" height="106" rx="8" fill="#1a2335"/><text x="89" y="138" text-anchor="middle" fill="#7dd3fc" font-size="17">Overview</text>
+                <rect x="156" y="78" width="110" height="106" rx="8" fill="#1a2335"/><text x="211" y="138" text-anchor="middle" fill="#34d399" font-size="17">Language</text>
+                <rect x="278" y="78" width="110" height="106" rx="8" fill="#1a2335"/><text x="333" y="138" text-anchor="middle" fill="#fbbf24" font-size="17">Safety</text>
+                <rect x="400" y="78" width="100" height="106" rx="8" fill="#1a2335"/><text x="450" y="138" text-anchor="middle" fill="#d8b4fe" font-size="17">Config</text>
+                <rect x="512" y="78" width="96" height="106" rx="8" fill="#1a2335"/><text x="560" y="138" text-anchor="middle" fill="#fb7185" font-size="17">Logs</text>
+              </svg>
+            </div>
+            <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>Tip:</b> Combine <code>basedir</code> with <code>--sandbox</code> or <code>disable_natives</code>.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 22. Summary ══ -->
+    <section class="slide slide--center" data-slide="22">
+      <svg class="hero-bg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="960" cy="520" r="360" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="8 8"/>
+        <circle cx="960" cy="520" r="520" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+      </svg>
       <div class="title-glyph float rv" style="--i:0"><img src="spid3r.png" alt="Spid3r"></div>
       <h1 class="h1 h1--sm rv" style="--i:1">One language. <span class="grad-t">Everything built in.</span></h1>
-      <p class="lead rv" style="--i:2;font-size:var(--fs-body)">Self-hosted (<code>spid3r-self</code>) · YamLLVM &amp; YamGC · <code>yamc</code> / <code>yamcvm</code> / <code>spvm</code> / <code>spkg</code> · 254 builtins · signed packages</p>
-      <div class="stat-grid" style="margin-top:var(--sp-6)">
-        <div class="stat rv" style="--i:3"><div class="bignum bignum--sm cnt" data-v="40">0</div><div class="lbl">reserved keywords</div></div>
-        <div class="stat rv" style="--i:4"><div class="bignum bignum--sm cnt" data-v="6">0</div><div class="lbl">core data types</div></div>
-        <div class="stat rv" style="--i:5"><div class="bignum bignum--sm">20+</div><div class="lbl">data organizers</div></div>
-        <div class="stat rv" style="--i:6"><div class="bignum bignum--sm cnt" data-v="26">0</div><div class="lbl">built-in toolkits</div></div>
-        <div class="stat rv" style="--i:7"><div class="bignum bignum--sm cnt" data-v="4">0</div><div class="lbl">execution backends</div></div>
-        <div class="stat rv" style="--i:8"><div class="bignum bignum--sm cnt" data-v="60">0</div><div class="lbl">VM instructions</div></div>
-        <div class="stat rv" style="--i:9"><div class="bignum bignum--sm cnt" data-v="0">0</div><div class="lbl">external dependencies</div></div>
+      <p class="lead rv" style="--i:2">Spid3r v1.5.0 · <code>spid3r-self</code> · LLVM 23.1 &amp; YamGC · 254 builtins · 26 modules</p>
+      <div class="stat-grid" style="margin-top:var(--sp-4)">
+        <div class="stat rv" style="--i:3"><div class="bignum bignum--sm cnt" data-v="40">0</div><div class="lbl">keywords</div></div>
+        <div class="stat rv" style="--i:4"><div class="bignum bignum--sm cnt" data-v="6">0</div><div class="lbl">core types</div></div>
+        <div class="stat rv" style="--i:5"><div class="bignum bignum--sm">20+</div><div class="lbl">containers</div></div>
+        <div class="stat rv" style="--i:6"><div class="bignum bignum--sm cnt" data-v="26">0</div><div class="lbl">stdlib modules</div></div>
+        <div class="stat rv" style="--i:7"><div class="bignum bignum--sm cnt" data-v="4">0</div><div class="lbl">backends</div></div>
+        <div class="stat rv" style="--i:8"><div class="bignum bignum--sm cnt" data-v="60">0</div><div class="lbl">VM opcodes</div></div>
+        <div class="stat rv" style="--i:9"><div class="bignum bignum--sm cnt" data-v="0">0</div><div class="lbl">external deps</div></div>
       </div>
-      <p class="note rv pulse" style="--i:11;margin-top:var(--sp-6)">ANSNEW TECH · Created with AI Assistance · © 2026 Spid3r Language Project · needyamin.github.io/spid3r</p>
+      <p class="note rv pulse" style="--i:10;margin-top:var(--sp-4);position:relative;z-index:1">ANSNEW TECH · Made with AI Assistance · © 2026 Spid3r Language Project</p>
     </section>
 
   </main>
 
   <footer class="chrome chrome--bottom">
     <button class="navbtn" id="prevBtn">‹ Prev</button>
-    <div class="attribution">Developed by ANSNEW TECH · Made with AI Assistance</div>
+    <div class="attribution">ANSNEW TECH · Spid3r v1.5.0 · Made with AI Assistance</div>
     <button class="navbtn" id="nextBtn">Next ›</button>
   </footer>
-
 </div>
 
 <script>
 (function(){
   'use strict';
-  var stage    = document.getElementById('stage');
-  var slides   = Array.prototype.slice.call(document.querySelectorAll('.slide'));
-  var counter  = document.getElementById('counter');
-  var progress = document.getElementById('progress');
-  var prevBtn  = document.getElementById('prevBtn');
-  var nextBtn  = document.getElementById('nextBtn');
-  var reduce   = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var cur      = 0;
-
-  /* Fixed 1920×1080 stage, scaled to fill the viewport */
-  function fit(){
-    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-    stage.style.transform = 'scale(' + s + ')';
-  }
-  window.addEventListener('resize', fit);
-  fit();
-
-  /* ASCII count-ups, replay on every (re)visit */
-  function resetCounters(slide){
-    slide.querySelectorAll('.cnt').forEach(function(el){
-      el._tok = (el._tok || 0) + 1;
-      delete el.dataset.done;
-      el.textContent = '0';
-    });
-  }
+  var stage=document.getElementById('stage'),slides=Array.prototype.slice.call(document.querySelectorAll('.slide')),
+      counter=document.getElementById('counter'),progress=document.getElementById('progress'),
+      prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn'),
+      reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches,cur=0;
+  function fit(){var s=Math.min(window.innerWidth/1920,window.innerHeight/1080);stage.style.transform='scale('+s+')';}
+  window.addEventListener('resize',fit);fit();
+  function resetCounters(slide){slide.querySelectorAll('.cnt').forEach(function(el){el._tok=(el._tok||0)+1;delete el.dataset.done;el.textContent='0';});}
   function runCounters(slide){
     slide.querySelectorAll('.cnt').forEach(function(el){
-      if (el.dataset.done) return;
-      el.dataset.done = '1';
-      var target = parseInt(el.dataset.v, 10) || 0;
-      var tok = (el._tok = (el._tok || 0) + 1);
-      if (reduce){ el.textContent = String(target); return; }
-      var t0 = null;
-      function step(ts){
-        if (el._tok !== tok) return;
-        if (!t0) t0 = ts;
-        var p = Math.min((ts - t0) / 1400, 1);
-        var eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = String(Math.round(target * eased));
-        if (p < 1) requestAnimationFrame(step);
-      }
+      if(el.dataset.done)return;el.dataset.done='1';
+      var target=parseInt(el.dataset.v,10)||0,tok=(el._tok=(el._tok||0)+1);
+      if(reduce){el.textContent=String(target);return;}
+      var t0=null;
+      function step(ts){if(el._tok!==tok)return;if(!t0)t0=ts;var p=Math.min((ts-t0)/1200,1),e=1-Math.pow(1-p,3);el.textContent=String(Math.round(target*e));if(p<1)requestAnimationFrame(step);}
       requestAnimationFrame(step);
     });
   }
-
   function show(n){
-    if (n < 0) n = 0;
-    if (n > slides.length - 1) n = slides.length - 1;
-    if (n === cur && slides[cur].classList.contains('active')){
-      runCounters(slides[cur]);
-      return;
-    }
-    var leaving = slides[cur];
-    leaving.classList.remove('active');
-    resetCounters(leaving);
-    cur = n;
-    var entering = slides[cur];
-    entering.classList.add('active');
-    counter.innerHTML = '<b>' + (cur + 1) + '</b> / ' + slides.length;
-    progress.style.width = ((cur + 1) / slides.length * 100) + '%';
-    runCounters(entering);
-    try { location.hash = 's' + (cur + 1); } catch (_) {}
+    if(n<0)n=0;if(n>slides.length-1)n=slides.length-1;
+    if(n===cur&&slides[cur].classList.contains('active')){runCounters(slides[cur]);return;}
+    slides[cur].classList.remove('active');resetCounters(slides[cur]);
+    cur=n;slides[cur].classList.add('active');
+    counter.innerHTML='<b>'+(cur+1)+'</b> / '+slides.length;
+    progress.style.width=((cur+1)/slides.length*100)+'%';
+    runCounters(slides[cur]);try{location.hash='s'+(cur+1);}catch(_){}
   }
-  function next(){ show(cur + 1); }
-  function prev(){ show(cur - 1); }
-
-  prevBtn.addEventListener('click', prev);
-  nextBtn.addEventListener('click', next);
-
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); next(); }
-    else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); prev(); }
-    else if (e.key === 'Home'){ e.preventDefault(); show(0); }
-    else if (e.key === 'End'){ e.preventDefault(); show(slides.length - 1); }
+  function next(){show(cur+1);}function prev(){show(cur-1);}
+  prevBtn.addEventListener('click',prev);nextBtn.addEventListener('click',next);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+    else if(e.key==='Home'){e.preventDefault();show(0);}
+    else if(e.key==='End'){e.preventDefault();show(slides.length-1);}
   });
-
-  document.getElementById('deck').addEventListener('click', function(e){
-    if (e.target.closest('a,button')) return;
-    var r = this.getBoundingClientRect();
-    (e.clientX - r.left) > r.width / 2 ? next() : prev();
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('a,button'))return;
+    var r=this.getBoundingClientRect();(e.clientX-r.left)>r.width/2?next():prev();
   });
-
-  var m = (location.hash || '').match(/^#s(\d+)$/);
-  show(m ? parseInt(m[1], 10) - 1 : 0);
+  var m=(location.hash||'').match(/^#s(\d+)$/);show(m?parseInt(m[1],10)-1:0);
 })();
 </script>
 </body>

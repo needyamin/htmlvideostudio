@@ -1,451 +1,197 @@
 <!DOCTYPE html>
 <html lang="bn">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Spid3r — সহজ বাংলা উপস্থাপনা</title>
-  <!--
-  DESIGN SYSTEM: Linear (structure + motion) × Spid3r Tech Utility (palette + voice)
-  Verified against Spid3r v1.1.1 (Language 1.1.1, Self-hosted + Rust Stage 0).
-  Written so both technical and non-technical viewers can understand easily.
--->
+  <title>Spid3r v1.5.0 — সহজ বাংলা উপস্থাপনা</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --stage-w: 1920px;
-      --stage-h: 1080px;
-      --content-max: 1600px;
-      --safe-x: 116px;
-      --safe-top: 112px;
-      --safe-bottom: 120px;
-      --chrome-top-h: 76px;
-      --chrome-bottom-h: 96px;
-      --bg: #0b0f17;
-      --surface: #111722;
-      --card: #161e2e;
-      --card-alt: #1a2335;
-      --code: #080c13;
-      --border: #1e293b;
-      --border-sub: rgba(255, 255, 255, .08);
-      --border-strong: rgba(255, 255, 255, .16);
-      --border-w: 2px;
-      --fg1: #f1f5f9;
-      --fg2: #a9b8cb;
-      --fg3: #64748b;
-      --fg3-read: #7a899f;
-      --text-muted: #a9b8cb;
-      --code-fg: #d7e2ef;
-      --green: #04AA6D;
-      --cyan: #38bdf8;
-      --indigo: #818cf8;
-      --purple: #c084fc;
-      --amber: #fbbf24;
-      --rose: #fb7185;
-      --emerald: #34d399;
-      --cyan-light: #7dd3fc;
-      --indigo-light: #a5b4fc;
-      --purple-light: #d8b4fe;
-      --fn: #a78bfa;
+      --stage-w: 1920px; --stage-h: 1080px; --content-max: 1640px;
+      --safe-x: 112px; --safe-top: 102px; --safe-bottom: 108px;
+      --chrome-top-h: 72px; --chrome-bottom-h: 84px;
+      --bg: #0b0f17; --surface: #111722; --card: #161e2e; --card-alt: #1a2335; --code: #080c13;
+      --border: #1e293b; --border-sub: rgba(255, 255, 255, .08); --border-w: 2px;
+      --fg1: #f1f5f9; --fg2: #a9b8cb; --fg3: #64748b; --fg3-read: #7a899f; --code-fg: #d7e2ef;
+      --green: #04AA6D; --cyan: #38bdf8; --indigo: #818cf8; --purple: #c084fc;
+      --amber: #fbbf24; --rose: #fb7185; --emerald: #34d399;
+      --cyan-light: #7dd3fc; --indigo-light: #a5b4fc; --fn: #a78bfa;
       --grad: linear-gradient(135deg, #04AA6D 0%, #38bdf8 100%);
-      --tint-green: rgba(4, 170, 109, .12);
-      --tint-cyan: rgba(56, 189, 248, .12);
-      --tint-indigo: rgba(129, 140, 248, .14);
-      --tint-purple: rgba(192, 132, 252, .14);
-      --tint-amber: rgba(251, 191, 36, .08);
-      --tint-rose: rgba(251, 113, 133, .09);
-      --caveat-amber-bg: var(--tint-amber);
-      --caveat-amber-bd: rgba(251, 191, 36, .42);
-      --caveat-rose-bg: var(--tint-rose);
-      --caveat-rose-bd: rgba(251, 113, 133, .42);
-      --caveat-good-bg: rgba(4, 170, 109, .09);
-      --caveat-good-bd: rgba(4, 170, 109, .40);
+      --tint-green: rgba(4, 170, 109, .12); --tint-cyan: rgba(56, 189, 248, .12);
+      --tint-purple: rgba(192, 132, 252, .14); --tint-amber: rgba(251, 191, 36, .08); --tint-rose: rgba(251, 113, 133, .09);
+      --caveat-amber-bg: var(--tint-amber); --caveat-amber-bd: rgba(251, 191, 36, .42);
+      --caveat-rose-bg: var(--tint-rose); --caveat-rose-bd: rgba(251, 113, 133, .42);
+      --caveat-good-bg: rgba(4, 170, 109, .09); --caveat-good-bd: rgba(4, 170, 109, .40);
       --font-bn: 'Hind Siliguri', 'Noto Sans Bengali', 'SolaimanLipi', sans-serif;
       --font-bn-num: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
-      --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
-      --fs-h1: 112px;
-      --lh-h1: 1.12;
-      --fw-h1: 800;
-      --fs-h2: 64px;
-      --lh-h2: 1.20;
-      --fw-h2: 700;
-      --fs-h3: 40px;
-      --lh-h3: 1.30;
-      --fw-h3: 700;
-      --fs-lead: 34px;
-      --lh-lead: 1.50;
-      --fs-body: 32px;
-      --lh-body: 1.55;
-      --fw-body: 500;
-      --fs-caveat: 28px;
-      --lh-caveat: 1.50;
-      --fs-code: 28px;
-      --lh-code: 1.60;
-      --fs-chip: 26px;
-      --lh-chip: 1.40;
-      --fs-kicker: 26px;
-      --lh-kicker: 1.40;
-      --fs-meta: 24px;
-      --lh-meta: 1.40;
-      --fs-stat-lbl: 26px;
-      --lh-stat-lbl: 1.40;
-      --fs-bignum: 168px;
-      --lh-bignum: 1.20;
-      --fw-bignum: 800;
-      --fs-glyph: 120px;
-      --sp-1: 8px;
-      --sp-2: 12px;
-      --sp-3: 16px;
-      --sp-4: 24px;
-      --sp-5: 32px;
-      --sp-6: 40px;
-      --sp-7: 48px;
-      --sp-8: 64px;
-      --sp-9: 80px;
-      --sp-10: 96px;
-      --r-sm: 10px;
-      --r-md: 16px;
-      --r-lg: 24px;
-      --r-xl: 32px;
-      --r-pill: 999px;
-      --shadow-1: 0 2px 8px rgba(0, 0, 0, .24);
-      --shadow-2: 0 12px 40px rgba(0, 0, 0, .36);
-      --glow-green: 0 0 0 1px rgba(4, 170, 109, .28), 0 8px 40px rgba(4, 170, 109, .10);
-      --dur-fast: 320ms;
-      --dur-reveal: 520ms;
-      --dur-draw: 1000ms;
-      --dur-count: 1400ms;
-      --dur-slide: 600ms;
-      --dur-ambient: 4200ms;
-      --ease-out: cubic-bezier(.16, 1, .3, 1);
-      --ease-soft: cubic-bezier(.22, 1, .36, 1);
-      --ease-inout: cubic-bezier(.65, 0, .35, 1);
-      --stagger: 220ms;
-      --stagger-tight: 150ms;
-      --reveal-y: 28px;
-      --z-slide: 1;
-      --z-chrome: 50;
-      --z-progress: 100;
+      --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+      --fs-h1: 114px; --fs-h2: 58px; --fs-h3: 36px; --fs-lead: 32px; --fs-body: 28px;
+      --fs-caveat: 26px; --fs-code: 27px; --fs-chip: 25px; --fs-kicker: 24px; --fs-meta: 24px;
+      --fs-stat-lbl: 25px; --fs-bignum: 148px; --fs-glyph: 128px;
+      --sp-1: 8px; --sp-2: 14px; --sp-3: 20px; --sp-4: 28px; --sp-5: 36px; --sp-6: 44px;
+      --r-sm: 10px; --r-md: 16px; --r-pill: 999px;
+      --dur-fast: 280ms; --dur-reveal: 480ms; --dur-slide: 520ms; --dur-ambient: 4200ms;
+      --ease-out: cubic-bezier(.16, 1, .3, 1); --ease-inout: cubic-bezier(.65, 0, .35, 1);
+      --stagger: 140ms; --reveal-y: 22px; --z-slide: 1; --z-chrome: 50; --z-progress: 100;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
     html, body { height: 100%; width: 100% }
-    body {
-      background: var(--bg);
-      color: var(--fg1);
-      font-family: var(--font-bn);
-      line-height: var(--lh-body);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    body { background: var(--bg); color: var(--fg1); font-family: var(--font-bn); line-height: 1.45; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    #stage { position: relative; flex: 0 0 auto; width: var(--stage-w); height: var(--stage-h); transform-origin: center center; transform: scale(1); background: var(--bg); overflow: hidden; }
+    #progress { position: absolute; top: 0; left: 0; height: 5px; width: 0; background: var(--grad); z-index: var(--z-progress); transition: width var(--dur-slide) var(--ease-out); }
 
-    #stage {
-      position: relative;
-      flex: 0 0 auto;
-      width: var(--stage-w);
-      height: var(--stage-h);
-      transform-origin: center center;
-      transform: scale(1);
-      background: var(--bg);
-      overflow: hidden;
-    }
-
-    #progress {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 5px;
-      width: 0;
-      background: var(--grad);
-      z-index: var(--z-progress);
-      transition: width var(--dur-slide) var(--ease-out);
-    }
-
-    /* ── Chrome ── */
-    .chrome {
-      position: absolute;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      padding: 0 var(--safe-x);
-      background: rgba(11, 15, 23, .94);
-      z-index: var(--z-chrome);
-    }
-    .chrome--top { top: 0; height: var(--chrome-top-h); justify-content: space-between; display: none;}
-    .chrome--bottom { bottom: 0; height: var(--chrome-bottom-h); justify-content: space-between; gap: var(--sp-4); }
-
+    /* Chrome */
+    .chrome { position: absolute; left: 0; right: 0; display: flex; align-items: center; padding: 0 var(--safe-x); background: rgba(11, 15, 23, .94); z-index: var(--z-chrome); }
+    .chrome--top { top: 0; height: var(--chrome-top-h); border-bottom: var(--border-w) solid var(--border); justify-content: space-between; }
+    .chrome--bottom { bottom: 0; height: var(--chrome-bottom-h); border-top: var(--border-w) solid var(--border); justify-content: space-between; gap: var(--sp-4); }
     .brand { display: flex; align-items: center; gap: var(--sp-3); font-size: var(--fs-kicker); font-weight: 700 }
-    .brand .logo {
-      width: 46px; height: 46px; border-radius: var(--r-sm);
-      background: var(--tint-green); border: var(--border-w) solid rgba(4, 170, 109, .42);
-      display: flex; align-items: center; justify-content: center; font-size: 26px;
-    }
-    .brand .logo img { width: 30px; height: 30px; object-fit: contain; display: block }
+    .brand .logo { width: 44px; height: 44px; border-radius: var(--r-sm); background: var(--tint-green); border: var(--border-w) solid rgba(4, 170, 109, .42); display: flex; align-items: center; justify-content: center; }
+    .brand .logo img { width: 28px; height: 28px; object-fit: contain; display: block }
     .brand .en { color: var(--green) }
-
-    .badge {
-      display: inline-flex; align-items: center; gap: var(--sp-2);
-      font-size: var(--fs-chip); font-weight: 700; line-height: var(--lh-chip);
-      padding: 8px 20px; border-radius: var(--r-pill);
-      border: var(--border-w) solid rgba(4, 170, 109, .42);
-      color: var(--green); background: var(--tint-green);
-    }
+    .badge { display: inline-flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-chip); font-weight: 700; padding: 6px 18px; border-radius: var(--r-pill); border: var(--border-w) solid rgba(4, 170, 109, .42); color: var(--green); background: var(--tint-green); }
     .badge--cyan { border-color: rgba(56, 189, 248, .42); color: var(--cyan); background: var(--tint-cyan) }
     .badge--purple { border-color: rgba(192, 132, 252, .42); color: var(--purple); background: var(--tint-purple) }
     .badge--amber { border-color: rgba(251, 191, 36, .42); color: var(--amber); background: var(--tint-amber) }
-
-    .chrome-hint { font-size: var(--fs-meta); color: var(--fg3-read); line-height: var(--lh-meta) }
     #counter { font-family: var(--font-bn-num); font-size: var(--fs-meta); color: var(--fg2); white-space: nowrap }
     #counter b { color: var(--fg1); font-weight: 800 }
-
-    .navbtn {
-	  display: none;
-      background: var(--card); color: var(--fg1);
-      border: var(--border-w) solid var(--border); border-radius: var(--r-sm);
-      padding: 10px 26px; font-family: var(--font-bn); font-size: var(--fs-meta);
-      font-weight: 600; cursor: pointer;
-      transition: border-color var(--dur-fast), color var(--dur-fast);
-    }
+    .navbtn { background: var(--card); color: var(--fg1); border: var(--border-w) solid var(--border); border-radius: var(--r-sm); padding: 8px 24px; font-family: var(--font-bn); font-size: var(--fs-meta); font-weight: 600; cursor: pointer; transition: border-color var(--dur-fast), color var(--dur-fast); }
     .navbtn:hover { border-color: var(--green); color: var(--green) }
-    .attribution { font-size: var(--fs-meta); color: var(--fg3-read); text-align: center; line-height: var(--lh-meta) }
+    .attribution { font-size: var(--fs-meta); color: var(--fg3-read); text-align: center }
 
-    /* ── Slides ── */
+    /* Slides */
     #deck { position: absolute; inset: 0; z-index: var(--z-slide) }
-    .slide {
-      position: absolute; inset: 0; display: none; flex-direction: column;
-      padding: var(--safe-top) var(--safe-x) var(--safe-bottom); overflow: hidden;
-    }
+    .slide { position: absolute; inset: 0; display: none; flex-direction: column; padding: var(--safe-top) var(--safe-x) var(--safe-bottom); overflow: hidden; }
     .slide.active { display: flex }
     .slide--center { justify-content: center; align-items: center; text-align: center }
-    .slide-head { margin-bottom: var(--sp-6); flex: 0 0 auto }
-    .kicker { font-size: var(--fs-kicker); line-height: var(--lh-kicker); font-weight: 700; letter-spacing: .05em; color: var(--green); margin-bottom: var(--sp-2); }
-    h2.h { font-size: var(--fs-h2); line-height: var(--lh-h2); font-weight: var(--fw-h2); letter-spacing: -.01em; color: var(--fg1); }
-    h3.h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); font-weight: var(--fw-h3) }
-    .lead { font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--fg2) }
-    .sub { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--fg2) }
-    .note { font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--fg3-read) }
-    .foot-note { display: none; font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--fg3-read); margin-top: auto; padding-top: var(--sp-3) }
-
-    .grow { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center }
+    .slide-head { margin-bottom: var(--sp-4); flex: 0 0 auto }
+    .kicker { font-size: var(--fs-kicker); font-weight: 700; letter-spacing: .04em; color: var(--green); margin-bottom: 4px; }
+    h2.h { font-size: var(--fs-h2); line-height: 1.15; font-weight: 700; color: var(--fg1); }
+    h3.h3 { font-size: var(--fs-h3); line-height: 1.25; font-weight: 700 }
+    .lead { font-size: var(--fs-lead); line-height: 1.4; color: var(--fg2) }
+    .sub { font-size: var(--fs-body); line-height: 1.4; color: var(--fg2) }
+    .note { font-size: var(--fs-meta); line-height: 1.35; color: var(--fg3-read) }
+    .grow { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: var(--sp-4) }
     .grow>* { flex-shrink: 0 }
-    .gap-s { display: flex; flex-direction: column; gap: var(--sp-3) }
-    .gap-m { display: flex; flex-direction: column; gap: var(--sp-4) }
-    .gap-l { display: flex; flex-direction: column; gap: var(--sp-5) }
-    .two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: center }
+    .gap-s { display: flex; flex-direction: column; gap: var(--sp-2) }
+    .gap-m { display: flex; flex-direction: column; gap: var(--sp-3) }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-5); align-items: center }
     .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4) }
     .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4) }
-    .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: var(--sp-6); align-items: start }
+    .two, .three, .four { min-width: 0 }
+    .two>*, .three>*, .four>* { min-width: 0 }
 
-    /* ── Cards / chips / caveats ── */
-    .card { background: var(--card); border: var(--border-w) solid var(--border); border-radius: var(--r-md); padding: var(--sp-4) var(--sp-5); }
-    .card .ico { font-size: 44px; line-height: 1; margin-bottom: var(--sp-2) }
-    .card h4 { font-size: var(--fs-h3); line-height: var(--lh-h3); font-weight: 700; margin-bottom: var(--sp-2) }
-    .card p { font-size: var(--fs-body); line-height: 1.5; color: var(--fg2) }
-    .card--tight { padding: var(--sp-3) var(--sp-4) }
-    .card--tight h4 { font-size: var(--fs-chip); line-height: var(--lh-chip); margin-bottom: var(--sp-1) }
-    .card--tight p { font-size: var(--fs-meta); line-height: 1.4 }
-    .card--tight .ico { font-size: 32px; margin-bottom: var(--sp-1) }
+    /* Cards, Chips, Caveats */
+    .card { background: var(--card); border: var(--border-w) solid var(--border); border-radius: var(--r-md); padding: var(--sp-4); }
+    .card .ico { font-size: 44px; line-height: 1; margin-bottom: 8px }
+    .card h4 { font-size: var(--fs-h3); line-height: 1.22; font-weight: 700; margin-bottom: 6px }
+    .card p { font-size: var(--fs-body); line-height: 1.35; color: var(--fg2) }
+    .card--tight { padding: var(--sp-3) }
+    .card--tight h4 { font-size: var(--fs-chip); line-height: 1.25; margin-bottom: 4px }
+    .card--tight p { font-size: var(--fs-meta); line-height: 1.32 }
+    .card--tight .ico { font-size: 34px; margin-bottom: 4px }
     .mono { font-family: var(--font-mono); direction: ltr; unicode-bidi: isolate; color: var(--cyan-light) }
-    code {
-      font-family: var(--font-mono); font-size: .94em; direction: ltr; unicode-bidi: isolate;
-      background: var(--card-alt); border: 1px solid var(--border-sub);
-      padding: 2px 10px; border-radius: var(--r-sm); color: var(--cyan-light); white-space: nowrap;
-    }
+    code { font-family: var(--font-mono); font-size: .9em; direction: ltr; unicode-bidi: isolate; background: var(--card-alt); border: 1px solid var(--border-sub); padding: 2px 9px; border-radius: var(--r-sm); color: var(--cyan-light); white-space: nowrap; }
     .grad-t { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent }
     .chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center }
-    .chip {
-      font-family: var(--font-mono); font-size: var(--fs-chip); line-height: var(--lh-chip);
-      padding: 6px 16px; border-radius: var(--r-sm);
-      background: var(--card-alt); border: var(--border-w) solid var(--border);
-      color: var(--cyan-light); white-space: nowrap;
-    }
+    .chip { font-family: var(--font-mono); font-size: var(--fs-chip); padding: 6px 14px; border-radius: var(--r-sm); background: var(--card-alt); border: var(--border-w) solid var(--border); color: var(--cyan-light); white-space: nowrap; }
     .chip.grp { font-family: var(--font-bn); font-weight: 700; color: var(--green); background: var(--tint-green); border-color: rgba(4, 170, 109, .42); }
-    .caveat {
-      background: var(--caveat-amber-bg); border: var(--border-w) solid var(--caveat-amber-bd);
-      border-radius: var(--r-md); padding: var(--sp-3) var(--sp-5);
-      font-size: var(--fs-caveat); line-height: var(--lh-caveat); color: var(--fg1);
-    }
+    .caveat { background: var(--caveat-amber-bg); border: var(--border-w) solid var(--caveat-amber-bd); border-radius: var(--r-md); padding: var(--sp-3) var(--sp-4); font-size: var(--fs-caveat); line-height: 1.38; color: var(--fg1); }
     .caveat b { color: var(--amber) }
     .caveat--rose { background: var(--caveat-rose-bg); border-color: var(--caveat-rose-bd) }
     .caveat--rose b { color: var(--rose) }
     .caveat--good { background: var(--caveat-good-bg); border-color: var(--caveat-good-bd) }
     .caveat--good b { color: var(--emerald) }
-    .caveat--tight { font-size: var(--fs-meta); line-height: var(--lh-meta) }
+    .caveat--tight { font-size: var(--fs-meta); line-height: 1.35; padding: var(--sp-2) var(--sp-3) }
 
-    /* ── Code ── */
-    .code {
-      background: var(--code); border: var(--border-w) solid var(--border);
-      border-radius: var(--r-md); padding: var(--sp-4) var(--sp-5);
-      font-family: var(--font-mono); font-size: var(--fs-code); line-height: var(--lh-code);
-      color: var(--code-fg); direction: ltr; unicode-bidi: isolate;
-      text-align: left; white-space: normal; overflow: hidden;
-    }
-    .code--tight { font-size: 26px; line-height: 1.5; padding: var(--sp-3) var(--sp-4) }
+    /* Code */
+    .code { background: var(--code); border: var(--border-w) solid var(--border); border-radius: var(--r-md); padding: var(--sp-4); font-family: var(--font-mono); font-size: var(--fs-code); line-height: 1.48; color: var(--code-fg); direction: ltr; unicode-bidi: isolate; text-align: left; overflow: hidden; }
+    .code--tight { font-size: 25px; line-height: 1.42; padding: var(--sp-3) }
     .code .line { display: block; white-space: pre-wrap }
-    .code .k { color: var(--fn) }
-    .code .s { color: var(--emerald) }
-    .code .n { color: var(--amber) }
-    .code .c { color: var(--fg3) }
-    .code .f { color: var(--fn) }
-    .code .bn { font-family: var(--font-bn); unicode-bidi: isolate; color: var(--emerald) }
+    .code .k { color: var(--fn) } .code .s { color: var(--emerald) } .code .n { color: var(--amber) }
+    .code .c { color: var(--fg3) } .code .f { color: var(--fn) } .code .bn { font-family: var(--font-bn); unicode-bidi: isolate; color: var(--emerald) }
 
-    /* ── Pipeline ── */
-    .pipe { display: flex; align-items: center; width: 100% }
-    .pipe-step {
-      flex: 1 1 0; min-width: 0; text-align: center;
-      background: var(--card); border: var(--border-w) solid var(--border);
-      border-radius: var(--r-md); padding: var(--sp-4) var(--sp-2);
-    }
-    .pipe-step .pn { font-family: var(--font-bn-num); font-size: var(--fs-h3); font-weight: 800; color: var(--green); line-height: 1 }
-    .pipe-step .pt { font-size: var(--fs-h3); font-weight: 700; line-height: var(--lh-h3); margin-top: var(--sp-1) }
-    .pipe-step .ps { font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--fg2); margin-top: var(--sp-1) }
-    .pipe-step--hot { background: var(--tint-green); border-color: rgba(4, 170, 109, .42) }
-    .pipe-step--hot .pt { color: var(--emerald) }
-    .pipe-link { position: relative; flex: 0 0 46px; height: var(--border-w); background: var(--border) }
-    .pipe-link::after { content: ''; position: absolute; inset: 0; background: var(--green); transform: scaleX(0); transform-origin: left center; }
-    .slide.active .pipe-link::after { animation: linkGrow var(--dur-draw) var(--ease-out) both; animation-delay: calc(var(--i, 0)*var(--stagger) + 200ms); }
-    @keyframes linkGrow { to { transform: scaleX(1) } }
+    /* SVG Containers */
+    .svg-box { background: var(--surface); border: var(--border-w) solid var(--border); border-radius: var(--r-md); padding: var(--sp-3); display: flex; align-items: center; justify-content: center; }
+    .svg-box svg { width: 100%; height: auto; display: block }
+    .hero-bg { position: absolute; inset: 0; pointer-events: none; opacity: .32; z-index: 0 }
 
-    /* ── Ladder ── */
-    .ladder { display: flex; flex-direction: column; gap: var(--sp-3) }
-    .ladder-step {
-      background: var(--card); border: var(--border-w) solid var(--border);
-      border-radius: var(--r-sm); padding: var(--sp-3) var(--sp-5);
-      font-size: var(--fs-body); line-height: var(--lh-body); color: var(--fg1);
-      display: flex; align-items: center; gap: var(--sp-4); opacity: 0;
-    }
-    .ladder-step .num { font-family: var(--font-bn-num); font-size: var(--fs-h3); font-weight: 800; color: var(--green); min-width: 52px; text-align: center; }
+    /* Ladder */
+    .ladder { display: flex; flex-direction: column; gap: var(--sp-2) }
+    .ladder-step { background: var(--card); border: var(--border-w) solid var(--border); border-radius: var(--r-sm); padding: 14px var(--sp-4); font-size: var(--fs-body); line-height: 1.32; color: var(--fg1); display: flex; align-items: center; gap: var(--sp-3); opacity: 0; }
+    .ladder-step .num { font-family: var(--font-bn-num); font-size: var(--fs-h3); font-weight: 800; color: var(--green); min-width: 46px; text-align: center; }
     .ladder-step--first { background: var(--tint-green); border-color: rgba(4, 170, 109, .42) }
     .ladder-step--last { background: var(--tint-cyan); border-color: rgba(56, 189, 248, .42); color: var(--cyan-light) }
-    .ladder-step--tight { font-size: var(--fs-meta); line-height: var(--lh-meta); padding: var(--sp-2) var(--sp-4) }
     .slide.active .ladder-step { animation: rvIn var(--dur-reveal) var(--ease-out) both; animation-delay: calc(var(--i, 0)*var(--stagger)); }
 
-    /* ── Stats ── */
-    .stat { text-align: center }
-    .bignum {
-      font-family: var(--font-bn-num); font-size: var(--fs-bignum); line-height: var(--lh-bignum);
-      font-weight: var(--fw-bignum); background: var(--grad);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-    .stat .lbl { font-size: var(--fs-stat-lbl); line-height: var(--lh-stat-lbl); color: var(--fg2) }
-    .bignum--sm { font-size: 110px }
+    /* Stats */
+    .stat { text-align: center; background: var(--surface); border: var(--border-w) solid var(--border); border-radius: var(--r-md); padding: var(--sp-3) }
+    .bignum { font-family: var(--font-bn-num); font-size: var(--fs-bignum); line-height: 1.1; font-weight: 800; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .stat .lbl { font-size: var(--fs-stat-lbl); color: var(--fg2) }
+    .bignum--sm { font-size: 108px }
 
-    /* ── Reveal / ambient ── */
+    /* Reveal & Ambient */
     .rv { opacity: 0 }
     .slide.active .rv { animation: rvIn var(--dur-reveal) var(--ease-out) both; animation-delay: calc(var(--i, 0)*var(--stagger)); }
     @keyframes rvIn { from { opacity: 0; transform: translateY(var(--reveal-y)) } to { opacity: 1; transform: none } }
     .float { animation: floaty var(--dur-ambient) var(--ease-inout) infinite }
-    @keyframes floaty { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-18px) } }
+    @keyframes floaty { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-14px) } }
     .pulse { animation: pulseK var(--dur-ambient) var(--ease-inout) infinite }
-    @keyframes pulseK { 0%, 100% { opacity: 1 } 50% { opacity: .48 } }
+    @keyframes pulseK { 0%, 100% { opacity: 1 } 50% { opacity: .55 } }
 
-    /* ── Title / final ── */
-    .title-glyph { font-size: var(--fs-glyph); line-height: 1; margin-bottom: var(--sp-5) }
+    .title-glyph { font-size: var(--fs-glyph); line-height: 1; margin-bottom: var(--sp-3); position: relative; z-index: 1 }
     .title-glyph img { width: var(--fs-glyph); height: var(--fs-glyph); object-fit: contain; display: block; margin: 0 auto }
-    h1.h1 { font-size: var(--fs-h1); line-height: var(--lh-h1); font-weight: var(--fw-h1); letter-spacing: -.012em; }
-    h1.h1--sm { font-size: 96px }
-    .badge-row { display: flex; flex-wrap: wrap; gap: var(--sp-4); justify-content: center; margin-top: var(--sp-6) }
-    .stat-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-5) var(--sp-8); width: 100%; max-width: var(--content-max) }
-    .stat-grid .stat { flex: 0 0 21% }
-
-    /* ── Density tuning ── */
-    .slide-head { margin-bottom: var(--sp-4) }
-    .kicker { margin-bottom: var(--sp-1) }
-    .card { padding: var(--sp-3) var(--sp-4) }
-    .card .ico { margin-bottom: var(--sp-1) }
-    .card h4 { margin-bottom: var(--sp-1) }
-    .card p { line-height: 1.35 }
-    .card--tight { padding: var(--sp-2) var(--sp-3) }
-    .card--tight .ico { font-size: 30px; margin-bottom: 2px }
-    .card--tight p { line-height: 1.3 }
-    .code { padding: var(--sp-3) var(--sp-4); line-height: 1.4 }
-    .code--tight { font-size: 26px; line-height: 1.35; padding: var(--sp-2) var(--sp-3) }
-    .caveat { padding: var(--sp-2) var(--sp-4); line-height: 1.4 }
-    .caveat--tight { padding: var(--sp-2) var(--sp-3) }
-    .chip { padding: 4px 12px }
-    .pipe-step { padding: var(--sp-2) var(--sp-3) }
-    .ladder-step { padding: var(--sp-2) var(--sp-4) }
-    .grow.gap-l { gap: var(--sp-4) }
-    .grow.gap-m { gap: var(--sp-3) }
-    .two, .three, .four, .split { min-width: 0 }
-    .two>*, .three>*, .four>*, .split>* { min-width: 0 }
-
-    .slide[data-slide="2"] .grow.gap-l { gap: var(--sp-2) }
-    .slide[data-slide="2"] .bignum { font-size: 148px }
-    .slide[data-slide="3"] .grow.gap-m { gap: var(--sp-2) }
-    .slide[data-slide="7"] .grow.gap-m { gap: var(--sp-2) }
-    .slide[data-slide="7"] .ladder { gap: 6px }
-    .slide[data-slide="10"] .grow.gap-m { gap: var(--sp-2) }
-    .slide[data-slide="10"] .gap-s { gap: 6px }
-    .slide[data-slide="10"] .chip { padding: 2px 10px }
-
-    /* Slide 15 dense collections grid */
-    .slide[data-slide="15"] .slide-head { margin-bottom: var(--sp-2) }
-    .slide[data-slide="15"] .grow.gap-m { justify-content: flex-start; gap: var(--sp-1) }
-    .slide[data-slide="15"] .four .card--tight { padding: 6px 10px }
-    .slide[data-slide="15"] .four .card--tight h4 { margin-bottom: 0; line-height: 1.2 }
-    .slide[data-slide="15"] .four .card--tight p { line-height: 1.16 }
-    .slide[data-slide="15"] .code--tight { font-size: 24px; line-height: 1.28; padding: 8px 12px }
-    .slide[data-slide="15"] .caveat--tight { padding: 6px 12px; line-height: 1.3 }
-
-    /* Slide 17 dense 26-module inventory */
-    .slide[data-slide="17"] .slide-head { margin-bottom: var(--sp-2) }
-    .slide[data-slide="17"] .card--tight { padding: 5px 8px }
-    .slide[data-slide="17"] .card--tight h4 { margin-bottom: 0; font-size: 24px; line-height: 1.18 }
-    .slide[data-slide="17"] .card--tight p { line-height: 1.14; font-size: 24px }
-    .slide[data-slide="17"] .card--tight .ico { margin-bottom: 0 }
-    .slide[data-slide="17"] .gap-s { gap: var(--sp-1) }
-    .slide[data-slide="17"] .caveat--tight { padding: 6px 12px; line-height: 1.3 }
-    .slide[data-slide="17"] .h3 { margin: 0 }
+    h1.h1 { font-size: var(--fs-h1); line-height: 1.1; font-weight: 800; position: relative; z-index: 1 }
+    h1.h1--sm { font-size: 92px }
+    .badge-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; margin-top: var(--sp-4); position: relative; z-index: 1 }
+    .stat-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-3) var(--sp-4); width: 100%; max-width: var(--content-max); position: relative; z-index: 1 }
+    .stat-grid .stat { flex: 0 0 22% }
 
     @media (prefers-reduced-motion:reduce) {
-      :root {
-        --dur-fast: 1ms; --dur-reveal: 1ms; --dur-draw: 1ms; --dur-count: 1ms;
-        --dur-slide: 1ms; --dur-ambient: 1ms; --stagger: 0ms; --stagger-tight: 0ms; --reveal-y: 0px;
-      }
+      :root { --dur-fast: 1ms; --dur-reveal: 1ms; --dur-slide: 1ms; --dur-ambient: 1ms; --stagger: 0ms; --reveal-y: 0px; }
       .float, .pulse { animation: none !important }
       .slide.active .rv { opacity: 1; transform: none }
     }
   </style>
 </head>
-
 <body>
   <div id="stage">
-
     <div id="progress"></div>
 
     <header class="chrome chrome--top">
       <div class="brand">
         <span class="logo"><img src="spid3r.png" alt="Spid3r"></span>
         <span><span class="en">Spid3r</span></span>
-
+        <span class="badge">v1.5.0</span>
       </div>
-      <div class="chrome-hint"></div>
-      <div id="counter"><b>১</b> / ১৯</div>
+      <div id="counter"><b>১</b> / ২০</div>
     </header>
 
     <main id="deck">
 
       <!-- ══ 1. শিরোনাম ══ -->
       <section class="slide slide--center active" data-slide="1">
+        <svg class="hero-bg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="hb1" cx="50%" cy="48%" r="45%"><stop offset="0%" stop-color="#04AA6D" stop-opacity=".45"/><stop offset="100%" stop-color="#0b0f17" stop-opacity="0"/></radialGradient></defs>
+          <circle cx="960" cy="520" r="460" fill="url(#hb1)"/>
+          <circle cx="960" cy="520" r="240" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="8 8"/>
+          <circle cx="960" cy="520" r="380" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+          <circle cx="960" cy="520" r="520" fill="none" stroke="#1e293b" stroke-width="1"/>
+          <path d="M960 0 L960 1080 M0 520 L1920 520 M360 120 L1560 920 M1560 120 L360 920" stroke="#1e293b" stroke-width="1"/>
+        </svg>
         <div class="title-glyph float rv" style="--i:0"><img src="spid3r.png" alt="Spid3r"></div>
         <h1 class="h1 rv" style="--i:1"><span class="grad-t">Spid3r</span></h1>
         <p class="lead rv" style="--i:2">একটি সহজ, দ্রুতগতির ও নিরাপদ অল-ইন-ওয়ান প্রোগ্রামিং ভাষা</p>
-        <p class="sub rv" style="--i:3">Rust ও Self-hosted (<code>spid3r-self</code>) কম্পাইলারে তৈরি · <b style="color:var(--green)">বাড়তি কোনো ডাউনলোড লাগে না</b></p>
+        <p class="sub rv" style="--i:3">Rust Stage 0 ও Self-hosted <code>spid3r-self</code> · <b>LLVM 23.1 AOT</b></p>
         <div class="badge-row">
-          <span class="badge rv" style="--i:4">v1.1.1 (Language 1.1.1)</span>
-          <span class="badge badge--cyan rv" style="--i:5">ব্রাউজারে চলে (WASM)</span>
-          <span class="badge badge--purple rv pulse" style="--i:6">YamLLVM নেটিভ (LLVM 23)</span>
+          <span class="badge rv" style="--i:4">v1.5.0</span>
+          <span class="badge badge--cyan rv" style="--i:5">৪টি ব্যাকএন্ড</span>
+          <span class="badge badge--purple rv pulse" style="--i:6">ব্রাউজার WASM</span>
           <span class="badge badge--amber rv" style="--i:7">✨ AI-এর সহায়তায় নির্মিত</span>
         </div>
-     
+        <p class="note rv" style="--i:8;margin-top:var(--sp-5);position:relative;z-index:1">ANSNEW TECH · © ২০২৬ Spid3r Language Project · github.com/needyamin/spid3r</p>
       </section>
 
       <!-- ══ 2. এক নজরে ══ -->
@@ -454,34 +200,27 @@
           <div class="kicker">সহজ ভূমিকা</div>
           <h2 class="h">Spid3r কী? — এক নজরে</h2>
         </div>
-        <div class="grow gap-l">
+        <div class="grow">
           <div class="four">
-            <div class="card rv" style="--i:1">
-              <div class="ico">🧩</div>
-              <h4>সবকিছু একসাথে</h4>
-              <p>কম্পাইলার (<code>yamc</code>, <code>yamcvm</code>, <code>spvm</code>, <code>spkg</code>), ওয়েব, SQL ডেটাবেস, গণিত ও ফাইল — বাড়তি ইনস্টল নেই</p>
-            </div>
-            <div class="card rv" style="--i:2">
-              <div class="ico">⚙️</div>
-              <h4>Spid3r Engine: ৪ ব্যাকএন্ড</h4>
-              <p>Tree (<code>spvm_rt</code>), <code>spvm</code> VM, <b>YamLLVM</b> ও WASM — সবখানে <b style="color:var(--fg1)">১০০% একই ফলাফল</b></p>
-            </div>
-            <div class="card rv" style="--i:3">
-              <div class="ico">♻️</div>
-              <h4>YamGC মেমরি ক্লিনআপ</h4>
-              <p>অপ্রয়োজনীয় ডেটা সাথে সাথে ও চক্রাকার লিংক ১,০২৪টি অবজেক্টের পর নিজেই মুছে মেমরি লিক রোধ করে</p>
-            </div>
-            <div class="card rv" style="--i:4">
-              <div class="ico">🌐</div>
-              <h4>ব্রাউজারেই চলে</h4>
-              <p>WebAssembly ইঞ্জিন থাকায় যেকোনো ব্রাউজার, Node.js ও Deno-তেও চলে</p>
-            </div>
+            <div class="card rv" style="--i:1"><div class="ico">🧩</div><h4>সবকিছু একসাথে</h4><p><code>spid3r</code>, <code>yamc</code>, <code>yamcvm</code>, <code>spvm</code>, <code>spkg</code></p></div>
+            <div class="card rv" style="--i:2"><div class="ico">⚙️</div><h4>৪টি ব্যাকএন্ড</h4><p>Tree · <code>spvm</code> · LLVM 23 · WASM</p></div>
+            <div class="card rv" style="--i:3"><div class="ico">♻️</div><h4>YamGC মেমরি</h4><p>RC ও স্বয়ংক্রিয় সাইকেল ক্লিনার</p></div>
+            <div class="card rv" style="--i:4"><div class="ico">🌐</div><h4>সবখানে চলে</h4><p>নেটিভ, VM, GUI ও ব্রাউজার</p></div>
           </div>
-          <div class="four rv" style="--i:5">
+          <div class="svg-box rv" style="--i:5">
+            <svg viewBox="0 0 1360 150" xmlns="http://www.w3.org/2000/svg">
+              <text x="30" y="34" fill="#a9b8cb" font-size="22" font-weight="700">৪টি এক্সিকিউশন ব্যাকএন্ডে শতভাগ সমান ফলাফল</text>
+              <rect x="30" y="52" width="300" height="78" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="180" y="88" text-anchor="middle" fill="#7dd3fc" font-size="22" font-weight="700">Tree Oracle</text><text x="180" y="116" text-anchor="middle" fill="#a9b8cb" font-size="17">রেফারেন্স ইঞ্জিন</text>
+              <rect x="360" y="52" width="300" height="78" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="510" y="88" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">spvm VM</text><text x="510" y="116" text-anchor="middle" fill="#a9b8cb" font-size="17">৬০ অপকোড · .matrixc</text>
+              <rect x="690" y="52" width="300" height="78" rx="10" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="840" y="88" text-anchor="middle" fill="#d8b4fe" font-size="22" font-weight="700">LLVM 23 AOT</text><text x="840" y="116" text-anchor="middle" fill="#a9b8cb" font-size="17">নেটিভ মেশিন কোড</text>
+              <rect x="1020" y="52" width="310" height="78" rx="10" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="2"/><text x="1175" y="88" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="700">WebAssembly</text><text x="1175" y="116" text-anchor="middle" fill="#a9b8cb" font-size="17">ব্রাউজার ইঞ্জিন</text>
+            </svg>
+          </div>
+          <div class="four rv" style="--i:6">
             <div class="stat"><div class="bignum cnt" data-v="6">০</div><div class="lbl">মূল ডেটা টাইপ</div></div>
-            <div class="stat"><div class="bignum cnt" data-v="40">০</div><div class="lbl">রিজার্ভড কীওয়ার্ড</div></div>
-            <div class="stat"><div class="bignum cnt" data-v="20">০</div><div class="lbl">ডেটা স্ট্রাকচার+</div></div>
-            <div class="stat"><div class="bignum cnt" data-v="26">০</div><div class="lbl">বিল্ট-ইন টুলকিট</div></div>
+            <div class="stat"><div class="bignum cnt" data-v="40">০</div><div class="lbl">কীওয়ার্ড</div></div>
+            <div class="stat"><div class="bignum cnt" data-v="20">০</div><div class="lbl">কন্টেইনার+</div></div>
+            <div class="stat"><div class="bignum cnt" data-v="26">০</div><div class="lbl">stdlib মডিউল</div></div>
           </div>
         </div>
       </section>
@@ -490,26 +229,39 @@
       <section class="slide" data-slide="3">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">শুরু করা</div>
-          <h2 class="h">এক ফাইল ইনস্টল — কোডিংয়ের জন্য প্রস্তুত</h2>
+          <h2 class="h">এক ইনস্টলেই কোডিংয়ের জন্য প্রস্তুত</h2>
         </div>
-        <div class="grow gap-m">
-          <div class="three">
-            <div class="card card--tight rv" style="--i:1"><div class="ico">🐧</div><h4>Linux / macOS</h4><p class="mono">curl … install.sh | sh</p></div>
-            <div class="card card--tight rv" style="--i:2"><div class="ico">🪟</div><h4>Windows</h4><p>সহজ সেটআপ <code>.exe</code></p></div>
-            <div class="card card--tight rv" style="--i:3"><div class="ico">🦀</div><h4>Cargo</h4><p class="mono">cargo install</p></div>
+        <div class="grow">
+          <div class="two">
+            <div class="gap-m">
+              <div class="two" style="gap:var(--sp-3)">
+                <div class="card card--tight rv" style="--i:1"><div class="ico">🪟</div><h4>Windows</h4><p>Microsoft Store বা <code>Setup.exe</code></p></div>
+                <div class="card card--tight rv" style="--i:2"><div class="ico">🐧</div><h4>Linux / macOS</h4><p class="mono">install.sh | sh</p></div>
+                <div class="card card--tight rv" style="--i:3"><div class="ico">🦀</div><h4>Cargo</h4><p class="mono">cargo install</p></div>
+                <div class="card card--tight rv" style="--i:4"><div class="ico">🧩</div><h4>VS Code</h4><p>অফলাইন <code>.vsix</code> যুক্ত</p></div>
+              </div>
+              <div class="code code--tight rv" style="--i:5"><span class="line">$ spid3r --version</span><span class="line">spid3r 1.5.0 (LLVM 23.1 AOT · Rust Stage 0)</span></div>
+              <div class="caveat caveat--good caveat--tight rv" style="--i:6"><b>শূন্য নির্ভরতা:</b> ইনস্টল করলেই সব টুল ও ডকুমেন্টেশন প্রস্তুত।</div>
+            </div>
+            <div class="gap-m">
+              <div class="code rv" style="--i:7">
+                <span class="line"><span class="c">// hello.matrix / hello.mt</span></span>
+                <span class="line"><span class="k">fn</span> <span class="f">main</span>() {</span>
+                <span class="line">    <span class="f">println</span>(<span class="s bn">"স্বাগতম Spid3r!"</span>);</span>
+                <span class="line">    <span class="k">return</span> <span class="n">0</span>;</span>
+                <span class="line">}</span>
+              </div>
+              <div class="svg-box rv" style="--i:8">
+                <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="16" y="24" width="175" height="140" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="103" y="82" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="22">hello.mt</text><text x="103" y="122" text-anchor="middle" fill="#a9b8cb" font-size="18">কোড লিখুন</text>
+                  <text x="215" y="102" text-anchor="middle" fill="#04AA6D" font-size="30" font-weight="800">→</text>
+                  <rect x="240" y="24" width="165" height="140" rx="12" fill="#161e2e" stroke="#04AA6D" stroke-width="2"/><text x="322" y="82" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="22">sp run</text><text x="322" y="122" text-anchor="middle" fill="#a9b8cb" font-size="18">চালান</text>
+                  <text x="430" y="102" text-anchor="middle" fill="#04AA6D" font-size="30" font-weight="800">→</text>
+                  <rect x="455" y="24" width="170" height="140" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="540" y="82" text-anchor="middle" fill="#f1f5f9" font-size="20">স্বাগতম Spid3r!</text><text x="540" y="122" text-anchor="middle" fill="#34d399" font-size="18">এক্সিট ০</text>
+                </svg>
+              </div>
+            </div>
           </div>
-          <div class="caveat caveat--good rv" style="--i:4"><b>একটাই ইনস্টল!</b> ফাইল <code>.matrix</code>/<code>.mt</code> · <code>sp</code> ও <code>yamc · yamcvm · spvm · spkg</code> + অফলাইন <code>spid3r-formatter.vsix</code></div>
-          <div class="code code--tight">
-            <span class="line rv" style="--i:5"><span class="c">// আমার প্রথম Spid3r প্রোগ্রাম</span></span>
-            <span class="line rv" style="--i:6"><span class="k">fn</span> <span class="f">main</span>() {</span>
-            <span class="line rv" style="--i:7">    <span class="f">println</span>(<span class="s">"Hello, World!"</span>);</span>
-            <span class="line rv" style="--i:8">    <span class="k">let</span> language = <span class="s">"Spid3r"</span>;</span>
-            <span class="line rv" style="--i:9">    <span class="k">let</span> year = <span class="n">2026</span>;</span>
-            <span class="line rv" style="--i:10">    <span class="f">println</span>(<span class="s bn">"স্বাগতম "</span> + language + <span class="s">" ("</span> + <span class="f">string</span>(year) + <span class="s">")!"</span>);</span>
-            <span class="line rv" style="--i:11">    <span class="k">return</span> <span class="n">0</span>;</span>
-            <span class="line rv" style="--i:12">}</span>
-          </div>
-          <p class="note rv" style="--i:13">⚡ ডকুমেন্টেশনের প্রতিটি উদাহরণ ব্রাউজারেই "Try it Yourself" বাটনে চালানো যায়</p>
         </div>
       </section>
 
@@ -517,28 +269,30 @@
       <section class="slide" data-slide="4">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">সহজ টুলবক্স</div>
-          <h2 class="h"><code>spid3r</code> / <code>sp</code> ও ৪টি আলাদা কম্পোনেন্ট CLI</h2>
+          <h2 class="h"><code>spid3r</code> / <code>sp</code> ও ৪টি কম্পোনেন্ট CLI</h2>
         </div>
-        <div class="grow gap-l">
-          <div class="lead rv" style="--i:1">মূল <code>spid3r</code> ছাড়াও প্রতিটি কাজের জন্য আলাদা জিরো-ওভারহেড কমান্ড রয়েছে</div>
-          <div class="three">
-            <div class="card rv" style="--i:2">
-              <div class="ico">▶️</div>
-              <h4 style="font-size:var(--fs-h3)">VM ও পরীক্ষা (<code>spvm</code>)</h4>
-              <p style="white-space:normal;font-size:var(--fs-meta)"><span class="mono">spvm · run · exec · check · repl · debug · lsp · test · bench</span></p>
-            </div>
-            <div class="card rv" style="--i:3">
-              <div class="ico">📦</div>
-              <h4 style="font-size:var(--fs-h3)">কম্পাইল (<code>yamc · yamcvm</code>)</h4>
-              <p class="mono" style="white-space:normal;font-size:var(--fs-meta)">yamc (YamLLVM exe) · yamcvm (.matrixc) · gui · bundle · fmt · doc</p>
-            </div>
-            <div class="card rv" style="--i:4">
-              <div class="ico">🗂️</div>
-              <h4 style="font-size:var(--fs-h3)">প্যাকেজ ও কন্ট্রোল (<code>spkg</code>)</h4>
-              <p class="mono" style="white-space:normal;font-size:var(--fs-meta)">spkg (init · add · install · verify · publish) · config · control</p>
-            </div>
+        <div class="grow">
+          <div class="svg-box rv" style="--i:1">
+            <svg viewBox="0 0 1320 240" xmlns="http://www.w3.org/2000/svg">
+              <defs><marker id="ab4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#04AA6D" stroke-width="2"/></marker></defs>
+              <rect x="460" y="14" width="400" height="62" rx="12" fill="rgba(4,170,109,.14)" stroke="#04AA6D" stroke-width="2"/><text x="660" y="52" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="24" font-weight="700">spid3r / sp (Unified CLI)</text>
+              <path d="M660 76 L660 106 M170 106 L1150 106" stroke="#04AA6D" stroke-width="2.5"/>
+              <path d="M170 106 L170 134" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#ab4)"/>
+              <path d="M496 106 L496 134" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#ab4)"/>
+              <path d="M823 106 L823 134" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#ab4)"/>
+              <path d="M1150 106 L1150 134" stroke="#04AA6D" stroke-width="2.5" marker-end="url(#ab4)"/>
+              <rect x="30" y="140" width="280" height="84" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="170" y="178" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="23" font-weight="700">spvm</text><text x="170" y="208" text-anchor="middle" fill="#a9b8cb" font-size="18">বাইটকোড VM রানার</text>
+              <rect x="356" y="140" width="280" height="84" rx="12" fill="#161e2e" stroke="#c084fc" stroke-width="2"/><text x="496" y="178" text-anchor="middle" fill="#d8b4fe" font-family="JetBrains Mono,monospace" font-size="23" font-weight="700">yamc</text><text x="496" y="208" text-anchor="middle" fill="#a9b8cb" font-size="18">LLVM 23 নেটিভ কম্পাইলার</text>
+              <rect x="683" y="140" width="280" height="84" rx="12" fill="#161e2e" stroke="#fbbf24" stroke-width="2"/><text x="823" y="178" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono,monospace" font-size="23" font-weight="700">yamcvm</text><text x="823" y="208" text-anchor="middle" fill="#a9b8cb" font-size="18">.matrixc বাইটকোড</text>
+              <rect x="1010" y="140" width="280" height="84" rx="12" fill="#161e2e" stroke="#04AA6D" stroke-width="2"/><text x="1150" y="178" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="23" font-weight="700">spkg</text><text x="1150" y="208" text-anchor="middle" fill="#a9b8cb" font-size="18">প্যাকেজ ম্যানেজার</text>
+            </svg>
           </div>
-          <div class="caveat caveat--good rv" style="--i:5"><b>🛡️ নিরাপদ <code>--sandbox</code> মোড:</b> ফাইল, ইন্টারনেট ও সিস্টেম কমান্ড বন্ধ রেখে অচেনা বা অবিশ্বস্ত কোডও নিরাপদে পরীক্ষা করা যায়।</div>
+          <div class="three">
+            <div class="card card--tight rv" style="--i:2"><h4>পরীক্ষা ও ডিবাগ</h4><p class="mono">check · test · bench · repl · debug · lsp</p></div>
+            <div class="card card--tight rv" style="--i:3"><h4>বিল্ড ও GUI</h4><p class="mono">build · gui · bundle · fmt · doc</p></div>
+            <div class="card card--tight rv" style="--i:4"><h4>কনফিগ ও কন্ট্রোল</h4><p class="mono">config · control · spid3r-control</p></div>
+          </div>
+          <div class="caveat caveat--good rv" style="--i:5"><b>🛡️ নিরাপদ <code>--sandbox</code> মোড:</b> ফাইল, নেটওয়ার্ক ও সিস্টেম কমান্ড বন্ধ রেখে অচেনা কোড নিরাপদে চালান।</div>
         </div>
       </section>
 
@@ -546,29 +300,39 @@
       <section class="slide" data-slide="5">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">ভেতরের কাজ</div>
-          <h2 class="h">কোড চলে ৬ সহজ ধাপে, ৪ ব্যাকএন্ডে</h2>
+          <h2 class="h">এক ফ্রন্ট-এন্ড, চারটি সমান ব্যাকএন্ড</h2>
         </div>
-        <div class="grow gap-l">
-          <div class="pipe">
-            <div class="pipe-step rv" style="--i:1"><div class="pn">১</div><div class="pt">লেক্সার</div><div class="ps">শব্দ আলাদা করে</div></div>
-            <div class="pipe-link" style="--i:1"></div>
-            <div class="pipe-step rv" style="--i:2"><div class="pn">২</div><div class="pt">পার্সার</div><div class="ps">গঠন সাজায়</div></div>
-            <div class="pipe-link" style="--i:2"></div>
-            <div class="pipe-step rv" style="--i:3"><div class="pn">৩</div><div class="pt">সিমান্টিক</div><div class="ps">ভুল যাচাই করে</div></div>
-            <div class="pipe-link" style="--i:3"></div>
-            <div class="pipe-step rv" style="--i:4"><div class="pn">৪</div><div class="pt">লোয়ারিং</div><div class="ps">কোড সহজ করে</div></div>
-            <div class="pipe-link" style="--i:4"></div>
-            <div class="pipe-step rv" style="--i:5"><div class="pn">৫</div><div class="pt">Spid3r Engine</div><div class="ps">৪ ব্যাকএন্ডে চলে</div></div>
-            <div class="pipe-link" style="--i:5"></div>
-            <div class="pipe-step pipe-step--hot rv" style="--i:6"><div class="pn">৬</div><div class="pt">YamGC</div><div class="ps">মেমরি পরিষ্কার</div></div>
+        <div class="grow">
+          <div class="svg-box rv" style="--i:1">
+            <svg viewBox="0 0 1360 390" xmlns="http://www.w3.org/2000/svg">
+              <defs><marker id="ab5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#38bdf8" stroke-width="2"/></marker></defs>
+              <rect x="520" y="8" width="320" height="48" rx="10" fill="#161e2e" stroke="#04AA6D" stroke-width="2"/><text x="680" y="38" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="21">app.matrix / .mt</text>
+              <path d="M680 56 L680 86" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#ab5)"/>
+              <rect x="100" y="90" width="250" height="68" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="225" y="130" text-anchor="middle" fill="#f1f5f9" font-size="22" font-weight="700">১. লেক্সার (শব্দ)</text>
+              <path d="M350 124 L390 124" stroke="#38bdf8" stroke-width="2" marker-end="url(#ab5)"/>
+              <rect x="394" y="90" width="250" height="68" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="519" y="130" text-anchor="middle" fill="#f1f5f9" font-size="22" font-weight="700">২. পার্সার (গঠন)</text>
+              <path d="M644 124 L684 124" stroke="#38bdf8" stroke-width="2" marker-end="url(#ab5)"/>
+              <rect x="688" y="90" width="260" height="68" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="818" y="130" text-anchor="middle" fill="#f1f5f9" font-size="22" font-weight="700">৩. সিমান্টিক (যাচাই)</text>
+              <path d="M948 124 L988 124" stroke="#38bdf8" stroke-width="2" marker-end="url(#ab5)"/>
+              <rect x="992" y="90" width="268" height="68" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="1126" y="130" text-anchor="middle" fill="#f1f5f9" font-size="22" font-weight="700">৪. লোয়ারিং (AST)</text>
+              <path d="M680 158 L680 190 M180 190 L1180 190" stroke="#38bdf8" stroke-width="2.5"/>
+              <path d="M180 190 L180 222" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#ab5)"/>
+              <path d="M513 190 L513 222" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#ab5)"/>
+              <path d="M846 190 L846 222" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#ab5)"/>
+              <path d="M1180 190 L1180 222" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#ab5)"/>
+              <rect x="40" y="226" width="280" height="84" rx="12" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="180" y="262" text-anchor="middle" fill="#7dd3fc" font-size="22" font-weight="700">Tree Oracle</text><text x="180" y="292" text-anchor="middle" fill="#a9b8cb" font-size="18">রেফারেন্স ইঞ্জিন</text>
+              <rect x="373" y="226" width="280" height="84" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="513" y="262" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">spvm (৬০ অপকোড)</text><text x="513" y="292" text-anchor="middle" fill="#a9b8cb" font-size="18">yamcvm → .matrixc</text>
+              <rect x="706" y="226" width="280" height="84" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="846" y="262" text-anchor="middle" fill="#d8b4fe" font-size="22" font-weight="700">LLVM 23 AOT</text><text x="846" y="292" text-anchor="middle" fill="#a9b8cb" font-size="18">yamc ও spid3r-self</text>
+              <rect x="1040" y="226" width="280" height="84" rx="12" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="2"/><text x="1180" y="262" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="700">WebAssembly</text><text x="1180" y="292" text-anchor="middle" fill="#a9b8cb" font-size="18">ব্রাউজার ইঞ্জিন</text>
+              <rect x="220" y="330" width="920" height="44" rx="10" fill="#161e2e" stroke="#04AA6D" stroke-width="1.5"/><text x="680" y="358" text-anchor="middle" fill="#34d399" font-size="20" font-weight="600">YamGC মেমরি ক্লিনআপ · ১৩৬টি টেস্ট প্রোগ্রামে শতভাগ সমান ফলাফল (এক্সিট ৪-এ নিরাপত্তা)</text>
+            </svg>
           </div>
-          <div class="four">
-            <div class="card card--tight rv" style="--i:7;background:var(--tint-cyan)"><div class="ico">🌳</div><h4 style="color:var(--cyan)">Tree (<code>spvm_rt</code>)</h4><p>রেফারেন্স প্যারিটি চেকার</p></div>
-            <div class="card card--tight rv" style="--i:8"><div class="ico">⚙️</div><h4 style="color:var(--green)"><code>spvm</code> &amp; <code>yamcvm</code></h4><p>৬০টি নির্দেশনা · <code>.matrixc</code></p></div>
-            <div class="card card--tight rv" style="--i:9"><div class="ico">🚀</div><h4 style="color:var(--purple)">YamLLVM (<code>yamc</code>)</h4><p>LLVM 23 + <code>spid3r-self</code> Stage ১→৩</p></div>
-            <div class="card card--tight rv" style="--i:10"><div class="ico">🌐</div><h4 style="color:var(--amber)">WebAssembly</h4><p>ব্রাউজারে <code>spvm</code> ইঞ্জিন</p></div>
+          <div class="four rv" style="--i:2">
+            <div class="card card--tight"><h4 style="color:var(--amber)">২৫</h4><p>একবারে এরর ধরা</p></div>
+            <div class="card card--tight"><h4 style="color:var(--amber)">৬৪</h4><p>নেস্টিং সীমা</p></div>
+            <div class="card card--tight"><h4 style="color:var(--green)">৬০</h4><p><code>spvm</code> অপকোড</p></div>
+            <div class="card card--tight"><h4 style="color:var(--purple)">Stage ১→৩</h4><p><code>spid3r-self</code> প্যারিটি</p></div>
           </div>
-          <div class="caveat rv" style="--i:11;text-align:center">১৩৬টি টেস্ট প্রোগ্রামে চার ইঞ্জিনের ফলাফল অক্ষরে-অক্ষরে এক — নষ্ট <code>.matrixc</code> ফাইল এক্সিট কোড ৪-এ থেমে যায়</div>
         </div>
       </section>
 
@@ -576,42 +340,48 @@
       <section class="slide" data-slide="6">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">কোড খোঁজা</div>
-          <h2 class="h">দরকারি কোড খোঁজার ৬টি ধাপ</h2>
+          <h2 class="h">দরকারি কোড খোঁজার ৬টি নিরাপদ ধাপ</h2>
         </div>
-        <div class="grow two">
-          <div class="ladder">
-            <div class="ladder-step ladder-step--first" style="--i:1"><span class="num">১</span><span>আপনার ফাইলের নিজের ফোল্ডার</span></div>
-            <div class="ladder-step" style="--i:2"><span class="num">২</span><span><code>SPID3R_PATH</code> কাস্টম ফোল্ডার</span></div>
-            <div class="ladder-step" style="--i:3"><span class="num">৩</span><span>বর্তমান প্রজেক্টের <code>./stdlib</code></span></div>
-            <div class="ladder-step" style="--i:4"><span class="num">৪</span><span><code>spid3r.exe</code>-এর পাশের <code>stdlib/</code></span></div>
-            <div class="ladder-step" style="--i:5"><span class="num">৫</span><span><code>vendor/</code> (ডাউনলোড করা প্যাকেজ)</span></div>
-            <div class="ladder-step ladder-step--last" style="--i:6"><span class="num">৬</span><span>প্রোগ্রামের ভেতরে থাকা বিল্ট-ইন লাইব্রেরি</span></div>
-          </div>
-          <div class="gap-m">
-            <div class="caveat caveat--good rv" style="--i:1"><b>💾 নিজের ফাইল আগে:</b> প্রজেক্টে নিজের কাস্টম ফাইল থাকলে সেটাই বিল্ট-ইন ফাইলের চেয়ে অগ্রাধিকার পায়</div>
-            <div class="caveat caveat--rose rv" style="--i:2"><b>🚧 বাইরে যাওয়া নিষেধ:</b> <code>..</code> বা অন্য ড্রাইভের পাথ দিয়ে ফোল্ডারের বাইরে যাওয়া সব ইঞ্জিনে সম্পূর্ণ বন্ধ</div>
-            <div class="caveat rv" style="--i:3"><b>✅ সবসময় কাজ করে:</b> বাইরে কোনো ফাইল না পেলেও ভেতরের বিল্ট-ইন লাইব্রেরি দিয়ে অ্যাপ চলবেই</div>
+        <div class="grow">
+          <div class="two">
+            <div class="ladder">
+              <div class="ladder-step ladder-step--first" style="--i:1"><span class="num">১</span><span>বর্তমান ফাইলের ফোল্ডার</span></div>
+              <div class="ladder-step" style="--i:2"><span class="num">২</span><span><code>SPID3R_PATH</code> ফোল্ডার</span></div>
+              <div class="ladder-step" style="--i:3"><span class="num">৩</span><span>প্রজেক্টের <code>./stdlib</code></span></div>
+              <div class="ladder-step" style="--i:4"><span class="num">৪</span><span><code>spid3r</code>-এর পাশের <code>stdlib/</code></span></div>
+              <div class="ladder-step" style="--i:5"><span class="num">৫</span><span><code>vendor/</code> প্যাকেজ ফোল্ডার</span></div>
+              <div class="ladder-step ladder-step--last" style="--i:6"><span class="num">৬</span><span>বিল্ট-ইন ২৬টি stdlib মডিউল</span></div>
+            </div>
+            <div class="svg-box rv" style="--i:2">
+              <svg viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="16" width="560" height="125" rx="12" fill="rgba(56,189,248,.10)" stroke="#38bdf8" stroke-width="2"/><text x="48" y="58" fill="#7dd3fc" font-size="24" font-weight="700">📂 নিজের ফাইল সবসময় আগে</text><text x="48" y="96" fill="#f1f5f9" font-size="20">প্রজেক্টের কাস্টম ফাইল অগ্রাধিকার পায়</text>
+                <rect x="20" y="162" width="560" height="125" rx="12" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="48" y="204" fill="#fb7185" font-size="24" font-weight="700">⛔ ফোল্ডারের বাইরে যাওয়া বন্ধ</text><text x="48" y="242" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">import "../secret" → সব ইঞ্জিনে নিষিদ্ধ</text>
+                <rect x="20" y="308" width="560" height="125" rx="12" fill="rgba(4,170,109,.10)" stroke="#04AA6D" stroke-width="2"/><text x="48" y="350" fill="#34d399" font-size="24" font-weight="700">✅ অফলাইনেও নির্ভুল কাজ</text><text x="48" y="388" fill="#f1f5f9" font-size="20">বাইরে না পেলেও বিল্ট-ইন লাইব্রেরি কাজ করবে</text>
+              </svg>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ══ 7. বিশ্বাসের সিঁড়ি (T0, T1, T2, T5) ══ -->
+      <!-- ══ 7. বিশ্বাসের সিঁড়ি ══ -->
       <section class="slide" data-slide="7">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">নিরাপত্তা স্তর</div>
-          <h2 class="h">বিশ্বাসের সিঁড়ি — T0, T1, T2 ও T5</h2>
+          <h2 class="h">বিশ্বাসের ৪টি স্তর (T0 → T5)</h2>
         </div>
-        <div class="grow gap-m">
-          <p class="lead rv" style="--i:1">কোন কোডকে কতটুকু বিশ্বাস করা হচ্ছে — Spid3r তা পরিষ্কারভাবে আলাদা করে</p>
-          <div class="ladder" style="max-width:1400px;margin:0 auto;width:100%">
-            <div class="ladder-step ladder-step--first" style="--i:1"><span class="num">T0</span><span><b>বিল্ট-ইন লাইব্রেরি (stdlib)</b> — প্রোগ্রামের ভেতরে লক করা, বদলানো যায় না</span></div>
-            <div class="ladder-step" style="--i:2"><span class="num">T1</span><span><b>নিজের প্রজেক্ট ফাইল</b> (<code>.matrix</code> / <code>.mt</code>) — আপনার নিজের লেখা কোড</span></div>
-            <div class="ladder-step ladder-step--last" style="--i:3"><span class="num">T2</span><span><b>ডাউনলোড করা প্যাকেজ</b> (<code>vendor/</code>) — <code>spkg verify</code> ও SHA-256 দিয়ে যাচাইকৃত</span></div>
-            <div class="ladder-step ladder-step--tight" style="--i:4;border-color:var(--caveat-rose-bd);background:var(--caveat-rose-bg)"><span class="num" style="color:var(--rose)">T5</span><span style="color:var(--rose)"><b>নেটিভ C প্লাগইন</b> (<code>extern fn</code>) — পুরো সিস্টেম ক্ষমতা, শুধু নেটিভ বিল্ডে</span></div>
+        <div class="grow">
+          <div class="svg-box rv" style="--i:1">
+            <svg viewBox="0 0 1320 390" xmlns="http://www.w3.org/2000/svg">
+              <text x="40" y="34" fill="#a9b8cb" font-size="20" font-weight="700">স্তর</text><text x="165" y="34" fill="#a9b8cb" font-size="20" font-weight="700">কোডের উৎস ও যাচাইকরণ</text><text x="1080" y="34" fill="#a9b8cb" font-size="20" font-weight="700">ক্ষমতা</text>
+              <rect x="40" y="50" width="1240" height="70" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="90" y="94" fill="#34d399" font-size="28" font-weight="800">T0</text><text x="165" y="94" fill="#f1f5f9" font-size="23" font-weight="600">বিল্ট-ইন stdlib (২৬ মডিউল, ২৫৪ নেটিভ) — লক করা</text><rect x="1060" y="64" width="190" height="42" rx="8" fill="#04AA6D"/><text x="1155" y="92" text-anchor="middle" fill="#0b0f17" font-size="19" font-weight="800">অপরিবর্তনীয়</text>
+              <rect x="40" y="134" width="1240" height="70" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="90" y="178" fill="#f1f5f9" font-size="28" font-weight="800">T1</text><text x="165" y="178" fill="#f1f5f9" font-size="23" font-weight="600">আপনার নিজের প্রজেক্ট কোড (.matrix / .mt)</text><rect x="1060" y="148" width="190" height="42" rx="8" fill="#1a2335" stroke="#38bdf8"/><text x="1155" y="176" text-anchor="middle" fill="#7dd3fc" font-size="19" font-weight="700">নিজস্ব কোড</text>
+              <rect x="40" y="218" width="1240" height="70" rx="12" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="90" y="262" fill="#7dd3fc" font-size="28" font-weight="800">T2</text><text x="165" y="262" fill="#f1f5f9" font-size="23" font-weight="600">vendor/ প্যাকেজ — SHA-256 + Ed25519 যাচাইকৃত</text><rect x="1060" y="232" width="190" height="42" rx="8" fill="rgba(56,189,248,.2)"/><text x="1155" y="260" text-anchor="middle" fill="#7dd3fc" font-size="19" font-weight="700">০ স্ক্রিপ্ট</text>
+              <rect x="40" y="302" width="1240" height="70" rx="12" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="90" y="346" fill="#fb7185" font-size="28" font-weight="800">T5</text><text x="165" y="346" fill="#fb7185" font-size="23" font-weight="600">নেটিভ C FFI (extern fn) — পূর্ণ সিস্টেম ক্ষমতা (শুধু নেটিভ)</text><rect x="1060" y="316" width="190" height="42" rx="8" fill="rgba(251,113,133,.25)"/><text x="1155" y="344" text-anchor="middle" fill="#fb7185" font-size="19" font-weight="800">বিশ্বস্ত C</text>
+            </svg>
           </div>
-          <div class="two" style="max-width:1600px;width:100%;margin:0 auto">
-            <div class="caveat caveat--good rv" style="--i:1"><b>✅ বড় সুবিধা:</b> প্যাকেজ ইনস্টলের সময় <b>কোনো লুকানো স্ক্রিপ্ট চলে না</b> — শুধু যাচাইকৃত ফাইল কপি হয়</div>
-            <div class="caveat caveat--rose rv" style="--i:2"><b>⚠️ সতর্কতা:</b> <code>T5</code> নেটিভ প্লাগইন স্যান্ডবক্সের বাইরে চলে — শুধু পুরোপুরি বিশ্বস্ত লাইব্রেরিতে ব্যবহার করুন</div>
+          <div class="two">
+            <div class="caveat caveat--good caveat--tight rv" style="--i:2"><b>✅ বড় সুবিধা:</b> প্যাকেজ ইনস্টলে কোনো লুকানো স্ক্রিপ্ট চলে না।</div>
+            <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>⚠️ সতর্কতা:</b> <code>T5</code> প্লাগইন স্যান্ডবক্সের বাইরে চলে — শুধু বিশ্বস্ত লাইব্রেরি লিংক করুন।</div>
           </div>
         </div>
       </section>
@@ -622,515 +392,511 @@
           <div class="kicker">প্যাকেজ নিরাপত্তা</div>
           <h2 class="h">স্বাক্ষরিত প্যাকেজ — কেউ বদলাতে পারবে না</h2>
         </div>
-        <div class="grow gap-m">
-          <div class="gap-s">
-            <h3 class="h3 rv" style="--i:1">প্যাকেজ শেয়ার ও যাচাইয়ের সহজ ধাপ</h3>
-            <div class="pipe">
-              <div class="pipe-step rv" style="--i:2"><div class="pt">📥 spkg add</div><div class="ps">প্যাকেজ যোগ</div></div>
-              <div class="pipe-link" style="--i:2"></div>
-              <div class="pipe-step rv" style="--i:3"><div class="pt">🔍 tree / verify</div><div class="ps">হ্যাশ পরীক্ষা</div></div>
-              <div class="pipe-link" style="--i:3"></div>
-              <div class="pipe-step rv" style="--i:4"><div class="pt">✍️ publish</div><div class="ps">নিরাপদ প্রকাশ</div></div>
-              <div class="pipe-link" style="--i:4"></div>
-              <div class="pipe-step pipe-step--hot rv" style="--i:5"><div class="pt">🔐 install</div><div class="ps">স্বাক্ষর যাচাই</div></div>
-            </div>
-            <p class="sub rv" style="--i:6">🧷 SHA-256 ডিজিটাল ফিঙ্গারপ্রিন্ট + Ed25519 স্বাক্ষর — <b style="color:var(--green)">একবার প্রকাশিত ভার্সন আর বদলানো যায় না</b></p>
-            <p class="note rv" style="--i:7">মেনিফেস্ট: <code>spider.toml</code> · ভার্সন: <code>^1.2 · &gt;=1.2.3 · =1.2.3</code> · <code>spkg</code> বা <code>spid3r</code>-এ সমানভাবে চলে</p>
+        <div class="grow">
+          <div class="svg-box rv" style="--i:1">
+            <svg viewBox="0 0 1320 155" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="22" width="250" height="108" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="145" y="70" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="23">spkg add</text><text x="145" y="106" text-anchor="middle" fill="#a9b8cb" font-size="19">প্যাকেজ যোগ</text>
+              <text x="305" y="84" text-anchor="middle" fill="#38bdf8" font-size="30">→</text>
+              <rect x="340" y="22" width="260" height="108" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="470" y="70" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="23">spkg verify</text><text x="470" y="106" text-anchor="middle" fill="#a9b8cb" font-size="19">SHA-256 হ্যাশ</text>
+              <text x="635" y="84" text-anchor="middle" fill="#38bdf8" font-size="30">→</text>
+              <rect x="670" y="22" width="260" height="108" rx="12" fill="#161e2e" stroke="#c084fc" stroke-width="2"/><text x="800" y="70" text-anchor="middle" fill="#d8b4fe" font-family="JetBrains Mono,monospace" font-size="23">spkg publish</text><text x="800" y="106" text-anchor="middle" fill="#a9b8cb" font-size="19">Ed25519 স্বাক্ষর</text>
+              <text x="965" y="84" text-anchor="middle" fill="#04AA6D" font-size="30">→</text>
+              <rect x="1000" y="22" width="300" height="108" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="1150" y="70" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="23">spkg install</text><text x="1150" y="106" text-anchor="middle" fill="#a9b8cb" font-size="19">অপরিবর্তনীয় রিলিজ</text>
+            </svg>
           </div>
-          <div class="two" style="max-width:1500px;width:100%;margin:0 auto">
-            <div class="caveat caveat--good caveat--tight rv" style="--i:8"><b>✅ <code>spkg verify</code> (<code>spid3r verify</code>):</b> প্যাকেজের একটি ফাইলও বদলে গেলে বিল্ড আটকে যায়</div>
-            <div class="caveat caveat--tight rv" style="--i:9"><b>📦 নিরাপদ ইনস্টল:</b> ইনস্টলের সময় কোনো কোড চলে না — প্যাকেজ শুধু নিরাপদ ফাইল</div>
+          <div class="svg-box rv" style="--i:2">
+            <svg viewBox="0 0 1320 160" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="18" width="600" height="124" rx="12" fill="rgba(4,170,109,.10)" stroke="#04AA6D" stroke-width="2"/><text x="320" y="66" text-anchor="middle" fill="#34d399" font-size="24" font-weight="700">✅ হ্যাশ ও স্বাক্ষর মিলে গেলে</text><text x="320" y="108" text-anchor="middle" fill="#f1f5f9" font-size="20">spider.lock অনুযায়ী নিরাপদ বিল্ড ও রান</text>
+              <rect x="660" y="18" width="640" height="124" rx="12" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="980" y="66" text-anchor="middle" fill="#fb7185" font-size="24" font-weight="700">⛔ একটি ফাইলও বদলে গেলে</text><text x="980" y="108" text-anchor="middle" fill="#f1f5f9" font-size="20">spkg verify সাথে সাথে বিল্ড আটকে দেয়</text>
+            </svg>
           </div>
+          <div class="caveat caveat--tight rv" style="--i:3;text-align:center"><b><code>spider.toml</code>:</b> ভার্সন লকিং এবং শূন্য লুকানো ইনস্টল স্ক্রিপ্ট।</div>
         </div>
       </section>
 
-      <!-- ══ 9. একক .exe অ্যাপ তৈরি ══ -->
+      <!-- ══ 9. প্যাকেজ ম্যানেজার (spkg) ══ -->
       <section class="slide" data-slide="9">
         <div class="slide-head rv" style="--i:0">
-          <div class="kicker">নেটিভ অ্যাপ</div>
-          <h2 class="h">কোড থেকে সরাসরি একক <code>.exe</code> অ্যাপ (YamLLVM)</h2>
+          <div class="kicker">প্যাকেজ ম্যানেজার (spkg)</div>
+          <h2 class="h">পাবলিক রেজিস্ট্রি ও সহজ <code>spkg</code></h2>
         </div>
-        <div class="grow two">
-          <div class="code rv" style="--i:1">
-            <span class="line"><span class="c bn"># yamcvm → বাইটকোড, yamc → নেটিভ অ্যাপ</span></span>
-            <span class="line">yamcvm app.matrix -o app.matrixc</span>
-            <span class="line">yamc app.matrix -o App.exe --release \</span>
-            <span class="line">  --icon app.ico --subsystem windows \</span>
-            <span class="line">  --bytecode app.matrixc --embed ui --bundle-runtime</span>
-          </div>
-          <div class="gap-m">
-            <div class="two" style="gap:var(--sp-3)">
-              <div class="card card--tight rv" style="--i:2"><div class="ico">🖼️</div><h4 style="color:var(--green)">--icon</h4><p>নিজের কাস্টম অ্যাপ আইকন যোগ</p></div>
-              <div class="card card--tight rv" style="--i:3"><div class="ico">🪟</div><h4 style="color:var(--cyan)">--subsystem windows</h4><p>কালো কনসোল ছাড়া পরিচ্ছন্ন উইন্ডো</p></div>
-              <div class="card card--tight rv" style="--i:4"><div class="ico">🔒</div><h4 style="color:var(--purple)">--bytecode</h4><p>সোর্স টেক্সট ছাড়াই অ্যাপ ডেলিভারি</p></div>
-              <div class="card card--tight rv" style="--i:5"><div class="ico">📦</div><h4 style="color:var(--amber)">--bundle-runtime</h4><p>Spid3r না থাকা পিসিতেও চলবে</p></div>
+        <div class="grow">
+          <div class="two">
+            <div class="svg-box rv" style="--i:1">
+              <svg viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg">
+                <defs><marker id="ab9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#38bdf8" stroke-width="2"/></marker></defs>
+                <rect x="20" y="20" width="245" height="380" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/>
+                <text x="142" y="66" text-anchor="middle" fill="#7dd3fc" font-size="24" font-weight="700">৪টি উৎস</text>
+                <rect x="38" y="96" width="209" height="54" rx="8" fill="#1a2335"/><text x="142" y="130" text-anchor="middle" fill="#f1f5f9" font-size="18">spid3r-spkg.github.io</text>
+                <rect x="38" y="166" width="209" height="54" rx="8" fill="#1a2335"/><text x="142" y="200" text-anchor="middle" fill="#a9b8cb" font-size="18">Git (--git)</text>
+                <rect x="38" y="236" width="209" height="54" rx="8" fill="#1a2335"/><text x="142" y="270" text-anchor="middle" fill="#a9b8cb" font-size="18">লোকাল (--path)</text>
+                <rect x="38" y="306" width="209" height="54" rx="8" fill="#1a2335"/><text x="142" y="340" text-anchor="middle" fill="#a9b8cb" font-size="18">লোকাল রেজিস্ট্রি</text>
+                <path d="M265 210 L335 210" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#ab9)"/>
+                <rect x="342" y="20" width="278" height="380" rx="12" fill="rgba(4,170,109,.10)" stroke="#04AA6D" stroke-width="2"/>
+                <text x="481" y="66" text-anchor="middle" fill="#34d399" font-size="24" font-weight="700">আপনার প্রজেক্ট</text>
+                <rect x="364" y="98" width="234" height="62" rx="8" fill="#161e2e"/><text x="481" y="136" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">spider.toml</text>
+                <rect x="364" y="178" width="234" height="62" rx="8" fill="#161e2e"/><text x="481" y="216" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">spider.lock</text>
+                <rect x="364" y="258" width="234" height="62" rx="8" fill="#161e2e"/><text x="481" y="296" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">vendor/</text>
+                <text x="481" y="366" text-anchor="middle" fill="#fbbf24" font-size="19" font-weight="700">০টি লুকানো স্ক্রিপ্ট</text>
+              </svg>
             </div>
-            <p class="note rv" style="--i:6">সাথে <code>--embed ui</code> — ডিজাইন ও ছবিগুলো একটি ফাইলের ভেতরেই থাকে</p>
-            <div class="caveat caveat--rose rv" style="--i:7"><b>সৎ সতর্কতা:</b> সোর্স কোড লুকানো মানে এনক্রিপশন নয় — ক্লায়েন্ট অ্যাপে কখনো পাসওয়ার্ড বা গোপন কী রাখবেন না!</div>
+            <div class="gap-m">
+              <div class="code rv" style="--i:2">
+                <span class="line"><span class="f">spkg</span> install nettools</span>
+                <span class="line"><span class="f">spkg</span> verify &amp;&amp; <span class="f">spkg</span> audit</span>
+                <span class="line"><span class="f">spkg</span> install --frozen --offline</span>
+                <span class="line"><span class="f">spkg</span> tool install nettools</span>
+              </div>
+              <div class="two" style="gap:var(--sp-3)">
+                <div class="card card--tight rv" style="--i:3"><div class="ico">🗂️</div><h4>ওয়ার্কস্পেস</h4><p>একসাথে একাধিক প্যাকেজ লক</p></div>
+                <div class="card card--tight rv" style="--i:4"><div class="ico">🌐</div><h4>অফলাইন ও CI</h4><p><code>--frozen --offline</code></p></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ══ 10. ৬ টাইপ + ৪০ কীওয়ার্ড ══ -->
+      <!-- ══ 10. একক .exe অ্যাপ তৈরি ══ -->
       <section class="slide" data-slide="10">
+        <div class="slide-head rv" style="--i:0">
+          <div class="kicker">নেটিভ অ্যাপ</div>
+          <h2 class="h">স্ক্রিপ্ট থেকে একক <code>.exe</code> অ্যাপ (LLVM 23)</h2>
+        </div>
+        <div class="grow">
+          <div class="two">
+            <div class="gap-m">
+              <div class="code code--tight rv" style="--i:1">
+                <span class="line">yamcvm app.matrix -o app.matrixc</span>
+                <span class="line">yamc app.matrix -o App.exe --release \</span>
+                <span class="line">  --icon app.ico --subsystem windows \</span>
+                <span class="line">  --bytecode app.matrixc --embed ui --bundle-runtime</span>
+              </div>
+              <div class="svg-box rv" style="--i:2">
+                <svg viewBox="0 0 600 135" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="14" y="16" width="175" height="100" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="101" y="58" text-anchor="middle" fill="#a9b8cb" font-size="19" font-weight="700">সোর্স কোড</text><text x="101" y="90" text-anchor="middle" fill="#fb7185" font-size="17">সাধারণ টেক্সট</text>
+                  <text x="208" y="74" text-anchor="middle" fill="#38bdf8" font-size="26">→</text>
+                  <rect x="228" y="16" width="175" height="100" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="315" y="58" text-anchor="middle" fill="#7dd3fc" font-size="19" font-weight="700">.matrixc</text><text x="315" y="90" text-anchor="middle" fill="#34d399" font-size="17">SHA-256 পিনড</text>
+                  <text x="422" y="74" text-anchor="middle" fill="#fb7185" font-size="26">≠</text>
+                  <rect x="442" y="16" width="144" height="100" rx="10" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="514" y="58" text-anchor="middle" fill="#fb7185" font-size="19" font-weight="700">পাসওয়ার্ড</text><text x="514" y="90" text-anchor="middle" fill="#f1f5f9" font-size="16">সার্ভারে রাখুন</text>
+                </svg>
+              </div>
+              <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>⚠️ সৎ সতর্কতা:</b> বাইটকোড সোর্স লুকায়, পাসওয়ার্ড নয় — ক্লায়েন্ট অ্যাপে গোপন কী রাখবেন না!</div>
+            </div>
+            <div class="svg-box rv" style="--i:4">
+              <svg viewBox="0 0 600 410" xmlns="http://www.w3.org/2000/svg">
+                <rect x="24" y="16" width="552" height="378" rx="14" fill="#161e2e" stroke="#04AA6D" stroke-width="2.5"/>
+                <text x="300" y="62" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="28" font-weight="700">App.exe-এর ভেতরে</text>
+                <rect x="56" y="94" width="488" height="80" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="300" y="142" text-anchor="middle" fill="#7dd3fc" font-size="22">SHA-256 যাচাইকৃত .matrixc বাইটকোড</text>
+                <rect x="56" y="192" width="488" height="80" rx="10" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="300" y="240" text-anchor="middle" fill="#d8b4fe" font-size="22">ui/ অ্যাসেট (মেমরি থেকে লোড)</text>
+                <rect x="56" y="290" width="488" height="80" rx="10" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="2"/><text x="300" y="338" text-anchor="middle" fill="#fbbf24" font-size="22">পিন করা spid3r_lang রানটাইম</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 11. ৬ টাইপ + ৪০ কীওয়ার্ড ══ -->
+      <section class="slide" data-slide="11">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">ভাষার ভিত্তি</div>
           <h2 class="h">৬টি মূল ডেটা টাইপ ও ৪০টি কীওয়ার্ড</h2>
         </div>
-        <div class="grow gap-m">
-          <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-3)">
-            <div class="card card--tight rv" style="--i:1"><h4 class="mono" style="color:var(--amber)">int</h4><p>পূর্ণসংখ্যা<br><code>42 · 0xFF</code><br>বড় সংখ্যায় <code>n</code></p></div>
-            <div class="card card--tight rv" style="--i:2"><h4 class="mono" style="color:var(--cyan)">float</h4><p>দশমিক সংখ্যা<br><code>3.14 · 1.5e3</code><br><code>nan() · inf()</code></p></div>
-            <div class="card card--tight rv" style="--i:3"><h4 class="mono" style="color:var(--green)">bool</h4><p>সত্য / মিথ্যা<br><code>"" 0 null false</code> = মিথ্যা<br>খালি <code>[]</code> = সত্য</p></div>
-            <div class="card card--tight rv" style="--i:4"><h4 class="mono" style="color:var(--purple)">string</h4><p>টেক্সট (UTF-8)<br><code>r"raw"</code> · শেষ থেকে<br>গোনা যায় <code>[-1]</code></p></div>
-            <div class="card card--tight rv" style="--i:5"><h4 class="mono" style="color:var(--rose)">null</h4><p>খালি / অনুপস্থিত মান<br><code>??</code> বিকল্প<br><code>?.</code> নিরাপদ চেক</p></div>
-            <div class="card card--tight rv" style="--i:6"><h4 class="mono" style="color:var(--indigo-light)">bytes</h4><p>বাইনারি ডেটা<br>১৬ MiB সীমা<br>hex + base64 রেডি</p></div>
+        <div class="grow">
+          <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
+            <div class="card card--tight rv" style="--i:1"><h4 class="mono" style="color:var(--amber)">int</h4><p>পূর্ণসংখ্যা <code>42·n</code></p></div>
+            <div class="card card--tight rv" style="--i:2"><h4 class="mono" style="color:var(--cyan)">float</h4><p>দশমিক <code>3.14</code></p></div>
+            <div class="card card--tight rv" style="--i:3"><h4 class="mono" style="color:var(--green)">bool</h4><p>সত্য / মিথ্যা</p></div>
+            <div class="card card--tight rv" style="--i:4"><h4 class="mono" style="color:var(--purple)">string</h4><p>UTF-8 <code>[-1]</code></p></div>
+            <div class="card card--tight rv" style="--i:5"><h4 class="mono" style="color:var(--rose)">null</h4><p>খালি <code>?? · ?.</code></p></div>
+            <div class="card card--tight rv" style="--i:6"><h4 class="mono" style="color:var(--indigo-light)">bytes</h4><p>বাইনারি ১৬ MiB</p></div>
           </div>
-          <div class="caveat caveat--tight rv" style="--i:7"><b>সহজ টাইপ বদল:</b> <code>x as int</code> লেখা মানেই নিরাপদে <code>int(x)</code> — একইভাবে <code>float</code>, <code>string</code> ও <code>bool</code>।</div>
+          <div class="svg-box rv" style="--i:7">
+            <svg viewBox="0 0 1320 94" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="14" width="620" height="66" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="330" y="54" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">১৬-বাইট ValueV2: int · float · bool · null · SSO টেক্সট ইনলাইন</text>
+              <rect x="670" y="14" width="630" height="66" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="985" y="54" text-anchor="middle" fill="#7dd3fc" font-size="22" font-weight="700">সহজ রূপান্তর: x as int · float · string · bool</text>
+            </svg>
+          </div>
           <div class="gap-s">
-            <h3 class="h3 rv" style="--i:8">মাত্র ৪০টি সংরক্ষিত শব্দ <span style="font-size:var(--fs-meta);color:var(--fg3-read)">— প্রতিটি শব্দের নির্দিষ্ট কাজ আছে, তাই শেখা খুব সহজ</span></h3>
-            <div class="chips rv" style="--i:9"><span class="chip grp">তৈরি</span><span class="chip">let</span><span class="chip">const</span><span class="chip">fn</span></div>
-            <div class="chips rv" style="--i:10"><span class="chip grp">নিয়ন্ত্রণ</span><span class="chip">if</span><span class="chip">elif</span><span class="chip">else</span><span class="chip">while</span><span class="chip">for</span><span class="chip">in</span><span class="chip">break</span><span class="chip">continue</span><span class="chip">return</span><span class="chip">match</span></div>
-            <div class="chips rv" style="--i:11"><span class="chip grp">এরর</span><span class="chip">try</span><span class="chip">catch</span><span class="chip">finally</span><span class="chip">throw</span><span class="chip grp">যুক্তি</span><span class="chip">true</span><span class="chip">false</span><span class="chip">null</span><span class="chip">and</span><span class="chip">or</span><span class="chip">not</span></div>
-            <div class="chips rv" style="--i:12"><span class="chip grp">অবজেক্ট</span><span class="chip">class</span><span class="chip">interface</span><span class="chip">new</span><span class="chip">self</span><span class="chip">super</span><span class="chip">extends</span><span class="chip">implements</span><span class="chip">public</span><span class="chip">private</span><span class="chip">abstract</span></div>
-            <div class="chips rv" style="--i:13"><span class="chip grp">ডেটা ও সমান্তরাল</span><span class="chip">yield</span><span class="chip">enum</span><span class="chip">spawn</span><span class="chip">async</span><span class="chip">await</span><span class="chip grp">মডিউল</span><span class="chip">import</span><span class="chip">as</span></div>
+            <div class="chips rv" style="--i:8"><span class="chip grp">তৈরি</span><span class="chip">let</span><span class="chip">const</span><span class="chip">fn</span><span class="chip grp">যুক্তি</span><span class="chip">true</span><span class="chip">false</span><span class="chip">null</span><span class="chip">and</span><span class="chip">or</span><span class="chip">not</span></div>
+            <div class="chips rv" style="--i:9"><span class="chip grp">প্রবাহ</span><span class="chip">if</span><span class="chip">elif</span><span class="chip">else</span><span class="chip">while</span><span class="chip">for</span><span class="chip">in</span><span class="chip">break</span><span class="chip">continue</span><span class="chip">return</span><span class="chip">match</span></div>
+            <div class="chips rv" style="--i:10"><span class="chip grp">এরর ও অ্যাসিংক</span><span class="chip">try</span><span class="chip">catch</span><span class="chip">finally</span><span class="chip">throw</span><span class="chip">yield</span><span class="chip">enum</span><span class="chip">spawn</span><span class="chip">async</span><span class="chip">await</span><span class="chip">import</span><span class="chip">as</span></div>
+            <div class="chips rv" style="--i:11"><span class="chip grp">অবজেক্ট</span><span class="chip">class</span><span class="chip">interface</span><span class="chip">new</span><span class="chip">self</span><span class="chip">super</span><span class="chip">extends</span><span class="chip">implements</span><span class="chip">public</span><span class="chip">private</span><span class="chip">abstract</span></div>
           </div>
         </div>
       </section>
 
-      <!-- ══ 11. Null নিরাপত্তা ও এরর সামলানো ══ -->
-      <section class="slide" data-slide="11">
-        <div class="slide-head rv" style="--i:0">
-          <div class="kicker">নিরাপদ কোডিং</div>
-          <h2 class="h">হঠাৎ ক্র্যাশ নেই · cleanup কখনো বাদ যায় না</h2>
-        </div>
-        <div class="grow two">
-          <div class="gap-m">
-            <h3 class="h3 rv" style="--i:1">খালি মান (Null) সামলানো</h3>
-            <div class="code rv" style="--i:2">
-              <span class="line"><span class="c bn">// ?? — নাম না থাকলে "Guest User" দেখাবে</span></span>
-              <span class="line"><span class="k">let</span> name = user_name ?? <span class="s">"Guest User"</span>;</span>
-              <span class="line"><span class="c bn">// ?. — অ্যাকাউন্ট না থাকলেও ক্র্যাশ করবে না</span></span>
-              <span class="line"><span class="k">let</span> bal = account?.wallet?.balance ?? <span class="n">0.0</span>;</span>
-              <span class="line"><span class="k">if</span> (x != <span class="k">null</span>) {</span>
-              <span class="line">    <span class="c bn">// এখানে x যে খালি নয় তা Spid3r নিজেই বোঝে</span></span>
-              <span class="line">}</span>
-            </div>
-            <div class="caveat caveat--good rv" style="--i:3">একবার চেক করলেই Spid3r বুঝতে পারে মানটি নিরাপদ — বাড়তি কোড লিখতে হয় না</div>
-          </div>
-          <div class="gap-m">
-            <h3 class="h3 rv" style="--i:4">ভুল সামলানো — try · catch · finally</h3>
-            <div class="pipe rv" style="--i:5">
-              <div class="pipe-step"><div class="pt">🎯 try</div><div class="ps">ঝুঁকিপূর্ণ কাজ</div></div>
-              <div class="pipe-link" style="--i:5"></div>
-              <div class="pipe-step"><div class="pt">🧤 catch</div><div class="ps">ভুল হলে সামলায়</div></div>
-              <div class="pipe-link" style="--i:6"></div>
-              <div class="pipe-step pipe-step--hot"><div class="pt">🧹 finally</div><div class="ps">সবসময় চলে</div></div>
-            </div>
-            <div class="caveat rv" style="--i:7"><b>✅ <code>finally</code> কখনোই বাদ যায় না</b> — ভেতর থেকে <code>return</code> বা <code>throw</code> হলেও ক্লিনআপ চলবেই!</div>
-            <div class="caveat caveat--good caveat--tight rv" style="--i:8">সহজ ফলাফল টাইপ: <code>Option (some/none)</code> এবং <code>Result (ok/err)</code> — হঠাৎ ক্র্যাশের বদলে স্পষ্ট উত্তর</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ 12. টেক্সট ও নিয়ন্ত্রণ প্রবাহ ══ -->
+      <!-- ══ 12. Null নিরাপত্তা ও এরর ══ -->
       <section class="slide" data-slide="12">
         <div class="slide-head rv" style="--i:0">
-          <div class="kicker">টেক্সট ও প্রবাহ</div>
-          <h2 class="h">সহজ টেক্সট ফরম্যাটিং ও লুপ</h2>
+          <div class="kicker">নিরাপদ কোডিং</div>
+          <h2 class="h">Null নিরাপত্তা ও নিশ্চিত <code>finally</code> ক্লিনআপ</h2>
         </div>
-        <div class="grow two">
-          <div class="gap-m">
-            <h3 class="h3 rv" style="--i:1">টেক্সটের ভেতরে মান বসানো</h3>
-            <div class="code code--tight rv" style="--i:2">
-              <span class="line"><span class="k">let</span> user = <span class="s">"Dev"</span>;</span>
-              <span class="line"><span class="k">let</span> score = <span class="n">98.5</span>;</span>
-              <span class="line"><span class="c bn">// {} এর ভেতরে স্পেস ছাড়া ভেরিয়েবল লিখুন</span></span>
-              <span class="line"><span class="s bn">"স্বাগতম {user}! স্কোর: {score}"</span></span>
-              <span class="line"><span class="s bn">"ফলাফল: {:.2}"</span>.<span class="f">format</span>(<span class="n">88.6875</span>)</span>
-              <span class="line"><span class="c">// → "88.69" (২ দশমিক ঘর পর্যন্ত)</span></span>
+        <div class="grow">
+          <div class="two">
+            <div class="gap-m">
+              <div class="svg-box rv" style="--i:1">
+                <svg viewBox="0 0 640 135" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="24" width="150" height="86" rx="10" fill="rgba(251,113,133,.12)" stroke="#fb7185" stroke-width="2"/><text x="85" y="75" text-anchor="middle" fill="#fb7185" font-family="JetBrains Mono,monospace" font-size="20">user == null</text>
+                  <text x="200" y="75" text-anchor="middle" fill="#38bdf8" font-size="28" font-weight="800">?. / ??</text>
+                  <rect x="245" y="24" width="175" height="86" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="332" y="75" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="20">"Guest"</text>
+                  <text x="452" y="75" text-anchor="middle" fill="#a9b8cb" font-size="28" font-weight="800">→</text>
+                  <rect x="480" y="24" width="150" height="86" rx="10" fill="#161e2e" stroke="#04AA6D" stroke-width="2"/><text x="555" y="75" text-anchor="middle" fill="#f1f5f9" font-size="21" font-weight="700">ক্র্যাশ নেই</text>
+                </svg>
+              </div>
+              <div class="code code--tight rv" style="--i:2">
+                <span class="line"><span class="k">let</span> name = user ?? <span class="s">"Guest"</span>;</span>
+                <span class="line"><span class="k">let</span> bal = acct?.wallet?.balance ?? <span class="n">0.0</span>;</span>
+                <span class="line"><span class="k">if</span> (x != <span class="k">null</span>) { <span class="c bn">/* স্বয়ংক্রিয় চেক */</span> }</span>
+              </div>
+              <div class="caveat caveat--good caveat--tight rv" style="--i:3">একবার চেক করলেই কোড নিরাপদ — হঠাৎ Null ক্র্যাশ হয় না।</div>
             </div>
-            <div class="chips rv" style="--i:3">
-              <span class="chip">.len()</span><span class="chip">.slice()</span><span class="chip">.upper()</span><span class="chip">.trim()</span><span class="chip">.split()</span>
-              <span class="chip">.replace()</span><span class="chip">.contains()</span><span class="chip">.repeat()</span><span class="chip">.format()</span>
-            </div>
-            <div class="caveat caveat--tight rv" style="--i:4"><b>⚠️ মনে রাখুন:</b> <code>"{ name }"</code> (স্পেসসহ) সাধারণ টেক্সট হিসেবেই থাকে; শেষ অক্ষর পেতে <code>"Spid3r"[-1]</code> → <code>"r"</code></div>
-          </div>
-          <div class="gap-m">
-            <h3 class="h3 rv" style="--i:6">সিদ্ধান্ত ও পুনরাবৃত্তি — if, while, for</h3>
-            <div class="code code--tight rv" style="--i:7">
-              <span class="line"><span class="c bn">// if সরাসরি মান ফেরত দিতে পারে!</span></span>
-              <span class="line"><span class="k">let</span> status = <span class="k">if</span> (marks &gt;= <span class="n">60</span>) { <span class="s bn">"পাশ"</span> }</span>
-              <span class="line">             <span class="k">else</span> { <span class="s bn">"ফেল"</span> };</span>
-              <span class="line"><span class="c bn">// গণনা বা লিস্টের প্রতিটি আইটেমে লুপ</span></span>
-              <span class="line"><span class="k">for let</span> i = <span class="n">0</span>; i &lt; <span class="n">n</span>; i += <span class="n">1</span> { … }</span>
-              <span class="line"><span class="k">for</span> item <span class="k">in</span> list { … }</span>
-              <span class="line"><span class="k">for</span> (key, value) <span class="k">in</span> map { … }</span>
-            </div>
-            <div class="pipe rv" style="--i:8">
-              <div class="pipe-step"><div class="pt">শুরু</div></div>
-              <div class="pipe-link" style="--i:8"></div>
-              <div class="pipe-step"><div class="pt">শর্ত সত্য?</div></div>
-              <div class="pipe-link" style="--i:9"></div>
-              <div class="pipe-step"><div class="pt">হ্যাঁ → কাজ করো</div></div>
-              <div class="pipe-link" style="--i:10"></div>
-              <div class="pipe-step pipe-step--hot"><div class="pt">না → বেরোও</div></div>
+            <div class="gap-m">
+              <div class="svg-box rv" style="--i:4">
+                <svg viewBox="0 0 640 135" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="24" width="175" height="86" rx="10" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="97" y="75" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="22">try { ... }</text>
+                  <text x="208" y="75" text-anchor="middle" fill="#a9b8cb" font-size="26">→</text>
+                  <rect x="230" y="24" width="180" height="86" rx="10" fill="rgba(251,113,133,.10)" stroke="#fb7185" stroke-width="2"/><text x="320" y="75" text-anchor="middle" fill="#fb7185" font-family="JetBrains Mono,monospace" font-size="22">catch (e)</text>
+                  <text x="433" y="75" text-anchor="middle" fill="#a9b8cb" font-size="26">→</text>
+                  <rect x="455" y="24" width="175" height="86" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="542" y="75" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="22">finally</text>
+                </svg>
+              </div>
+              <div class="two" style="gap:var(--sp-3)">
+                <div class="card card--tight rv" style="--i:5"><h4 class="mono" style="color:var(--cyan)">Option</h4><p><code>some(v) / none</code></p></div>
+                <div class="card card--tight rv" style="--i:6"><h4 class="mono" style="color:var(--green)">Result</h4><p><code>ok(v) / err(e)</code></p></div>
+              </div>
+              <div class="caveat caveat--tight rv" style="--i:7"><b><code>finally</code> সবসময় চলে</b> — রিটার্ন বা এরর হলেও বাদ যায় না।</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ══ 13. ফাংশন, ক্লোজার ও Match ══ -->
+      <!-- ══ 13. টেক্সট ও নিয়ন্ত্রণ প্রবাহ ══ -->
       <section class="slide" data-slide="13">
         <div class="slide-head rv" style="--i:0">
-          <div class="kicker">স্মার্ট শর্টকাট</div>
-          <h2 class="h">ফাংশন, ক্লোজার ও সম্পূর্ণ Match</h2>
+          <div class="kicker">টেক্সট ও প্রবাহ</div>
+          <h2 class="h">সহজ টেক্সট ফরম্যাটিং, <code>if</code> ও লুপ</h2>
         </div>
-        <div class="grow two" style="align-items:start">
-          <div class="gap-s">
-            <h3 class="h3 rv" style="--i:1">পুনঃব্যবহারযোগ্য ফাংশন</h3>
-            <div class="code code--tight rv" style="--i:2">
-              <span class="line"><span class="k">fn</span> <span class="f">power</span>(base, exp = <span class="n">2</span>) { … }</span>
-              <span class="line"><span class="c bn">// ক্লোজার — নিজের আগের মান মনে রাখে</span></span>
-              <span class="line"><span class="k">fn</span> <span class="f">make_acc</span>(start) {</span>
-              <span class="line">  <span class="k">let</span> total = start;</span>
-              <span class="line">  <span class="k">return fn</span>(v) { total += v; <span class="k">return</span> total; };</span>
-              <span class="line">}</span>
-              <span class="line">nums.<span class="f">filter</span>(x =&gt; x % <span class="n">2</span> == <span class="n">0</span>)</span>
-              <span class="line">    .<span class="f">map</span>(x =&gt; x * x)</span>
-              <span class="line">    .<span class="f">reduce</span>(<span class="n">0</span>, (a, n) =&gt; a + n);</span>
+        <div class="grow">
+          <div class="two">
+            <div class="gap-m">
+              <div class="code code--tight rv" style="--i:1">
+                <span class="line"><span class="s bn">"স্বাগতম {user}! স্কোর: {score}"</span></span>
+                <span class="line"><span class="s bn">"ফলাফল: {:.2}"</span>.<span class="f">format</span>(<span class="n">88.6875</span>) <span class="c">// "88.69"</span></span>
+                <span class="line"><span class="s">"Spid3r"</span>[-<span class="n">1</span>] <span class="c">// "r"</span></span>
+              </div>
+              <div class="chips rv" style="--i:2"><span class="chip">.len()</span><span class="chip">.trim()</span><span class="chip">.split()</span><span class="chip">.replace()</span><span class="chip">.format()</span></div>
             </div>
-            <div class="three" style="gap:var(--sp-2)">
-              <div class="card card--tight rv" style="--i:3"><h4 style="font-size:var(--fs-meta)">ফার্স্ট-ক্লাস</h4><p>ফাংশন পাস করা যায়</p></div>
-              <div class="card card--tight rv" style="--i:4"><h4 style="font-size:var(--fs-meta)">ক্লোজার</h4><p>নিজের ডেটা মনে রাখে</p></div>
-              <div class="card card--tight rv" style="--i:5"><h4 style="font-size:var(--fs-meta)">ডেটা চেইন</h4><p>filter → map → reduce</p></div>
+            <div class="gap-m">
+              <div class="code code--tight rv" style="--i:3">
+                <span class="line"><span class="k">let</span> st = <span class="k">if</span> (marks &gt;= <span class="n">60</span>) { <span class="s bn">"পাশ"</span> } <span class="k">else</span> { <span class="s bn">"ফেল"</span> };</span>
+                <span class="line"><span class="k">for</span> (k, v) <span class="k">in</span> map { … }</span>
+                <span class="line"><span class="k">while</span> (cond) { … }</span>
+              </div>
+              <div class="caveat caveat--good caveat--tight rv" style="--i:4"><code>if</code> সরাসরি মান ফেরত দেয় এবং লুপ তালিকা ও ম্যাপে সহজে চলে।</div>
             </div>
-            <div class="caveat caveat--tight rv" style="--i:6"><b>সুবিধা:</b> ডিফল্ট <code>items = []</code> প্রতিবার নতুন লিস্ট তৈরি করে — আগের কলের ডেটা মিশে যায় না!</div>
           </div>
-          <div class="gap-s">
-            <h3 class="h3 rv" style="--i:7">Enum ও Match — কোনো কেস বাদ পড়বে না</h3>
-            <div class="code code--tight rv" style="--i:8">
-              <span class="line"><span class="k">enum</span> Command {</span>
-              <span class="line">  <span class="f">Move</span>(x, y), <span class="f">Rotate</span>(deg), <span class="f">Stop</span></span>
-              <span class="line">}</span>
-              <span class="line"><span class="k">match</span> (cmd) {</span>
-              <span class="line">  <span class="f">Move</span>(x, y) <span class="k">if</span> x == <span class="n">0</span> =&gt; <span class="s bn">"দাঁড়াও"</span>,</span>
-              <span class="line">  <span class="f">Move</span>(x, y) =&gt; <span class="s bn">"চলো ({x},{y})"</span>,</span>
-              <span class="line">  <span class="f">Rotate</span>(deg) =&gt; <span class="s bn">"ঘুরো {deg}°"</span>,</span>
-              <span class="line">  <span class="f">Stop</span> =&gt; <span class="s bn">"থামো!"</span></span>
-              <span class="line">}</span>
-            </div>
-            <div class="caveat caveat--rose caveat--tight rv" style="--i:9"><b>⛔ ভুল হওয়ার সুযোগ নেই:</b> কোনো অপশন বাদ পড়লে কম্পাইলার চালানোর আগেই জানিয়ে দেবে!</div>
-            <div class="caveat caveat--tight rv" style="--i:10">মান তৈরি করতে বন্ধনীসহ <code>Stop()</code> লিখুন — খালি <code>Stop</code> শুধু <code>match</code>-এ ব্যবহারের জন্য।</div>
+          <div class="svg-box rv" style="--i:5">
+            <svg viewBox="0 0 1320 140" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="22" width="280" height="96" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="160" y="64" text-anchor="middle" fill="#7dd3fc" font-size="22" font-weight="700">লুপ শুরু</text><text x="160" y="96" text-anchor="middle" fill="#a9b8cb" font-family="JetBrains Mono,monospace" font-size="19">for item in list</text>
+              <text x="340" y="78" text-anchor="middle" fill="#38bdf8" font-size="28">→</text>
+              <rect x="380" y="22" width="280" height="96" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="520" y="64" text-anchor="middle" fill="#d8b4fe" font-size="22" font-weight="700">শর্ত যাচাই</text><text x="520" y="96" text-anchor="middle" fill="#a9b8cb" font-size="19">আইটেম আছে?</text>
+              <text x="700" y="78" text-anchor="middle" fill="#04AA6D" font-size="28">→</text>
+              <rect x="740" y="22" width="260" height="96" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="870" y="64" text-anchor="middle" fill="#34d399" font-size="22" font-weight="700">হ্যাঁ → কাজ করো</text><text x="870" y="96" text-anchor="middle" fill="#a9b8cb" font-size="19">আবার যাচাই</text>
+              <text x="1040" y="78" text-anchor="middle" fill="#fbbf24" font-size="28">→</text>
+              <rect x="1080" y="22" width="220" height="96" rx="12" fill="#161e2e" stroke="#fbbf24" stroke-width="2"/><text x="1190" y="64" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="700">না → বেরোও</text><text x="1190" y="96" text-anchor="middle" fill="#a9b8cb" font-size="19">পরের ধাপ</text>
+            </svg>
           </div>
         </div>
       </section>
 
-      <!-- ══ 14. অবজেক্ট-ওরিয়েন্টেড ডিজাইন ══ -->
+      <!-- ══ 14. ফাংশন, ক্লোজার ও Match ══ -->
       <section class="slide" data-slide="14">
         <div class="slide-head rv" style="--i:0">
-          <div class="kicker">কোড গোছানো</div>
-          <h2 class="h">ক্লাস, উত্তরাধিকার ও ইন্টারফেস (OOP)</h2>
+          <div class="kicker">স্মার্ট শর্টকাট</div>
+          <h2 class="h">ক্লোজার, ডেটা চেইন ও সম্পূর্ণ <code>match</code></h2>
         </div>
-        <div class="grow two" style="align-items:start">
-          <div class="code rv" style="--i:1">
-            <span class="line"><span class="k">class</span> Animal {</span>
-            <span class="line">  <span class="k">public let</span> name;</span>
-            <span class="line">  <span class="k">private let</span> energy; <span class="c bn">// ডিফল্টভাবে সুরক্ষিত</span></span>
-            <span class="line">  <span class="k">public fn new</span>(name) { <span class="k">self</span>.name = name; }</span>
-            <span class="line">  <span class="k">public fn</span> <span class="f">speak</span>(<span class="k">self</span>) { … }</span>
-            <span class="line">}</span>
-            <span class="line"><span class="k">class</span> Dog <span class="k">extends</span> Animal {</span>
-            <span class="line">  <span class="k">public fn new</span>(name, breed) {</span>
-            <span class="line">    <span class="k">super</span>(name); <span class="c bn">// প্যারেন্টের সেটআপ ব্যবহার</span></span>
-            <span class="line">  }</span>
-            <span class="line">  <span class="k">public fn</span> <span class="f">speak</span>(<span class="k">self</span>) {</span>
-            <span class="line">    <span class="k">return super</span>.<span class="f">speak</span>() + <span class="s">" → Woof!"</span>;</span>
-            <span class="line">  }</span>
-            <span class="line">}</span>
+        <div class="grow">
+          <div class="svg-box rv" style="--i:1">
+            <svg viewBox="0 0 1320 120" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="18" width="230" height="82" rx="12" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="135" y="68" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="23">[1, 2, 3, 4]</text>
+              <text x="285" y="68" text-anchor="middle" fill="#38bdf8" font-size="30">→</text>
+              <rect x="320" y="18" width="250" height="82" rx="12" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="445" y="68" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="23">.filter(even)</text>
+              <text x="605" y="68" text-anchor="middle" fill="#38bdf8" font-size="30">→</text>
+              <rect x="640" y="18" width="250" height="82" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="765" y="68" text-anchor="middle" fill="#d8b4fe" font-family="JetBrains Mono,monospace" font-size="23">.map(x * x)</text>
+              <text x="925" y="68" text-anchor="middle" fill="#04AA6D" font-size="30">→</text>
+              <rect x="960" y="18" width="340" height="82" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="1130" y="68" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="23">.reduce(0, +) ⇒ 20</text>
+            </svg>
           </div>
-          <div class="gap-m">
-            <div class="card rv" style="--i:2">
-              <div class="ico">🌳</div>
-              <h4 style="font-size:var(--fs-h3)">ব্লুপ্রিন্ট থেকে নতুন রূপ (Animal → Dog)</h4>
-              <p>একই বৈশিষ্ট্য বারবার না লিখে <code>extends</code> ও <code>super()</code> দিয়ে সহজে বাড়ানো যায়</p>
+          <div class="two">
+            <div class="code code--tight rv" style="--i:2">
+              <span class="line"><span class="c bn">// ক্লোজার আগের মান মনে রাখে</span></span>
+              <span class="line"><span class="k">fn</span> <span class="f">make_acc</span>(s) {</span>
+              <span class="line">  <span class="k">return fn</span>(v) { s += v; <span class="k">return</span> s; };</span>
+              <span class="line">}</span>
             </div>
-            <div class="card rv" style="--i:3">
-              <div class="ico">🧩</div>
-              <h4 style="font-size:var(--fs-h3)">interface Drawable { fn draw(self); }</h4>
-              <p>একই নিয়মে ভিন্ন ভিন্ন অবজেক্ট চালানো যায় — ডিফল্ট মেথড ও <code>static</code> সাপোর্টসহ</p>
+            <div class="code code--tight rv" style="--i:3">
+              <span class="line"><span class="k">match</span> (cmd) {</span>
+              <span class="line">  <span class="f">Move</span>(x, y) =&gt; <span class="s bn">"চলো ({x},{y})"</span>,</span>
+              <span class="line">  <span class="f">Stop</span>       =&gt; <span class="s bn">"থামো!"</span></span>
+              <span class="line">}</span>
             </div>
-            <div class="caveat caveat--good rv" style="--i:4"><b>মূল নিয়ম:</b> সবকিছু ডিফল্টভাবে <b>private</b> · একক উত্তরাধিকার · প্রথম প্যারামিটার স্পষ্ট <code>self</code></div>
+          </div>
+          <div class="two">
+            <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>সুবিধা:</b> ডিফল্ট <code>[]</code> বা <code>{}</code> প্রতিবার নতুন কপি বানায়।</div>
+            <div class="caveat caveat--rose caveat--tight rv" style="--i:5"><b>⛔ সম্পূর্ণ Match:</b> কোনো অপশন বাদ পড়লে কম্পাইলার আগেই জানায়।</div>
           </div>
         </div>
       </section>
 
-      <!-- ══ 15. ২০+ কালেকশন + বিল্ট-ইন গণিত ══ -->
+      <!-- ══ 15. অবজেক্ট-ওরিয়েন্টেড ডিজাইন ══ -->
       <section class="slide" data-slide="15">
         <div class="slide-head rv" style="--i:0">
-          <div class="kicker">ডেটা ও গণিত</div>
-          <h2 class="h">২০+ ডেটা অর্গানাইজার ও বিল্ট-ইন গণিত</h2>
+          <div class="kicker">কোড গোছানো</div>
+          <h2 class="h">ক্লাস, উত্তরাধিকার ও ইন্টারফেস</h2>
         </div>
-        <div class="grow gap-m">
-          <div class="four rv" style="--i:1;grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
-            <div class="card card--tight"><h4 class="mono">list</h4><p>তালিকা</p></div>
-            <div class="card card--tight"><h4 class="mono">map</h4><p>কী → মান জোড়া</p></div>
-            <div class="card card--tight"><h4 class="mono">set</h4><p>ইউনিক আইটেম</p></div>
-            <div class="card card--tight"><h4 class="mono">bag</h4><p>ডুপ্লিকেট গণনা</p></div>
-            <div class="card card--tight"><h4 class="mono">tuple</h4><p>স্থির তালিকা</p></div>
-            <div class="card card--tight"><h4 class="mono">bytes</h4><p>বাইনারি ডেটা</p></div>
-            <div class="card card--tight"><h4 class="mono">stack</h4><p>LIFO (উপরেরটা আগে)</p></div>
-            <div class="card card--tight"><h4 class="mono">queue</h4><p>FIFO (লাইন অনুযায়ী)</p></div>
-            <div class="card card--tight"><h4 class="mono">deque</h4><p>দুই দিকের লাইন</p></div>
-            <div class="card card--tight"><h4 class="mono">heap</h4><p>দ্রুত min/max</p></div>
-            <div class="card card--tight"><h4 class="mono">trie</h4><p>শব্দ প্রিফিক্স খুঁজা</p></div>
-            <div class="card card--tight"><h4 class="mono">graph</h4><p>রুট ও Dijkstra</p></div>
-            <div class="card card--tight"><h4 class="mono">ring_buffer</h4><p>নির্দিষ্ট চক্র বাফার</p></div>
-            <div class="card card--tight"><h4 class="mono">linked_list</h4><p>নোড চেইন</p></div>
-            <div class="card card--tight"><h4 class="mono">hash_table</h4><p>দ্রুত লুকআপ</p></div>
-            <div class="card card--tight"><h4 class="mono">bst</h4><p>সাজানো সার্চ ট্রি</p></div>
-            <div class="card card--tight"><h4 class="mono">priority_queue</h4><p>অগ্রাধিকার কিউ</p></div>
-            <div class="card card--tight"><h4 class="mono">vec</h4><p>ডায়নামিক তালিকা</p></div>
-          </div>
-          <div class="caveat caveat--good caveat--tight rv" style="--i:2"><b>🧩 জেনেরিক্স ও নিরাপদ সর্ট:</b> <code>&lt;T: Numeric&gt;</code>, <code>list&lt;int&gt;</code> আনবক্সিং (YamLLVM) ও লক-মুক্ত <code>sort_by / sorted_by</code></div>
-          <div class="two" style="gap:var(--sp-5)">
-            <div class="code code--tight rv" style="--i:3">
-              <span class="line"><span class="k">let</span> v1 = <span class="f">vector</span>([<span class="n">1.0</span>, <span class="n">2.0</span>, <span class="n">3.0</span>]);</span>
-              <span class="line"><span class="k">let</span> v2 = <span class="f">vector</span>([<span class="n">4.0</span>, <span class="n">5.0</span>, <span class="n">6.0</span>]);</span>
-              <span class="line">v1.<span class="f">dot</span>(v2); <span class="c">// 32.0</span></span>
-              <span class="line"><span class="k">let</span> A = <span class="f">matrix</span>(<span class="n">2</span>, <span class="n">2</span>, <span class="n">0.0</span>);</span>
-              <span class="line">A.<span class="f">set</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">4.0</span>); A.<span class="f">set</span>(<span class="n">0</span>,<span class="n">1</span>,<span class="n">7.0</span>); A.<span class="f">set</span>(<span class="n">1</span>,<span class="n">0</span>,<span class="n">2.0</span>); A.<span class="f">set</span>(<span class="n">1</span>,<span class="n">1</span>,<span class="n">6.0</span>);</span>
-              <span class="line">A.<span class="f">det</span>(); <span class="c">// 10.0 · A.solve(vector([18.0, 10.0]))</span></span>
-              <span class="line"><span class="f">save_npy</span>(<span class="s">"a.npy"</span>, A); <span class="c bn">// Python NumPy ফাইল!</span></span>
-            </div>
-            <div class="gap-s">
-              <div class="card card--tight rv" style="--i:4">
-                <h4 class="mono" style="color:var(--green)">4 &nbsp; 7<br>2 &nbsp; 6</h4>
-                <p style="color:var(--cyan)">→ det = 10 · inverse (LU) · solve(b)</p>
+        <div class="grow">
+          <div class="two">
+            <div class="gap-m">
+              <div class="code code--tight rv" style="--i:1">
+                <span class="line"><span class="k">class</span> Animal {</span>
+                <span class="line">  <span class="k">private let</span> energy = <span class="n">100</span>;</span>
+                <span class="line">  <span class="k">public let</span> name;</span>
+                <span class="line">  <span class="k">fn new</span>(name) { <span class="k">self</span>.name = name; }</span>
+                <span class="line">}</span>
+                <span class="line"><span class="k">class</span> Dog <span class="k">extends</span> Animal <span class="k">implements</span> Speak {</span>
+                <span class="line">  <span class="k">fn new</span>(name) { <span class="k">super</span>(name); }</span>
+                <span class="line">}</span>
               </div>
-              <div class="caveat caveat--tight rv" style="--i:5"><b>💾 বাড়তি ইনস্টল ছাড়াই NumPy-এর মতো ক্ষমতা</b> — Python-এর সাথে সরাসরি <code>.npy</code> ফাইল আদান-প্রদান</div>
-              <p class="note rv" style="--i:6"><b>সীমা:</b> ১৬,৭৭৭,২১৬ এলিমেন্ট · ৬৪-বিট ফ্লোট · <code>m.get(r,c)</code> / <code>m.set(r,c,v)</code></p>
+              <div class="three" style="gap:var(--sp-2)">
+                <div class="card card--tight rv" style="--i:2"><h4>🔒 Private</h4><p>ডিফল্ট সুরক্ষা</p></div>
+                <div class="card card--tight rv" style="--i:3"><h4>🧬 Extends</h4><p>একক উত্তরাধিকার</p></div>
+                <div class="card card--tight rv" style="--i:4"><h4>⚡ Static</h4><p>ও <code>abstract</code></p></div>
+              </div>
+            </div>
+            <div class="gap-m">
+              <div class="svg-box rv" style="--i:5">
+                <svg viewBox="0 0 600 290" xmlns="http://www.w3.org/2000/svg">
+                  <defs><marker id="ab15" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#38bdf8" stroke-width="2"/></marker></defs>
+                  <rect x="20" y="20" width="245" height="92" rx="10" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="142" y="58" text-anchor="middle" fill="#7dd3fc" font-size="23" font-weight="700">Animal</text><text x="142" y="92" text-anchor="middle" fill="#a9b8cb" font-size="18">🔒 private ডিফল্ট</text>
+                  <rect x="335" y="20" width="245" height="92" rx="10" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="457" y="58" text-anchor="middle" fill="#d8b4fe" font-size="23" font-weight="700">interface Speak</text><text x="457" y="92" text-anchor="middle" fill="#a9b8cb" font-size="18">একই নিয়ম</text>
+                  <path d="M142 112 L240 172" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#ab15)"/>
+                  <path d="M457 112 L360 172" stroke="#c084fc" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#ab15)"/>
+                  <rect x="150" y="178" width="300" height="90" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="300" y="218" text-anchor="middle" fill="#34d399" font-size="23" font-weight="700">Dog (extends)</text><text x="300" y="250" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="18">super() · স্পষ্ট self</text>
+                </svg>
+              </div>
+              <div class="caveat caveat--good caveat--tight rv" style="--i:6">ইন্টারফেসে ডিফল্ট মেথড থাকায় ভিন্ন অবজেক্ট এক তালিকায় চলে।</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ══ 16. কনকারেন্সি ══ -->
+      <!-- ══ 16. ২০+ কালেকশন + বিল্ট-ইন গণিত ══ -->
       <section class="slide" data-slide="16">
         <div class="slide-head rv" style="--i:0">
-          <div class="kicker">মাল্টিটাস্কিং</div>
-          <h2 class="h">আসল সমান্তরাল গতি — কোনো গ্লোবাল লক নেই!</h2>
+          <div class="kicker">ডেটা ও গণিত</div>
+          <h2 class="h">২০+ কন্টেইনার, জেনেরিক্স ও ম্যাট্রিক্স গণিত</h2>
         </div>
-        <div class="grow gap-l">
-          <div class="pipe">
-            <div class="pipe-step rv" style="--i:1"><div class="pt">🧵 spawn</div><div class="ps">নতুন কাজ শুরু</div></div>
-            <div class="pipe-link" style="--i:1"></div>
-            <div class="pipe-step rv" style="--i:2"><div class="pt">M:N শিডিউলার</div><div class="ps">সব CPU কোরে ভাগ (২৫৬ পর্যন্ত)</div></div>
-            <div class="pipe-link" style="--i:2"></div>
-            <div class="pipe-step rv" style="--i:3"><div class="pt">📡 channel()</div><div class="ps">নিরাপদ বার্তা পাইপ</div></div>
-            <div class="pipe-link" style="--i:3"></div>
-            <div class="pipe-step pipe-step--hot rv" style="--i:4"><div class="pt">⏳ recv()</div><div class="ps">ফলাফল গ্রহণ</div></div>
+        <div class="grow">
+          <div class="four rv" style="--i:1;grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
+            <div class="card card--tight"><h4 class="mono">list / vec</h4><p>তালিকা</p></div>
+            <div class="card card--tight"><h4 class="mono">map / hash</h4><p>কী → মান</p></div>
+            <div class="card card--tight"><h4 class="mono">set / bag</h4><p>ইউনিক</p></div>
+            <div class="card card--tight"><h4 class="mono">stack/queue</h4><p>LIFO/FIFO</p></div>
+            <div class="card card--tight"><h4 class="mono">heap / trie</h4><p>সার্চ</p></div>
+            <div class="card card--tight"><h4 class="mono">graph / bst</h4><p>রুট ও ট্রি</p></div>
           </div>
-          <div class="caveat caveat--rose rv" style="--i:5;text-align:center"><b>🚫 কোনো গ্লোবাল লক (GIL) নেই</b> — একাধিক ভারী কাজ সত্যিকার অর্থে একসাথে চলে, ট্রাফিক জ্যাম হয় না</div>
-          <div class="caveat caveat--good rv" style="--i:6;text-align:center"><code>async/await · task.join() · mutex(v) · atomic_int · অটো ডেডলক সনাক্তকরণ বিল্ট-ইন</code></div>
+          <div class="two">
+            <div class="svg-box rv" style="--i:2">
+              <svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="20" width="185" height="135" rx="10" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="112" y="54" text-anchor="middle" fill="#7dd3fc" font-size="20" font-weight="700">Matrix A</text><text x="112" y="96" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="24">[ 4  7 ]</text><text x="112" y="132" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="24">[ 2  6 ]</text>
+                <text x="235" y="98" text-anchor="middle" fill="#04AA6D" font-size="26">→</text>
+                <rect x="265" y="20" width="355" height="135" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="442" y="60" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="21">det = 10.0 · inverse()</text><text x="442" y="100" text-anchor="middle" fill="#f1f5f9" font-family="JetBrains Mono,monospace" font-size="20">solve([18, 10]) → [3.8, 0.4]</text><text x="442" y="136" text-anchor="middle" fill="#fbbf24" font-size="18">১৬.৭ মিলিয়ন ফ্লোট সীমা</text>
+                <text x="320" y="204" text-anchor="middle" fill="#a9b8cb" font-size="19">Python NumPy (.npy) সরাসরি পড়া ও লেখা যায়</text>
+              </svg>
+            </div>
+            <div class="gap-m">
+              <div class="code code--tight rv" style="--i:3">
+                <span class="line"><span class="k">let</span> v1 = <span class="f">vector</span>([<span class="n">1.0</span>, <span class="n">2.0</span>, <span class="n">3.0</span>]);</span>
+                <span class="line"><span class="k">let</span> A = <span class="f">matrix</span>(<span class="n">2</span>, <span class="n">2</span>, <span class="n">0.0</span>);</span>
+                <span class="line">A.<span class="f">det</span>(); <span class="f">save_npy</span>(<span class="s">"a.npy"</span>, A);</span>
+              </div>
+              <div class="caveat caveat--good caveat--tight rv" style="--i:4"><b>LLVM 23 জেনেরিক্স:</b> <code>&lt;T: Numeric&gt;</code> আনবক্সিং + লক-মুক্ত সর্ট।</div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- ══ 17. ২৬টি বিল্ট-ইন মডিউল ══ -->
+      <!-- ══ 17. কনকারেন্সি ══ -->
       <section class="slide" data-slide="17">
+        <div class="slide-head rv" style="--i:0">
+          <div class="kicker">মাল্টিটাস্কিং</div>
+          <h2 class="h">আসল সমান্তরাল গতি — কোনো গ্লোবাল লক নেই</h2>
+        </div>
+        <div class="grow">
+          <div class="svg-box rv" style="--i:1">
+            <svg viewBox="0 0 1320 140" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="28" width="220" height="82" rx="12" fill="#161e2e" stroke="#38bdf8" stroke-width="2"/><text x="130" y="64" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono,monospace" font-size="22">spawn fn()</text><text x="130" y="92" text-anchor="middle" fill="#a9b8cb" font-size="16">নতুন কাজ</text>
+              <text x="275" y="76" text-anchor="middle" fill="#38bdf8" font-size="28">→</text>
+              <rect x="310" y="14" width="360" height="110" rx="12" fill="rgba(192,132,252,.14)" stroke="#c084fc" stroke-width="2"/><text x="490" y="48" text-anchor="middle" fill="#d8b4fe" font-size="22" font-weight="700">M:N শিডিউলার (No GIL)</text><text x="490" y="80" text-anchor="middle" fill="#f1f5f9" font-size="18">২৫৬ পর্যন্ত ওয়ার্কার সব CPU কোরে</text><text x="490" y="106" text-anchor="middle" fill="#fb7185" font-size="16">অটো ডেডলক সুরক্ষা</text>
+              <text x="705" y="76" text-anchor="middle" fill="#38bdf8" font-size="28">→</text>
+              <rect x="740" y="28" width="240" height="82" rx="12" fill="#161e2e" stroke="#fbbf24" stroke-width="2"/><text x="860" y="64" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono,monospace" font-size="22">channel()</text><text x="860" y="92" text-anchor="middle" fill="#a9b8cb" font-size="16">নিরাপদ পাইপ</text>
+              <text x="1015" y="76" text-anchor="middle" fill="#04AA6D" font-size="28">→</text>
+              <rect x="1050" y="28" width="250" height="82" rx="12" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="1175" y="64" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="22">recv() / join()</text><text x="1175" y="92" text-anchor="middle" fill="#a9b8cb" font-size="16">ফলাফল সংগ্রহ</text>
+            </svg>
+          </div>
+          <div class="svg-box rv" style="--i:2">
+            <svg viewBox="0 0 1320 130" xmlns="http://www.w3.org/2000/svg">
+              <text x="24" y="42" fill="#fb7185" font-size="20" font-weight="700">GIL ভাষা (একবারে ১টি কোর)</text>
+              <rect x="340" y="20" width="220" height="32" rx="6" fill="#fb7185"/><rect x="570" y="20" width="220" height="32" rx="6" fill="#1e293b"/><rect x="800" y="20" width="220" height="32" rx="6" fill="#1e293b"/><rect x="1030" y="20" width="220" height="32" rx="6" fill="#1e293b"/>
+              <text x="24" y="98" fill="#34d399" font-size="20" font-weight="700">Spid3r M:N (সব কোর সক্রিয়)</text>
+              <rect x="340" y="76" width="220" height="32" rx="6" fill="#04AA6D"/><rect x="570" y="76" width="220" height="32" rx="6" fill="#04AA6D"/><rect x="800" y="76" width="220" height="32" rx="6" fill="#04AA6D"/><rect x="1030" y="76" width="220" height="32" rx="6" fill="#04AA6D"/>
+            </svg>
+          </div>
+          <div class="two">
+            <div class="code code--tight rv" style="--i:3"><span class="line"><span class="k">let</span> w = <span class="k">spawn fn</span>() { <span class="k">return</span> <span class="n">5050</span>; }; <span class="k">let</span> ans = w.<span class="f">join</span>();</span></div>
+            <div class="chips rv" style="--i:4"><span class="chip">async / await</span><span class="chip">mutex(v)</span><span class="chip">atomic_int(0)</span><span class="chip">ref / weak</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 18. ২৬টি বিল্ট-ইন মডিউল ══ -->
+      <section class="slide" data-slide="18">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">সবকিছু বিল্ট-ইন</div>
           <h2 class="h">২৬টি স্ট্যান্ডার্ড মডিউল ও ২৫৪টি নেটিভ ফাংশন</h2>
         </div>
         <div class="grow gap-s">
           <div class="four" style="grid-template-columns:repeat(6,1fr);gap:var(--sp-2)">
-            <div class="card card--tight rv" style="--i:1"><h4 style="color:var(--cyan)">SQL ডেটাবেস</h4><p>SQLite · Postgres · MySQL 8</p></div>
-            <div class="card card--tight rv" style="--i:2"><h4 style="color:var(--green)">ফাইল ও তথ্য</h4><p>spid3rinfo · ১,০২৪ স্ট্রিম</p></div>
-            <div class="card card--tight rv" style="--i:3"><h4 style="color:var(--purple)">ওয়েব ও নেট</h4><p>http_fetch · WS · TLS</p></div>
-            <div class="card card--tight rv" style="--i:4"><h4 style="color:var(--amber)">র‍্যান্ডম</h4><p>random_bytes (OS CSPRNG)</p></div>
-            <div class="card card--tight rv" style="--i:5"><h4 style="color:var(--rose)">হ্যাশ ও স্বাক্ষর</h4><p>sha256 · ed25519 · argon2</p></div>
-            <div class="card card--tight rv" style="--i:6"><h4 style="color:var(--indigo-light)">ফরম্যাট</h4><p>JSON · MsgPack · CBOR · gzip</p></div>
+            <div class="card card--tight rv" style="--i:1"><h4 style="color:var(--cyan)">SQL DB</h4><p>SQLite · PG · MySQL</p></div>
+            <div class="card card--tight rv" style="--i:2"><h4 style="color:var(--green)">ফাইল</h4><p>১,০২৪ স্ট্রিম</p></div>
+            <div class="card card--tight rv" style="--i:3"><h4 style="color:var(--purple)">ওয়েব</h4><p>HTTP · WS · TLS</p></div>
+            <div class="card card--tight rv" style="--i:4"><h4 style="color:var(--amber)">র‍্যান্ডম</h4><p>OS CSPRNG</p></div>
+            <div class="card card--tight rv" style="--i:5"><h4 style="color:var(--rose)">হ্যাশ</h4><p>sha256 · ed25519</p></div>
+            <div class="card card--tight rv" style="--i:6"><h4 style="color:var(--indigo-light)">ফরম্যাট</h4><p>JSON · CBOR · gzip</p></div>
           </div>
-          <h3 class="h3 rv" style="--i:7;font-size:var(--fs-kicker);line-height:var(--lh-kicker)">২৬টি <code>stdlib</code> মডিউল ও ২৫৪টি বিল্ট-ইন ফাংশন (১১৭টি AOT ট্রাম্পোলিন)</h3>
-          <div class="four rv" style="--i:8;grid-template-columns:repeat(9,1fr);gap:var(--sp-2)">
-            <div class="card card--tight"><h4 class="mono">web</h4><p>ওয়েব সার্ভার</p></div>
-            <div class="card card--tight"><h4 class="mono">http</h4><p>রাউটার</p></div>
-            <div class="card card--tight"><h4 class="mono">fastcgi</h4><p>nginx/Apache</p></div>
-            <div class="card card--tight"><h4 class="mono">stats</h4><p>পরিসংখ্যান</p></div>
-            <div class="card card--tight"><h4 class="mono">mathx</h4><p>FFT ও রুট</p></div>
-            <div class="card card--tight"><h4 class="mono">toml</h4><p>TOML পার্সার</p></div>
-            <div class="card card--tight"><h4 class="mono">yaml</h4><p>YAML I/O</p></div>
-            <div class="card card--tight"><h4 class="mono">xml</h4><p>XML I/O</p></div>
-            <div class="card card--tight"><h4 class="mono">tz</h4><p>৫৯৮ টাইমজোন</p></div>
-            <div class="card card--tight"><h4 class="mono">unicode</h4><p>UCD 15.1</p></div>
-            <div class="card card--tight"><h4 class="mono">smtp</h4><p>ইমেইল</p></div>
-            <div class="card card--tight"><h4 class="mono">ftp</h4><p>ফাইল ট্রান্সফার</p></div>
-            <div class="card card--tight"><h4 class="mono">session</h4><p>সাইনড কুকি</p></div>
-            <div class="card card--tight"><h4 class="mono">middleware</h4><p>CORS/লিমিট</p></div>
-            <div class="card card--tight"><h4 class="mono">multipart</h4><p>ফাইল আপলোড</p></div>
-            <div class="card card--tight"><h4 class="mono">event</h4><p>ইভেন্ট লুপ</p></div>
-            <div class="card card--tight"><h4 class="mono">gen</h4><p>জেনারেটর</p></div>
-            <div class="card card--tight"><h4 class="mono">bigint</h4><p>অসীম সংখ্যা</p></div>
-            <div class="card card--tight"><h4 class="mono">decimal</h4><p>টাকার হিসাব</p></div>
-            <div class="card card--tight"><h4 class="mono">rational</h4><p>ভগ্নাংশ</p></div>
-            <div class="card card--tight"><h4 class="mono">complex</h4><p>জটিল সংখ্যা</p></div>
-            <div class="card card--tight"><h4 class="mono">semver</h4><p>ভার্সন রুল</p></div>
-            <div class="card card--tight"><h4 class="mono">uuid</h4><p>ইউনিক আইডি</p></div>
-            <div class="card card--tight"><h4 class="mono">testkit</h4><p>টেস্ট রানার</p></div>
-            <div class="card card--tight"><h4 class="mono">assert</h4><p>টেস্ট যাচাই</p></div>
-            <div class="card card--tight"><h4 class="mono">mock</h4><p>টেস্ট স্টাব</p></div>
+          <div class="four rv" style="--i:7;grid-template-columns:repeat(9,1fr);gap:8px">
+            <div class="card card--tight"><h4 class="mono">web</h4></div><div class="card card--tight"><h4 class="mono">http</h4></div><div class="card card--tight"><h4 class="mono">fastcgi</h4></div>
+            <div class="card card--tight"><h4 class="mono">stats</h4></div><div class="card card--tight"><h4 class="mono">mathx</h4></div><div class="card card--tight"><h4 class="mono">toml</h4></div>
+            <div class="card card--tight"><h4 class="mono">yaml</h4></div><div class="card card--tight"><h4 class="mono">xml</h4></div><div class="card card--tight"><h4 class="mono">tz (598)</h4></div>
+            <div class="card card--tight"><h4 class="mono">unicode</h4></div><div class="card card--tight"><h4 class="mono">smtp</h4></div><div class="card card--tight"><h4 class="mono">ftp</h4></div>
+            <div class="card card--tight"><h4 class="mono">session</h4></div><div class="card card--tight"><h4 class="mono">middleware</h4></div><div class="card card--tight"><h4 class="mono">multipart</h4></div>
+            <div class="card card--tight"><h4 class="mono">event</h4></div><div class="card card--tight"><h4 class="mono">gen</h4></div><div class="card card--tight"><h4 class="mono">bigint</h4></div>
+            <div class="card card--tight"><h4 class="mono">decimal</h4></div><div class="card card--tight"><h4 class="mono">rational</h4></div><div class="card card--tight"><h4 class="mono">complex</h4></div>
+            <div class="card card--tight"><h4 class="mono">semver</h4></div><div class="card card--tight"><h4 class="mono">uuid</h4></div><div class="card card--tight"><h4 class="mono">testkit</h4></div>
+            <div class="card card--tight"><h4 class="mono">assert</h4></div><div class="card card--tight"><h4 class="mono">mock</h4></div>
           </div>
-          <p class="note rv" style="--i:9">সহজ নামকরণ নিয়ম: মডিউলের নামসহ ব্যবহার করুন — যেমন <code>uuid.uuid_v4()</code>, <code>toml.toml_parse()</code></p>
-          <div class="caveat caveat--rose caveat--tight rv" style="--i:10"><b>🔐 সৎ নিরাপত্তা ঘোষণা:</b> সব নিরাপত্তা টুল মানদণ্ডের টেস্টে (RFC) উত্তীর্ণ, তবে <b>এখনো স্বাধীন থার্ড-পার্টি অডিট হয়নি</b> — গুরুত্বপূর্ণ সিস্টেমে অডিটেড সিকিউরিটি প্রক্সি বা হার্ডওয়্যার ভল্ট (HSM) ব্যবহার করুন।</div>
+          <div class="caveat caveat--rose caveat--tight rv" style="--i:8"><b>🔐 সৎ নিরাপত্তা:</b> মানদণ্ড টেস্টে উত্তীর্ণ হলেও থার্ড-পার্টি অডিট এখনো বাকি — প্রোডাকশনে অডিটেড গেটওয়ে বা HSM ব্যবহার করুন।</div>
         </div>
       </section>
 
-      <!-- ══ 18. কনফিগ + কন্ট্রোল প্যানেল ══ -->
-      <section class="slide" data-slide="18">
+      <!-- ══ 19. কনফিগ + কন্ট্রোল প্যানেল ══ -->
+      <section class="slide" data-slide="19">
         <div class="slide-head rv" style="--i:0">
           <div class="kicker">সহজ নিয়ন্ত্রণ</div>
-          <h2 class="h">একটি সেটিংস ফাইল ও লোকাল ড্যাশবোর্ড</h2>
+          <h2 class="h">একটি <code>spid3r.ini</code> ও লোকাল ড্যাশবোর্ড</h2>
         </div>
-        <div class="grow two">
-          <div class="gap-m">
-            <div class="two" style="gap:var(--sp-3)">
-              <div class="card card--tight rv" style="--i:1"><div class="ico">⚙️</div><h4 style="color:var(--cyan)">spid3r.ini</h4><p>ইঞ্জিন · মেমরি · নেটওয়ার্ক · টাইমজোন</p></div>
-              <div class="card card--tight rv" style="--i:2"><div class="ico">🎚️</div><h4 style="color:var(--amber)">লাইভ রিলোড</h4><p>রিস্টার্ট ছাড়াই <code>config reload</code></p></div>
+        <div class="grow">
+          <div class="two">
+            <div class="svg-box rv" style="--i:1">
+              <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="16" width="560" height="82" rx="10" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="2"/><text x="300" y="50" text-anchor="middle" fill="#7dd3fc" font-size="21" font-weight="700">খোঁজার ধাপ (প্রথম ম্যাচ কার্যকর)</text><text x="300" y="80" text-anchor="middle" fill="#f1f5f9" font-size="19">SPID3R_INI → App → User → Project</text>
+                <rect x="20" y="120" width="560" height="108" rx="10" fill="#161e2e" stroke="#1e293b" stroke-width="2"/><text x="300" y="164" text-anchor="middle" fill="#f1f5f9" font-size="23" font-weight="700">১২ সেকশনে ৪৫টি অপশন</text><text x="300" y="200" text-anchor="middle" fill="#a9b8cb" font-family="JetBrains Mono,monospace" font-size="19">spid3r config reload (লাইভ)</text>
+                <rect x="20" y="250" width="560" height="82" rx="10" fill="rgba(4,170,109,.12)" stroke="#04AA6D" stroke-width="2"/><text x="300" y="298" text-anchor="middle" fill="#34d399" font-size="21" font-weight="700">🔒 ১০০% লোকাল — কিছুই বাইরে যায় না</text>
+              </svg>
             </div>
-            <div class="card card--tight rv" style="--i:3"><div class="ico">📐</div><h4 style="color:var(--indigo-light)">সহজ INI স্কিমা</h4><p>১২ সেকশনে ৪৫টি অপশন · ভুল মান নোটসহ নিরাপদে এড়িয়ে যায়</p></div>
-            <div class="caveat caveat--rose rv" style="--i:4"><b>সততা:</b> <code>basedir</code> শুধু ফাইল টুল সীমাবদ্ধ করে — পুরো নিরাপত্তার জন্য <code>--sandbox</code> বা <code>disable_natives</code> ব্যবহার করুন</div>
-          </div>
-          <div class="gap-m">
-            <div class="card card--tight rv" style="--i:5"><div class="ico">🖥️</div><h4 style="color:var(--green)">spid3r control</h4><p>টার্মিনাল ড্যাশবোর্ড: <code>status · safety · ini · config · logs</code></p></div>
-            <div class="card card--tight rv" style="--i:6"><div class="ico">📊</div><h4 style="color:var(--purple)">ডেস্কটপ কন্ট্রোল প্যানেল</h4><p><code>spid3r-control.exe</code> — Overview · Language · Safety · Config · Logs</p></div>
-            <div class="caveat caveat--good rv" style="--i:7"><b>✅ ১০০% লোকাল ও প্রাইভেট:</b> আপনার সেটিংস, কন্ট্রোল ও লগ — সব আপনার কম্পিউটারেই থাকে</div>
+            <div class="gap-m">
+              <div class="svg-box rv" style="--i:2">
+                <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="16" y="14" width="608" height="192" rx="12" fill="#080c13" stroke="#38bdf8" stroke-width="2"/>
+                  <rect x="16" y="14" width="608" height="46" rx="10" fill="#161e2e"/><text x="38" y="44" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="19" font-weight="700">spid3r-control.exe</text>
+                  <rect x="34" y="78" width="110" height="106" rx="8" fill="#1a2335"/><text x="89" y="138" text-anchor="middle" fill="#7dd3fc" font-size="17">Overview</text>
+                  <rect x="156" y="78" width="110" height="106" rx="8" fill="#1a2335"/><text x="211" y="138" text-anchor="middle" fill="#34d399" font-size="17">Language</text>
+                  <rect x="278" y="78" width="110" height="106" rx="8" fill="#1a2335"/><text x="333" y="138" text-anchor="middle" fill="#fbbf24" font-size="17">Safety</text>
+                  <rect x="400" y="78" width="100" height="106" rx="8" fill="#1a2335"/><text x="450" y="138" text-anchor="middle" fill="#d8b4fe" font-size="17">Config</text>
+                  <rect x="512" y="78" width="96" height="106" rx="8" fill="#1a2335"/><text x="560" y="138" text-anchor="middle" fill="#fb7185" font-size="17">Logs</text>
+                </svg>
+              </div>
+              <div class="caveat caveat--rose caveat--tight rv" style="--i:3"><b>টিপ:</b> সম্পূর্ণ নিরাপত্তায় <code>basedir</code>-এর সাথে <code>--sandbox</code> ব্যবহার করুন।</div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ══ 19. সারসংক্ষেপ ══ -->
-      <section class="slide slide--center" data-slide="19">
+      <!-- ══ 20. সারসংক্ষেপ ══ -->
+      <section class="slide slide--center" data-slide="20">
+        <svg class="hero-bg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="960" cy="520" r="360" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="8 8"/>
+          <circle cx="960" cy="520" r="520" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+        </svg>
         <div class="title-glyph float rv" style="--i:0"><img src="spid3r.png" alt="Spid3r"></div>
         <h1 class="h1 h1--sm rv" style="--i:1">একটি ভাষা। <span class="grad-t">সবকিছু বিল্ট-ইন।</span></h1>
-        <p class="lead rv" style="--i:2">Self-hosted (<code>spid3r-self</code>) · YamLLVM ও YamGC · <code>yamc / yamcvm / spvm / spkg</code> · ২৫৪ নেটিভ ফাংশন</p>
-        <div class="stat-grid" style="margin-top:var(--sp-7)">
+        <p class="lead rv" style="--i:2">Spid3r v1.5.0 · <code>spid3r-self</code> · LLVM 23.1 ও YamGC · ২৫৪ নেটিভ ফাংশন · ২৬ মডিউল</p>
+        <div class="stat-grid" style="margin-top:var(--sp-4)">
           <div class="stat rv" style="--i:3"><div class="bignum bignum--sm cnt" data-v="40">০</div><div class="lbl">কীওয়ার্ড</div></div>
           <div class="stat rv" style="--i:4"><div class="bignum bignum--sm cnt" data-v="6">০</div><div class="lbl">মূল ডেটা টাইপ</div></div>
-          <div class="stat rv" style="--i:5"><div class="bignum bignum--sm cnt" data-v="20">০</div><div class="lbl">ডেটা স্ট্রাকচার+</div></div>
-          <div class="stat rv" style="--i:6"><div class="bignum bignum--sm cnt" data-v="26">০</div><div class="lbl">বিল্ট-ইন মডিউল</div></div>
-          <div class="stat rv" style="--i:7"><div class="bignum bignum--sm cnt" data-v="4">০</div><div class="lbl">এক্সিকিউশন ব্যাকএন্ড</div></div>
-          <div class="stat rv" style="--i:8"><div class="bignum bignum--sm cnt" data-v="60">০</div><div class="lbl">VM নির্দেশনা</div></div>
-          <div class="stat rv" style="--i:9"><div class="bignum bignum--sm cnt" data-v="0">০</div><div class="lbl">বাড়তি নির্ভরতা (Deps)</div></div>
+          <div class="stat rv" style="--i:5"><div class="bignum bignum--sm cnt" data-v="20">০</div><div class="lbl">কন্টেইনার+</div></div>
+          <div class="stat rv" style="--i:6"><div class="bignum bignum--sm cnt" data-v="26">০</div><div class="lbl">মডিউল</div></div>
+          <div class="stat rv" style="--i:7"><div class="bignum bignum--sm cnt" data-v="4">০</div><div class="lbl">ব্যাকএন্ড</div></div>
+          <div class="stat rv" style="--i:8"><div class="bignum bignum--sm cnt" data-v="60">০</div><div class="lbl">VM অপকোড</div></div>
+          <div class="stat rv" style="--i:9"><div class="bignum bignum--sm cnt" data-v="0">০</div><div class="lbl">বাড়তি নির্ভরতা</div></div>
         </div>
-        <p class="note rv pulse" style="--i:10;margin-top:var(--sp-7)">needyamin.github.io/spid3r · Developed by ANSNEW TECH · AI-এর সহায়তায় নির্মিত · © ২০২৬ Spid3r Language Project</p>
+        <p class="note rv pulse" style="--i:10;margin-top:var(--sp-4);position:relative;z-index:1">ANSNEW TECH · AI-এর সহায়তায় নির্মিত · © ২০২৬ Spid3r Language Project</p>
       </section>
 
     </main>
 
     <footer class="chrome chrome--bottom">
       <button class="navbtn" id="prevBtn">‹ আগের</button>
-      <div class="attribution"></div>
+      <div class="attribution">ANSNEW TECH · Spid3r v1.5.0 · AI-এর সহায়তায় নির্মিত</div>
       <button class="navbtn" id="nextBtn">পরের ›</button>
     </footer>
-
   </div>
 
   <script>
     (function () {
       'use strict';
-      var stage = document.getElementById('stage');
-      var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
-      var counter = document.getElementById('counter');
-      var progress = document.getElementById('progress');
-      var prevBtn = document.getElementById('prevBtn');
-      var nextBtn = document.getElementById('nextBtn');
-      var bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
-      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var cur = 0;
-
-      function toBn(n) {
-        return String(n).split('').map(function (c) {
-          return bn[+c] !== undefined ? bn[+c] : c;
-        }).join('');
-      }
-
-      /* Fixed 1920×1080 stage, scaled to fill the viewport */
-      function fit() {
-        var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-        stage.style.transform = 'scale(' + s + ')';
-      }
-      window.addEventListener('resize', fit);
-      fit();
-
-      /* Count-ups: Bengali digits, replay on every (re)visit */
-      function resetCounters(slide) {
-        slide.querySelectorAll('.cnt').forEach(function (el) {
-          el._tok = (el._tok || 0) + 1;
-          delete el.dataset.done;
-          el.textContent = '০';
-        });
-      }
-      function runCounters(slide) {
-        slide.querySelectorAll('.cnt').forEach(function (el) {
-          if (el.dataset.done) return;
-          el.dataset.done = '1';
-          var target = parseInt(el.dataset.v, 10) || 0;
-          var tok = (el._tok = (el._tok || 0) + 1);
-          if (reduce) { el.textContent = toBn(target); return; }
-          var t0 = null;
-          function step(ts) {
-            if (el._tok !== tok) return;
-            if (!t0) t0 = ts;
-            var p = Math.min((ts - t0) / 1400, 1);
-            var eased = 1 - Math.pow(1 - p, 3);
-            el.textContent = toBn(Math.round(target * eased));
-            if (p < 1) requestAnimationFrame(step);
-          }
+      var stage = document.getElementById('stage'), slides = Array.prototype.slice.call(document.querySelectorAll('.slide')),
+          counter = document.getElementById('counter'), progress = document.getElementById('progress'),
+          prevBtn = document.getElementById('prevBtn'), nextBtn = document.getElementById('nextBtn'),
+          bn = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'],
+          reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches, cur = 0;
+      function toBn(n){ return String(n).split('').map(function(c){ return bn[+c]!==undefined?bn[+c]:c; }).join(''); }
+      function fit(){ var s = Math.min(window.innerWidth/1920, window.innerHeight/1080); stage.style.transform = 'scale('+s+')'; }
+      window.addEventListener('resize', fit); fit();
+      function resetCounters(slide){ slide.querySelectorAll('.cnt').forEach(function(el){ el._tok=(el._tok||0)+1; delete el.dataset.done; el.textContent='০'; }); }
+      function runCounters(slide){
+        slide.querySelectorAll('.cnt').forEach(function(el){
+          if(el.dataset.done)return; el.dataset.done='1';
+          var target=parseInt(el.dataset.v,10)||0, tok=(el._tok=(el._tok||0)+1);
+          if(reduce){ el.textContent=toBn(target); return; }
+          var t0=null;
+          function step(ts){ if(el._tok!==tok)return; if(!t0)t0=ts; var p=Math.min((ts-t0)/1200,1), e=1-Math.pow(1-p,3); el.textContent=toBn(Math.round(target*e)); if(p<1)requestAnimationFrame(step); }
           requestAnimationFrame(step);
         });
       }
-
-      function show(n) {
-        if (n < 0) n = 0;
-        if (n > slides.length - 1) n = slides.length - 1;
-        if (n === cur && slides[cur].classList.contains('active')) {
-          runCounters(slides[cur]);
-          return;
-        }
-        var leaving = slides[cur];
-        leaving.classList.remove('active');
-        resetCounters(leaving);
-        cur = n;
-        var entering = slides[cur];
-        entering.classList.add('active');
-        counter.innerHTML = '<b>' + toBn(cur + 1) + '</b> / ' + toBn(slides.length);
-        progress.style.width = ((cur + 1) / slides.length * 100) + '%';
-        runCounters(entering);
-        try { location.hash = 's' + (cur + 1); } catch (_) { }
+      function show(n){
+        if(n<0)n=0; if(n>slides.length-1)n=slides.length-1;
+        if(n===cur && slides[cur].classList.contains('active')){ runCounters(slides[cur]); return; }
+        slides[cur].classList.remove('active'); resetCounters(slides[cur]);
+        cur=n; slides[cur].classList.add('active');
+        counter.innerHTML='<b>'+toBn(cur+1)+'</b> / '+toBn(slides.length);
+        progress.style.width=((cur+1)/slides.length*100)+'%';
+        runCounters(slides[cur]); try{ location.hash='s'+(cur+1); }catch(_){}
       }
-      function next() { show(cur + 1); }
-      function prev() { show(cur - 1); }
-
-      prevBtn.addEventListener('click', prev);
-      nextBtn.addEventListener('click', next);
-
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
-        else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
-        else if (e.key === 'Home') { e.preventDefault(); show(0); }
-        else if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }
+      function next(){ show(cur+1); } function prev(){ show(cur-1); }
+      prevBtn.addEventListener('click', prev); nextBtn.addEventListener('click', next);
+      document.addEventListener('keydown', function(e){
+        if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); next(); }
+        else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+        else if(e.key==='Home'){ e.preventDefault(); show(0); }
+        else if(e.key==='End'){ e.preventDefault(); show(slides.length-1); }
       });
-
-      document.getElementById('deck').addEventListener('click', function (e) {
-        if (e.target.closest('a,button')) return;
-        var r = this.getBoundingClientRect();
-        (e.clientX - r.left) > r.width / 2 ? next() : prev();
+      document.getElementById('deck').addEventListener('click', function(e){
+        if(e.target.closest('a,button'))return;
+        var r=this.getBoundingClientRect(); (e.clientX-r.left)>r.width/2?next():prev();
       });
-
-      var m = (location.hash || '').match(/^#s(\d+)$/);
-      show(m ? parseInt(m[1], 10) - 1 : 0);
+      var m=(location.hash||'').match(/^#s(\d+)$/); show(m?parseInt(m[1],10)-1:0);
     })();
   </script>
 </body>
-
 </html>
